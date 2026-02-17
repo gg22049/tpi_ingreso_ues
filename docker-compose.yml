@@ -1,0 +1,40 @@
+services:
+  postgres_18:
+    image: postgres:18.2-alpine
+    container_name: postgres_tpi
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres1234"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/Docker/tpi_2026/data:/var/lib/postgresql/data
+    networks:
+      - tpi_network
+  pgadmin_9:
+    image: dpage/pgadmin4:9.12
+    container_name: pgadmin_tpi
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "correo@ues.edu.sv"
+      PGADMIN_DEFAULT_PASSWORD: "pgadmin1234"
+      PGADMIN_LISTEN_PORT: "5050"
+    ports:
+      - "5050:5050"
+    networks:
+      - tpi_network
+  payara_7:
+    image: payara/server-full:7.2025.2
+    ports:
+      - "8080:8080"
+      - "4848:4848"
+      - "5005:5005"
+    volumes:
+      - ./target/app.war:/opt/payara/deployments/app.war:ro
+      - ./payara/domain:/opt/payara/appserver/glassfish/domains/domain1
+      - ./payara/postboot:/opt/payara/postboot.d:ro
+    networks:
+      - tpi_network
+    depends_on:
+      - postgres
+networks:
+  tpi_network:
