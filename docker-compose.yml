@@ -1,6 +1,6 @@
 services:
   postgres_18:
-    image: postgres:18.2-alpine
+    image: postgres:18.2-alpine3.23
     container_name: postgres_tpi
     environment:
       POSTGRES_USER: postgres
@@ -10,7 +10,7 @@ services:
     volumes:
       - ~/Docker/tpi_2026/data:/var/lib/postgresql/data
     networks:
-      - tpi_network
+      - network_tpi
   pgadmin_9:
     image: dpage/pgadmin4:9.12
     container_name: pgadmin_tpi
@@ -21,20 +21,6 @@ services:
     ports:
       - "5050:5050"
     networks:
-      - tpi_network
-  payara_7:
-    image: payara/server-full:7.2025.2
-    ports:
-      - "8080:8080"
-      - "4848:4848"
-      - "5005:5005"
-    volumes:
-      - ./target/app.war:/opt/payara/deployments/app.war:ro
-      - ./payara/domain:/opt/payara/appserver/glassfish/domains/domain1
-      - ./payara/postboot:/opt/payara/postboot.d:ro
-    networks:
-      - tpi_network
-    depends_on:
-      - postgres
+      - network_tpi
 networks:
-  tpi_network:
+  network_tpi:
