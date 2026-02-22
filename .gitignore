@@ -1,0 +1,8 @@
+# --- Java Build ---
+target/
+
+# --- NetBeans ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/

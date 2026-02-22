@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+  <persistence-unit name="Ingreso-PU" transaction-type="JTA">
+    <jta-data-source>jdbc/pgdb</jta-data-source>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoDocumentoIdentificacion</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIngreso</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DocumentoIdentificacion</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenAspirante</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Examen</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoExamen</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenAreaConocimiento</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenJornada</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenAreaConocimientoPregunta</class>
+  </persistence-unit>
+</persistence>
