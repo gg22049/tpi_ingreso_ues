@@ -18,8 +18,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "examen")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Examen.findAll", query = "SELECT e FROM Examen e"),
     @NamedQuery(name = "Examen.findByIdExamen", query = "SELECT e FROM Examen e WHERE e.idExamen = :idExamen"),
@@ -78,7 +76,7 @@ public class Examen implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<ExamenJornada> getExamenJornadaList() {
         return examenJornadaList;
     }
@@ -95,7 +93,7 @@ public class Examen implements Serializable {
         this.idTipoExamen = idTipoExamen;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<ExamenAspirante> getExamenAspiranteList() {
         return examenAspiranteList;
     }
@@ -104,7 +102,7 @@ public class Examen implements Serializable {
         this.examenAspiranteList = examenAspiranteList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<ExamenAreaConocimiento> getExamenAreaConocimientoList() {
         return examenAreaConocimientoList;
     }

@@ -17,8 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,7 +27,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "pregunta")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Pregunta.findAll", query = "SELECT p FROM Pregunta p"),
     @NamedQuery(name = "Pregunta.findByIdPregunta", query = "SELECT p FROM Pregunta p WHERE p.idPregunta = :idPregunta"),
@@ -108,7 +106,7 @@ public class Pregunta implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<PreguntaAreaConocimiento> getPreguntaAreaConocimientoList() {
         return preguntaAreaConocimientoList;
     }
@@ -117,7 +115,7 @@ public class Pregunta implements Serializable {
         this.preguntaAreaConocimientoList = preguntaAreaConocimientoList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<ExamenAreaConocimientoPregunta> getExamenAreaConocimientoPreguntaList() {
         return examenAreaConocimientoPreguntaList;
     }
@@ -126,7 +124,7 @@ public class Pregunta implements Serializable {
         this.examenAreaConocimientoPreguntaList = examenAreaConocimientoPreguntaList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<PreguntaDistractor> getPreguntaDistractorList() {
         return preguntaDistractorList;
     }

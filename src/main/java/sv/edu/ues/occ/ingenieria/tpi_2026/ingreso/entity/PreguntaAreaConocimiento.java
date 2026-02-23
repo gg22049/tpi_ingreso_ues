@@ -16,7 +16,6 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
@@ -25,7 +24,6 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pregunta_area_conocimiento")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PreguntaAreaConocimiento.findAll", query = "SELECT p FROM PreguntaAreaConocimiento p"),
     @NamedQuery(name = "PreguntaAreaConocimiento.findByIdPreguntaAreaConocimiento", query = "SELECT p FROM PreguntaAreaConocimiento p WHERE p.idPreguntaAreaConocimiento = :idPreguntaAreaConocimiento"),

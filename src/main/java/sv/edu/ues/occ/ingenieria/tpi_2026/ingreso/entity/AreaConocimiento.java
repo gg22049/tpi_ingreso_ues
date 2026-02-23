@@ -19,8 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "area_conocimiento")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "AreaConocimiento.findAll", query = "SELECT a FROM AreaConocimiento a"),
     @NamedQuery(name = "AreaConocimiento.findByIdAreaConocimiento", query = "SELECT a FROM AreaConocimiento a WHERE a.idAreaConocimiento = :idAreaConocimiento"),
@@ -100,7 +98,7 @@ public class AreaConocimiento implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<PreguntaAreaConocimiento> getPreguntaAreaConocimientoList() {
         return preguntaAreaConocimientoList;
     }
@@ -109,7 +107,7 @@ public class AreaConocimiento implements Serializable {
         this.preguntaAreaConocimientoList = preguntaAreaConocimientoList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<ExamenAreaConocimiento> getExamenAreaConocimientoList() {
         return examenAreaConocimientoList;
     }
@@ -118,7 +116,7 @@ public class AreaConocimiento implements Serializable {
         this.examenAreaConocimientoList = examenAreaConocimientoList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<DistractorAreaConocimiento> getDistractorAreaConocimientoList() {
         return distractorAreaConocimientoList;
     }
@@ -127,7 +125,7 @@ public class AreaConocimiento implements Serializable {
         this.distractorAreaConocimientoList = distractorAreaConocimientoList;
     }
 
-    @XmlTransient
+    @JsonbTransient
     public List<AreaConocimiento> getAreaConocimientoList() {
         return areaConocimientoList;
     }
