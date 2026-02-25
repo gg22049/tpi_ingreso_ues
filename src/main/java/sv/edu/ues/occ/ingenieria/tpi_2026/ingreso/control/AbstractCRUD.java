@@ -16,16 +16,26 @@ import java.util.logging.Logger;
 /**
  * Generalizacion de metodos CRUD.
  *
- * @param <T> Parametro generico a sustituir para la implementacion.
+ * @param <T> Parametro generico a suministrar.
  * @author caesar
  */
-public abstract class AbstractDataPersistence<T> {
-
-    public abstract EntityManager getEntityManager();
+public abstract class AbstractCRUD<T> {
 
     private final Class<T> tipoDato;
 
-    public AbstractDataPersistence(Class<T> tipoDato) {
+    /**
+     * Metodo para obtener el entity manager para las operaciones basicas.
+     *
+     * @return Retorna un Entity Manager.
+     */
+    public abstract EntityManager getEntityManager();
+
+    /**
+     * Metodo constructor de la clase abstracta.
+     *
+     * @param tipoDato Clase de la entidad en la que se opera.
+     */
+    public AbstractCRUD(Class<T> tipoDato) {
         this.tipoDato = tipoDato;
     }
 
@@ -47,9 +57,9 @@ public abstract class AbstractDataPersistence<T> {
                 throw new IllegalStateException("Error accediendo al repositorio");
             }
             em.persist(entity);
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            throw new IllegalStateException("Error persistiendo la entidad");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error persistiendo la entidad", e);
         }
     }
 
@@ -99,9 +109,9 @@ public abstract class AbstractDataPersistence<T> {
                 throw new IllegalStateException("Error accediendo al repositorio");
             }
             return em.find(tipoDato, id);
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            throw new IllegalStateException("Error durante la busqueda por id");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error durante la busqueda por id", e);
         }
     }
 
@@ -115,7 +125,7 @@ public abstract class AbstractDataPersistence<T> {
      * @throws IllegalArgumentException Rango brindado invalido.
      * @throws IllegalStateException Error en el proceso de busqueda por rango.
      */
-    public List<T> findRange(int offset, int limit) throws IllegalArgumentException, IllegalStateException {
+    public List<T> findByRange(int offset, int limit) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
         if (offset < 0 || limit <= 0) {
             throw new IllegalArgumentException("Rango invalido");
@@ -133,8 +143,9 @@ public abstract class AbstractDataPersistence<T> {
             q.setFirstResult(offset);
             q.setMaxResults(limit);
             return q.getResultList();
-        } catch (Exception ex) {
-            throw new IllegalStateException("Error al obtener el rango de registros");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error al obtener el rango de registros", e);
         }
     }
 
@@ -157,9 +168,9 @@ public abstract class AbstractDataPersistence<T> {
                 throw new IllegalStateException("Error accediendo al repositorio");
             }
             return em.merge(entity);
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            throw new IllegalStateException("Error actualizando el registro");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error actualizando el registro", e);
         }
     }
 
@@ -184,9 +195,9 @@ public abstract class AbstractDataPersistence<T> {
                 entity = em.merge(entity);
             }
             em.remove(entity);
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            throw new IllegalStateException("Error eliminando el registro");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error eliminando el registro", e);
         }
     }
 
@@ -209,8 +220,9 @@ public abstract class AbstractDataPersistence<T> {
             cq.select(cb.count(raiz));
             TypedQuery<Long> q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } catch (Exception ex) {
-            throw new IllegalStateException("Error contando los registros de la tabla");
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error contando los registros de la tabla", e);
         }
     }
 
