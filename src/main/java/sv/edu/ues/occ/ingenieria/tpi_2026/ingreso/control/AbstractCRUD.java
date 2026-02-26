@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @param <T> Parametro generico a suministrar.
  * @author caesar
  */
-public abstract class AbstractCRUD<T> {
+public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
 
     private final Class<T> tipoDato;
 
@@ -46,6 +46,7 @@ public abstract class AbstractCRUD<T> {
      * @throws IllegalStateException En caso de error en el proceso.
      * @throws IllegalArgumentException si la entidad es invalida.
      */
+    @Override
     public void create(final T entity) throws IllegalStateException, IllegalArgumentException {
         EntityManager em = null;
         if (entity == null) {
@@ -69,6 +70,7 @@ public abstract class AbstractCRUD<T> {
      * @return Retorna los registros de la tabla o una lista vacia en su lugar.
      * @throws IllegalStateException En caso de error en el proceso.
      */
+    @Override
     public List<T> findAll() {
         EntityManager em = null;
         try {
@@ -98,6 +100,7 @@ public abstract class AbstractCRUD<T> {
      * @throws IllegalStateException En caso de error en proceso de busqueda por
      * id.
      */
+    @Override
     public T findById(final Object id) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
         if (id == null) {
@@ -125,6 +128,7 @@ public abstract class AbstractCRUD<T> {
      * @throws IllegalArgumentException Rango brindado invalido.
      * @throws IllegalStateException Error en el proceso de busqueda por rango.
      */
+    @Override
     public List<T> findByRange(int offset, int limit) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
         if (offset < 0 || limit <= 0) {
@@ -157,6 +161,7 @@ public abstract class AbstractCRUD<T> {
      * @throws IllegalArgumentException La entidad a actualizar es invalida.
      * @throws IllegalStateException Error en proceso de actualizacion
      */
+    @Override
     public T update(final T entity) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
         if (entity == null) {
@@ -181,6 +186,7 @@ public abstract class AbstractCRUD<T> {
      * @throws IllegalArgumentException La entidad a eliminar es invalida.
      * @throws IllegalStateException Error eliminando la entidad.
      */
+    @Override
     public void delete(T entity) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
         if (entity == null) {
@@ -207,6 +213,7 @@ public abstract class AbstractCRUD<T> {
      * @return int Retorna un valor entero.
      * @throws IllegalStateException Error contando los registro.
      */
+    @Override
     public int count() throws IllegalStateException {
         EntityManager em = null;
         try {

@@ -18,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenAreaConocimientoP
  */
 @Stateless
 @LocalBean
-public class ExamenAreaConocimientoPreguntaDAOImp extends AbstractCRUD<ExamenAreaConocimientoPregunta> implements DefaultDAO<ExamenAreaConocimientoPregunta>, Serializable {
+public class ExamenAreaConocimientoPreguntaDAOImp extends AbstractCRUD<ExamenAreaConocimientoPregunta> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,60 +30,6 @@ public class ExamenAreaConocimientoPreguntaDAOImp extends AbstractCRUD<ExamenAre
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public void createDAO(ExamenAreaConocimientoPregunta entity) throws RuntimeException {
-        try {
-            create(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<ExamenAreaConocimientoPregunta> findAllDAO() throws RuntimeException {
-        try {
-            return findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public ExamenAreaConocimientoPregunta findByIdDAO(Object id) throws RuntimeException {
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<ExamenAreaConocimientoPregunta> findByRangeDAO(int offset, int limit) throws RuntimeException {
-        try {
-            return findByRange(offset, limit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public ExamenAreaConocimientoPregunta updateDAO(ExamenAreaConocimientoPregunta entity) throws RuntimeException {
-        try {
-            return update(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDAO(ExamenAreaConocimientoPregunta entity) throws RuntimeException {
-        try {
-            delete(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

@@ -18,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Examen;
  */
 @Stateless
 @LocalBean
-public class ExamenDAOImp extends AbstractCRUD<Examen> implements DefaultDAO<Examen>, Serializable {
+public class ExamenDAOImp extends AbstractCRUD<Examen> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,60 +30,6 @@ public class ExamenDAOImp extends AbstractCRUD<Examen> implements DefaultDAO<Exa
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public void createDAO(Examen entity) throws RuntimeException {
-        try {
-            create(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Examen> findAllDAO() throws RuntimeException {
-        try {
-            return findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Examen findByIdDAO(Object id) throws RuntimeException {
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Examen> findByRangeDAO(int offset, int limit) throws RuntimeException {
-        try {
-            return findByRange(offset, limit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Examen updateDAO(Examen entity) throws RuntimeException {
-        try {
-            return update(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDAO(Examen entity) throws RuntimeException {
-        try {
-            delete(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

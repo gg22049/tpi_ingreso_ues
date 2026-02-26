@@ -18,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
  */
 @Stateless
 @LocalBean
-public class JornadaDAOImp extends AbstractCRUD<Jornada> implements DefaultDAO<Jornada>, Serializable {
+public class JornadaDAOImp extends AbstractCRUD<Jornada> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,60 +30,6 @@ public class JornadaDAOImp extends AbstractCRUD<Jornada> implements DefaultDAO<J
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public void createDAO(Jornada entity) throws RuntimeException {
-        try {
-            create(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Jornada> findAllDAO() throws RuntimeException {
-        try {
-            return findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Jornada findByIdDAO(Object id) throws RuntimeException {
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Jornada> findByRangeDAO(int offset, int limit) throws RuntimeException {
-        try {
-            return findByRange(offset, limit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Jornada updateDAO(Jornada entity) throws RuntimeException {
-        try {
-            return update(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDAO(Jornada entity) throws RuntimeException {
-        try {
-            delete(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

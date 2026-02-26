@@ -9,7 +9,6 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnit;
 import java.io.Serializable;
-import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento;
 
 /**
@@ -18,7 +17,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimie
  */
 @Stateless
 @LocalBean
-public class DistractorAreaConocimientoDAOImp extends AbstractCRUD<DistractorAreaConocimiento> implements DefaultDAO<DistractorAreaConocimiento>, Serializable {
+public class DistractorAreaConocimientoDAOImp extends AbstractCRUD<DistractorAreaConocimiento> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,60 +29,6 @@ public class DistractorAreaConocimientoDAOImp extends AbstractCRUD<DistractorAre
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public void createDAO(DistractorAreaConocimiento entity) throws RuntimeException {
-        try {
-            create(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<DistractorAreaConocimiento> findAllDAO() throws RuntimeException {
-        try {
-            return findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public DistractorAreaConocimiento findByIdDAO(Object id) throws RuntimeException {
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<DistractorAreaConocimiento> findByRangeDAO(int offset, int limit) throws RuntimeException {
-        try {
-            return findByRange(offset, limit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public DistractorAreaConocimiento updateDAO(DistractorAreaConocimiento entity) throws RuntimeException {
-        try {
-            return update(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDAO(DistractorAreaConocimiento entity) throws RuntimeException {
-        try {
-            delete(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

@@ -34,7 +34,7 @@ public interface DefaultDAO<T> {
      * @throws IllegalArgumentException En caso de entidad nula.
      * @throws IllegalStateException En caso falle la persistencia.
      */
-    public void createDAO(T entity) throws RuntimeException;
+    public void create(T entity) throws RuntimeException;
 
     /**
      * Permite recuperar una lista de registros de entidad.
@@ -56,7 +56,7 @@ public interface DefaultDAO<T> {
      * @return Retorna una lista los elementos encontrados; lista vacia en su
      * defecto.
      */
-    public List<T> findAllDAO() throws RuntimeException;
+    public List<T> findAll() throws RuntimeException;
 
     /**
      * Permite buscar un registro por id.
@@ -80,7 +80,7 @@ public interface DefaultDAO<T> {
      * @throws IllegalStateException En caso falle la consulta.
      * @return Retorna el registro encontrado; {@code null} en su defecto.
      */
-    public T findByIdDAO(Object id) throws RuntimeException;
+    public T findById(Object id) throws RuntimeException;
 
     /**
      * Permite buscar una lista de registros por rango.
@@ -108,7 +108,7 @@ public interface DefaultDAO<T> {
      * @return Retorna una lista los elementos encontrados; lista vacia en su
      * defecto.
      */
-    public List<T> findByRangeDAO(int offset, int limit) throws RuntimeException;
+    public List<T> findByRange(int offset, int limit) throws RuntimeException;
 
     /**
      * Permite actualizar una entidad.
@@ -131,7 +131,7 @@ public interface DefaultDAO<T> {
      * @throws IllegalStateException En caso de que falle la actualizacion.
      * @return Retorna la entidad actualizada.
      */
-    public T updateDAO(T entity) throws RuntimeException;
+    public T update(T entity) throws RuntimeException;
 
     /**
      * Permite eliminar una entidad.
@@ -153,6 +153,26 @@ public interface DefaultDAO<T> {
      * @throws IllegalArgumentException En caso de {@code entity} {@code null}.
      * @throws IllegalStateException En caso de que falle la eliminacion.
      */
-    public void deleteDAO(T entity) throws RuntimeException;
+    public void delete(T entity) throws RuntimeException;
+
+    /**
+     * Permite los registros de una tabla.
+     * <p>
+     * Precondiciones:
+     * <ul>
+     * <li>La tabla debe poseer registros.</li>
+     * </ul>
+     * </p>
+     * <p>
+     * Postcondiciones:
+     * <ul>
+     * <li>Se recupera la cantidad en un momento dado por lo que esta sujeto a
+     * cambios.</li>
+     * </ul>
+     * </p>
+     *
+     * @throws IllegalStateException En caso de que falle el proceso de contar.
+     */
+    public int count() throws RuntimeException;
 
 }

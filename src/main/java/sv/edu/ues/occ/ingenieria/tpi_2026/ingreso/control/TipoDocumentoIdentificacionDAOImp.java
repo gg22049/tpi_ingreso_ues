@@ -18,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoDocumentoIdentifica
  */
 @Stateless
 @LocalBean
-public class TipoDocumentoIdentificacionDAOImp extends AbstractCRUD<TipoDocumentoIdentificacion> implements DefaultDAO<TipoDocumentoIdentificacion>, Serializable {
+public class TipoDocumentoIdentificacionDAOImp extends AbstractCRUD<TipoDocumentoIdentificacion> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,60 +30,6 @@ public class TipoDocumentoIdentificacionDAOImp extends AbstractCRUD<TipoDocument
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public void createDAO(TipoDocumentoIdentificacion entity) throws RuntimeException {
-        try {
-            create(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<TipoDocumentoIdentificacion> findAllDAO() throws RuntimeException {
-        try {
-            return findAll();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public TipoDocumentoIdentificacion findByIdDAO(Object id) throws RuntimeException {
-        try {
-            return findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<TipoDocumentoIdentificacion> findByRangeDAO(int offset, int limit) throws RuntimeException {
-        try {
-            return findByRange(offset, limit);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public TipoDocumentoIdentificacion updateDAO(TipoDocumentoIdentificacion entity) throws RuntimeException {
-        try {
-            return update(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDAO(TipoDocumentoIdentificacion entity) throws RuntimeException {
-        try {
-            delete(entity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
