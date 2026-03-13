@@ -131,7 +131,7 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
     @Override
     public List<T> findByRange(int offset, int limit) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
-        if (offset < 0 || limit <= 0) {
+        if (offset < 0 || limit <= offset) {
             throw new IllegalArgumentException("Rango invalido");
         }
         try {
@@ -214,7 +214,7 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
      * @throws IllegalStateException Error contando los registro.
      */
     @Override
-    public int count() throws IllegalStateException {
+    public Long count() throws IllegalStateException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -226,7 +226,7 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
             Root<T> raiz = cq.from(tipoDato);
             cq.select(cb.count(raiz));
             TypedQuery<Long> q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
+            return q.getSingleResult();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             throw new IllegalStateException("Error contando los registros de la tabla", e);

@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +20,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,11 +31,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "area_conocimiento")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "AreaConocimiento.findAll", query = "SELECT a FROM AreaConocimiento a"),
     @NamedQuery(name = "AreaConocimiento.findByIdAreaConocimiento", query = "SELECT a FROM AreaConocimiento a WHERE a.idAreaConocimiento = :idAreaConocimiento"),
     @NamedQuery(name = "AreaConocimiento.findByNombre", query = "SELECT a FROM AreaConocimiento a WHERE a.nombre = :nombre"),
-    @NamedQuery(name = "AreaConocimiento.findByObservaciones", query = "SELECT a FROM AreaConocimiento a WHERE a.observaciones = :observaciones")})
+    @NamedQuery(name = "AreaConocimiento.findByDescripcion", query = "SELECT a FROM AreaConocimiento a WHERE a.descripcion = :descripcion"),
+    @NamedQuery(name = "AreaConocimiento.findByActivo", query = "SELECT a FROM AreaConocimiento a WHERE a.activo = :activo")})
 public class AreaConocimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,22 +48,24 @@ public class AreaConocimiento implements Serializable {
     private Integer idAreaConocimiento;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 64)
     @Column(name = "nombre")
     private String nombre;
     @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAreaConocimiento")
+    @Column(name = "descripcion")
+    private String descripcion;
+    @Column(name = "activo")
+    private Boolean activo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
+    private List<PruebaClaveAreaConocimiento> pruebaClaveAreaConocimientoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
     private List<PreguntaAreaConocimiento> preguntaAreaConocimientoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAreaConocimiento")
-    private List<ExamenAreaConocimiento> examenAreaConocimientoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAreaConocimiento")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
     private List<DistractorAreaConocimiento> distractorAreaConocimientoList;
-    @OneToMany(mappedBy = "idAreaConocimientoPadre")
+    @OneToMany(mappedBy = "idAreaConocimientoPadre", fetch = FetchType.LAZY)
     private List<AreaConocimiento> areaConocimientoList;
     @JoinColumn(name = "id_area_conocimiento_padre", referencedColumnName = "id_area_conocimiento")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private AreaConocimiento idAreaConocimientoPadre;
 
     public AreaConocimiento() {
@@ -90,15 +96,32 @@ public class AreaConocimiento implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getObservaciones() {
-        return observaciones;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    @JsonbTransient
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    @XmlTransient
+    public List<PruebaClaveAreaConocimiento> getPruebaClaveAreaConocimientoList() {
+        return pruebaClaveAreaConocimientoList;
+    }
+
+    public void setPruebaClaveAreaConocimientoList(List<PruebaClaveAreaConocimiento> pruebaClaveAreaConocimientoList) {
+        this.pruebaClaveAreaConocimientoList = pruebaClaveAreaConocimientoList;
+    }
+
+    @XmlTransient
     public List<PreguntaAreaConocimiento> getPreguntaAreaConocimientoList() {
         return preguntaAreaConocimientoList;
     }
@@ -107,16 +130,7 @@ public class AreaConocimiento implements Serializable {
         this.preguntaAreaConocimientoList = preguntaAreaConocimientoList;
     }
 
-    @JsonbTransient
-    public List<ExamenAreaConocimiento> getExamenAreaConocimientoList() {
-        return examenAreaConocimientoList;
-    }
-
-    public void setExamenAreaConocimientoList(List<ExamenAreaConocimiento> examenAreaConocimientoList) {
-        this.examenAreaConocimientoList = examenAreaConocimientoList;
-    }
-
-    @JsonbTransient
+    @XmlTransient
     public List<DistractorAreaConocimiento> getDistractorAreaConocimientoList() {
         return distractorAreaConocimientoList;
     }
@@ -125,7 +139,7 @@ public class AreaConocimiento implements Serializable {
         this.distractorAreaConocimientoList = distractorAreaConocimientoList;
     }
 
-    @JsonbTransient
+    @XmlTransient
     public List<AreaConocimiento> getAreaConocimientoList() {
         return areaConocimientoList;
     }

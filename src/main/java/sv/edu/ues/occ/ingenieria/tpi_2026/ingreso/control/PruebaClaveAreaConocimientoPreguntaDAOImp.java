@@ -9,7 +9,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnit;
 import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPregunta;
 
 /**
  *
@@ -17,13 +17,13 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
  */
 @Stateless
 @LocalBean
-public class AreaConocimientoDAOImp extends AbstractCRUD<AreaConocimiento> implements Serializable {
+public class PruebaClaveAreaConocimientoPreguntaDAOImp extends AbstractCRUD<PruebaClaveAreaConocimientoPregunta> implements Serializable {
 
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
 
-    public AreaConocimientoDAOImp() {
-        super(AreaConocimiento.class);
+    public PruebaClaveAreaConocimientoPreguntaDAOImp(Class<PruebaClaveAreaConocimientoPregunta> tipoDato) {
+        super(tipoDato);
     }
 
     @Override

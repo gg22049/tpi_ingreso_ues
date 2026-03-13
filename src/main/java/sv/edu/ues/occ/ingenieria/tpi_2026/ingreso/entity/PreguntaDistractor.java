@@ -6,16 +6,17 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
@@ -24,41 +25,62 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "pregunta_distractor")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PreguntaDistractor.findAll", query = "SELECT p FROM PreguntaDistractor p"),
-    @NamedQuery(name = "PreguntaDistractor.findByIdPreguntaDistractor", query = "SELECT p FROM PreguntaDistractor p WHERE p.idPreguntaDistractor = :idPreguntaDistractor"),
+    @NamedQuery(name = "PreguntaDistractor.findByIdPregunta", query = "SELECT p FROM PreguntaDistractor p WHERE p.preguntaDistractorPK.idPregunta = :idPregunta"),
+    @NamedQuery(name = "PreguntaDistractor.findByIdDistractor", query = "SELECT p FROM PreguntaDistractor p WHERE p.preguntaDistractorPK.idDistractor = :idDistractor"),
+    @NamedQuery(name = "PreguntaDistractor.findByCorrecto", query = "SELECT p FROM PreguntaDistractor p WHERE p.correcto = :correcto"),
     @NamedQuery(name = "PreguntaDistractor.findByObservaciones", query = "SELECT p FROM PreguntaDistractor p WHERE p.observaciones = :observaciones")})
 public class PreguntaDistractor implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EmbeddedId
+    protected PreguntaDistractorPK preguntaDistractorPK;
     @Basic(optional = false)
-    @Column(name = "id_pregunta_distractor")
-    private Long idPreguntaDistractor;
+    @NotNull
+    @Column(name = "correcto")
+    private boolean correcto;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
-    @JoinColumn(name = "id_distractor", referencedColumnName = "id_distractor")
-    @ManyToOne(optional = false)
-    private Distractor idDistractor;
-    @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta")
-    @ManyToOne(optional = false)
-    private Pregunta idPregunta;
+    @JoinColumn(name = "id_distractor", referencedColumnName = "id_distractor", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Distractor distractor;
+    @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Pregunta pregunta;
 
     public PreguntaDistractor() {
     }
 
-    public PreguntaDistractor(Long idPreguntaDistractor) {
-        this.idPreguntaDistractor = idPreguntaDistractor;
+    public PreguntaDistractor(PreguntaDistractorPK preguntaDistractorPK) {
+        this.preguntaDistractorPK = preguntaDistractorPK;
     }
 
-    public Long getIdPreguntaDistractor() {
-        return idPreguntaDistractor;
+    public PreguntaDistractor(PreguntaDistractorPK preguntaDistractorPK, boolean correcto) {
+        this.preguntaDistractorPK = preguntaDistractorPK;
+        this.correcto = correcto;
     }
 
-    public void setIdPreguntaDistractor(Long idPreguntaDistractor) {
-        this.idPreguntaDistractor = idPreguntaDistractor;
+    public PreguntaDistractor(long idPregunta, long idDistractor) {
+        this.preguntaDistractorPK = new PreguntaDistractorPK(idPregunta, idDistractor);
+    }
+
+    public PreguntaDistractorPK getPreguntaDistractorPK() {
+        return preguntaDistractorPK;
+    }
+
+    public void setPreguntaDistractorPK(PreguntaDistractorPK preguntaDistractorPK) {
+        this.preguntaDistractorPK = preguntaDistractorPK;
+    }
+
+    public boolean getCorrecto() {
+        return correcto;
+    }
+
+    public void setCorrecto(boolean correcto) {
+        this.correcto = correcto;
     }
 
     public String getObservaciones() {
@@ -69,26 +91,26 @@ public class PreguntaDistractor implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public Distractor getIdDistractor() {
-        return idDistractor;
+    public Distractor getDistractor() {
+        return distractor;
     }
 
-    public void setIdDistractor(Distractor idDistractor) {
-        this.idDistractor = idDistractor;
+    public void setDistractor(Distractor distractor) {
+        this.distractor = distractor;
     }
 
-    public Pregunta getIdPregunta() {
-        return idPregunta;
+    public Pregunta getPregunta() {
+        return pregunta;
     }
 
-    public void setIdPregunta(Pregunta idPregunta) {
-        this.idPregunta = idPregunta;
+    public void setPregunta(Pregunta pregunta) {
+        this.pregunta = pregunta;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idPreguntaDistractor != null ? idPreguntaDistractor.hashCode() : 0);
+        hash += (preguntaDistractorPK != null ? preguntaDistractorPK.hashCode() : 0);
         return hash;
     }
 
@@ -99,7 +121,7 @@ public class PreguntaDistractor implements Serializable {
             return false;
         }
         PreguntaDistractor other = (PreguntaDistractor) object;
-        if ((this.idPreguntaDistractor == null && other.idPreguntaDistractor != null) || (this.idPreguntaDistractor != null && !this.idPreguntaDistractor.equals(other.idPreguntaDistractor))) {
+        if ((this.preguntaDistractorPK == null && other.preguntaDistractorPK != null) || (this.preguntaDistractorPK != null && !this.preguntaDistractorPK.equals(other.preguntaDistractorPK))) {
             return false;
         }
         return true;
@@ -107,7 +129,7 @@ public class PreguntaDistractor implements Serializable {
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor[ idPreguntaDistractor=" + idPreguntaDistractor + " ]";
+        return "sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor[ preguntaDistractorPK=" + preguntaDistractorPK + " ]";
     }
 
 }

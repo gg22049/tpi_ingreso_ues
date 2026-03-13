@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,9 +16,14 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,11 +32,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "jornada")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Jornada.findAll", query = "SELECT j FROM Jornada j"),
     @NamedQuery(name = "Jornada.findByIdJornada", query = "SELECT j FROM Jornada j WHERE j.idJornada = :idJornada"),
-    @NamedQuery(name = "Jornada.findByIdDocenteEncargado", query = "SELECT j FROM Jornada j WHERE j.idDocenteEncargado = :idDocenteEncargado"),
-    @NamedQuery(name = "Jornada.findByIdAula", query = "SELECT j FROM Jornada j WHERE j.idAula = :idAula"),
+    @NamedQuery(name = "Jornada.findByNombre", query = "SELECT j FROM Jornada j WHERE j.nombre = :nombre"),
+    @NamedQuery(name = "Jornada.findByFechaInicio", query = "SELECT j FROM Jornada j WHERE j.fechaInicio = :fechaInicio"),
+    @NamedQuery(name = "Jornada.findByFechaFin", query = "SELECT j FROM Jornada j WHERE j.fechaFin = :fechaFin"),
     @NamedQuery(name = "Jornada.findByObservaciones", query = "SELECT j FROM Jornada j WHERE j.observaciones = :observaciones")})
 public class Jornada implements Serializable {
 
@@ -39,48 +47,74 @@ public class Jornada implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_jornada")
-    private Integer idJornada;
-    @Size(max = 256)
-    @Column(name = "id_docente_encargado")
-    private String idDocenteEncargado;
-    @Size(max = 256)
-    @Column(name = "id_aula")
-    private String idAula;
+    private Long idJornada;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 124)
+    @Column(name = "nombre")
+    private String nombre;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha_inicio")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaInicio;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha_fin")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaFin;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idJornada")
-    private List<ExamenJornada> examenJornadaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jornada", fetch = FetchType.LAZY)
+    private List<JornadaAula> jornadaAulaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jornada", fetch = FetchType.LAZY)
+    private List<PruebaJornada> pruebaJornadaList;
 
     public Jornada() {
     }
 
-    public Jornada(Integer idJornada) {
+    public Jornada(Long idJornada) {
         this.idJornada = idJornada;
     }
 
-    public Integer getIdJornada() {
+    public Jornada(Long idJornada, String nombre, Date fechaInicio, Date fechaFin) {
+        this.idJornada = idJornada;
+        this.nombre = nombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
+    public Long getIdJornada() {
         return idJornada;
     }
 
-    public void setIdJornada(Integer idJornada) {
+    public void setIdJornada(Long idJornada) {
         this.idJornada = idJornada;
     }
 
-    public String getIdDocenteEncargado() {
-        return idDocenteEncargado;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setIdDocenteEncargado(String idDocenteEncargado) {
-        this.idDocenteEncargado = idDocenteEncargado;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getIdAula() {
-        return idAula;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setIdAula(String idAula) {
-        this.idAula = idAula;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
     public String getObservaciones() {
@@ -91,13 +125,22 @@ public class Jornada implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @JsonbTransient
-    public List<ExamenJornada> getExamenJornadaList() {
-        return examenJornadaList;
+    @XmlTransient
+    public List<JornadaAula> getJornadaAulaList() {
+        return jornadaAulaList;
     }
 
-    public void setExamenJornadaList(List<ExamenJornada> examenJornadaList) {
-        this.examenJornadaList = examenJornadaList;
+    public void setJornadaAulaList(List<JornadaAula> jornadaAulaList) {
+        this.jornadaAulaList = jornadaAulaList;
+    }
+
+    @XmlTransient
+    public List<PruebaJornada> getPruebaJornadaList() {
+        return pruebaJornadaList;
+    }
+
+    public void setPruebaJornadaList(List<PruebaJornada> pruebaJornadaList) {
+        this.pruebaJornadaList = pruebaJornadaList;
     }
 
     @Override

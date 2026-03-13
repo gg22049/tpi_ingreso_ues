@@ -19,5 +19,18 @@
     <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor</class>
     <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenJornada</class>
     <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.ExamenAreaConocimientoPregunta</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcion</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornada</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimiento</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionExamen</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPregunta</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPreguntaDistractor</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion</class>
+    <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion</class>
   </persistence-unit>
 </persistence>

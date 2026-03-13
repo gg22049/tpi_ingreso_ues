@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +18,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,11 +29,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "distractor")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Distractor.findAll", query = "SELECT d FROM Distractor d"),
     @NamedQuery(name = "Distractor.findByIdDistractor", query = "SELECT d FROM Distractor d WHERE d.idDistractor = :idDistractor"),
     @NamedQuery(name = "Distractor.findByValor", query = "SELECT d FROM Distractor d WHERE d.valor = :valor"),
-    @NamedQuery(name = "Distractor.findByObservaciones", query = "SELECT d FROM Distractor d WHERE d.observaciones = :observaciones")})
+    @NamedQuery(name = "Distractor.findByActivo", query = "SELECT d FROM Distractor d WHERE d.activo = :activo"),
+    @NamedQuery(name = "Distractor.findByImagenUrl", query = "SELECT d FROM Distractor d WHERE d.imagenUrl = :imagenUrl")})
 public class Distractor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,15 +46,19 @@ public class Distractor implements Serializable {
     private Long idDistractor;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 64)
+    @Size(min = 1, max = 2147483647)
     @Column(name = "valor")
     private String valor;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
-    private String observaciones;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDistractor")
+    @Column(name = "activo")
+    private Boolean activo;
+    @Size(max = 64)
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
+    private List<PruebaClaveAreaConocimientoPreguntaDistractor> pruebaClaveAreaConocimientoPreguntaDistractorList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
     private List<DistractorAreaConocimiento> distractorAreaConocimientoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDistractor")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
     private List<PreguntaDistractor> preguntaDistractorList;
 
     public Distractor() {
@@ -81,15 +89,32 @@ public class Distractor implements Serializable {
         this.valor = valor;
     }
 
-    public String getObservaciones() {
-        return observaciones;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
-    @JsonbTransient
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    @XmlTransient
+    public List<PruebaClaveAreaConocimientoPreguntaDistractor> getPruebaClaveAreaConocimientoPreguntaDistractorList() {
+        return pruebaClaveAreaConocimientoPreguntaDistractorList;
+    }
+
+    public void setPruebaClaveAreaConocimientoPreguntaDistractorList(List<PruebaClaveAreaConocimientoPreguntaDistractor> pruebaClaveAreaConocimientoPreguntaDistractorList) {
+        this.pruebaClaveAreaConocimientoPreguntaDistractorList = pruebaClaveAreaConocimientoPreguntaDistractorList;
+    }
+
+    @XmlTransient
     public List<DistractorAreaConocimiento> getDistractorAreaConocimientoList() {
         return distractorAreaConocimientoList;
     }
@@ -98,7 +123,7 @@ public class Distractor implements Serializable {
         this.distractorAreaConocimientoList = distractorAreaConocimientoList;
     }
 
-    @JsonbTransient
+    @XmlTransient
     public List<PreguntaDistractor> getPreguntaDistractorList() {
         return preguntaDistractorList;
     }

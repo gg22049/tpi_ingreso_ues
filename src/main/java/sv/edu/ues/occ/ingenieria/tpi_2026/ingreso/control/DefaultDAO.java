@@ -173,6 +173,6 @@ public interface DefaultDAO<T> {
      *
      * @throws IllegalStateException En caso de que falle el proceso de contar.
      */
-    public int count() throws RuntimeException;
+    public Long count() throws RuntimeException;
 
 }

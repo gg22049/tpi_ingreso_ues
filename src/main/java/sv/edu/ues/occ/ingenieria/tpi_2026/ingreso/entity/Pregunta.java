@@ -8,6 +8,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +18,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,11 +29,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "pregunta")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Pregunta.findAll", query = "SELECT p FROM Pregunta p"),
     @NamedQuery(name = "Pregunta.findByIdPregunta", query = "SELECT p FROM Pregunta p WHERE p.idPregunta = :idPregunta"),
-    @NamedQuery(name = "Pregunta.findByEnunciado", query = "SELECT p FROM Pregunta p WHERE p.enunciado = :enunciado"),
-    @NamedQuery(name = "Pregunta.findByRespuesta", query = "SELECT p FROM Pregunta p WHERE p.respuesta = :respuesta"),
+    @NamedQuery(name = "Pregunta.findByValor", query = "SELECT p FROM Pregunta p WHERE p.valor = :valor"),
+    @NamedQuery(name = "Pregunta.findByActivo", query = "SELECT p FROM Pregunta p WHERE p.activo = :activo"),
+    @NamedQuery(name = "Pregunta.findByImagenUrl", query = "SELECT p FROM Pregunta p WHERE p.imagenUrl = :imagenUrl"),
     @NamedQuery(name = "Pregunta.findByObservaciones", query = "SELECT p FROM Pregunta p WHERE p.observaciones = :observaciones")})
 public class Pregunta implements Serializable {
 
@@ -43,22 +47,22 @@ public class Pregunta implements Serializable {
     private Long idPregunta;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 256)
-    @Column(name = "enunciado")
-    private String enunciado;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 64)
-    @Column(name = "respuesta")
-    private String respuesta;
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "valor")
+    private String valor;
+    @Column(name = "activo")
+    private Boolean activo;
+    @Size(max = 64)
+    @Column(name = "imagen_url")
+    private String imagenUrl;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPregunta")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
     private List<PreguntaAreaConocimiento> preguntaAreaConocimientoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPregunta")
-    private List<ExamenAreaConocimientoPregunta> examenAreaConocimientoPreguntaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPregunta")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
+    private List<PruebaClaveAreaConocimientoPregunta> pruebaClaveAreaConocimientoPreguntaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
     private List<PreguntaDistractor> preguntaDistractorList;
 
     public Pregunta() {
@@ -68,10 +72,9 @@ public class Pregunta implements Serializable {
         this.idPregunta = idPregunta;
     }
 
-    public Pregunta(Long idPregunta, String enunciado, String respuesta) {
+    public Pregunta(Long idPregunta, String valor) {
         this.idPregunta = idPregunta;
-        this.enunciado = enunciado;
-        this.respuesta = respuesta;
+        this.valor = valor;
     }
 
     public Long getIdPregunta() {
@@ -82,20 +85,28 @@ public class Pregunta implements Serializable {
         this.idPregunta = idPregunta;
     }
 
-    public String getEnunciado() {
-        return enunciado;
+    public String getValor() {
+        return valor;
     }
 
-    public void setEnunciado(String enunciado) {
-        this.enunciado = enunciado;
+    public void setValor(String valor) {
+        this.valor = valor;
     }
 
-    public String getRespuesta() {
-        return respuesta;
+    public Boolean getActivo() {
+        return activo;
     }
 
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     public String getObservaciones() {
@@ -106,7 +117,7 @@ public class Pregunta implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @JsonbTransient
+    @XmlTransient
     public List<PreguntaAreaConocimiento> getPreguntaAreaConocimientoList() {
         return preguntaAreaConocimientoList;
     }
@@ -115,16 +126,16 @@ public class Pregunta implements Serializable {
         this.preguntaAreaConocimientoList = preguntaAreaConocimientoList;
     }
 
-    @JsonbTransient
-    public List<ExamenAreaConocimientoPregunta> getExamenAreaConocimientoPreguntaList() {
-        return examenAreaConocimientoPreguntaList;
+    @XmlTransient
+    public List<PruebaClaveAreaConocimientoPregunta> getPruebaClaveAreaConocimientoPreguntaList() {
+        return pruebaClaveAreaConocimientoPreguntaList;
     }
 
-    public void setExamenAreaConocimientoPreguntaList(List<ExamenAreaConocimientoPregunta> examenAreaConocimientoPreguntaList) {
-        this.examenAreaConocimientoPreguntaList = examenAreaConocimientoPreguntaList;
+    public void setPruebaClaveAreaConocimientoPreguntaList(List<PruebaClaveAreaConocimientoPregunta> pruebaClaveAreaConocimientoPreguntaList) {
+        this.pruebaClaveAreaConocimientoPreguntaList = pruebaClaveAreaConocimientoPreguntaList;
     }
 
-    @JsonbTransient
+    @XmlTransient
     public List<PreguntaDistractor> getPreguntaDistractorList() {
         return preguntaDistractorList;
     }
