@@ -13,5 +13,26 @@
             <property name="jakarta.persistence.jdbc.user" value="postgres" />
             <property name="jakarta.persistence.jdbc.password" value="postgres1234" />
         </properties>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimiento</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPregunta</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPreguntaDistractor</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornada</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcion</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionExamen</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion</class>
+        <class>sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba</class>
     </persistence-unit>
 </persistence>
