@@ -131,7 +131,7 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
     @Override
     public List<T> findByRange(int offset, int limit) throws IllegalArgumentException, IllegalStateException {
         EntityManager em = null;
-        if (offset < 0 || limit <= offset) {
+        if (offset < 0 || limit < offset) {
             throw new IllegalArgumentException("Rango invalido");
         }
         try {
