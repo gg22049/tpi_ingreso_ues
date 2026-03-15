@@ -9,6 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.*;
+import org.testcontainers.shaded.org.yaml.snakeyaml.emitter.Emitter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,13 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AreaConocimientoDAOImpIT extends TestSingleton {
+public class AreaConocimientoDAOImpIT {
 
     EntityManager em;
 
     @BeforeAll
     void start() {
-        em = getEntityManager();
+        IntegrationTestSingleton its = IntegrationTestSingleton.getInstance();
+        em = its.getEntityManager();
     }
 
     @AfterAll
@@ -38,7 +40,7 @@ public class AreaConocimientoDAOImpIT extends TestSingleton {
     @Test
     void test() {
         System.out.println("AreaConocimientoDAOImp.create");
-
+        System.out.println(em.isOpen());
     }
 
 }
