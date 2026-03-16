@@ -7,7 +7,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Order;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
@@ -20,17 +19,14 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
  *
  * @author caesar
  */
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AreaConocimientoDAOImpIT {
+public class AreaConocimientoDAOImpIT extends ITAbstract {
 
-    IntegrationTestSingleton its;
     AreaConocimiento newEntity;
 
     @BeforeAll
     void init() {
-        its = IntegrationTestSingleton.getInstance();
         newEntity = new AreaConocimiento(-1, "TEST");
     }
 
@@ -45,7 +41,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.create(newEntity);
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
 
         try {
@@ -76,7 +72,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.findById(1L);
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -100,7 +96,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.findAll();
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -132,7 +128,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.findByRange(offset, limit);
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -161,7 +157,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.update(newEntity);
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -188,7 +184,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.delete(newEntity);
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -214,7 +210,7 @@ public class AreaConocimientoDAOImpIT {
         assertThrows(IllegalStateException.class, () -> {
             cut.count();
         });
-        cut.em = its.getEntityManager();
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();

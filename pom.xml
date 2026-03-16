@@ -36,6 +36,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>4.0.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-bom</artifactId>
+                <version>2.0.17</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -97,10 +111,30 @@
             <version>4.0.9</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>NuevoIngreso</finalName>
+        <finalName>nuevo-ingreso</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -160,7 +194,7 @@
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <destFile>${project.reporting.outputDirectory}/unit-test/unit-test.exec</destFile>
+                                    <destFile>${project.build.directory}/jacoco-exec/unit-test.exec</destFile>
                                 </configuration>
                             </execution>
                             <execution>
@@ -170,7 +204,7 @@
                                     <goal>check</goal>
                                 </goals>
                                 <configuration>
-                                    <dataFile>${project.reporting.outputDirectory}/unit-test/unit-test.exec</dataFile>
+                                    <dataFile>${project.build.directory}/jacoco-exec/unit-test.exec</dataFile>
                                     <excludes>
                                         <exclude>**/boundary/**</exclude>
                                         <exclude>**/entity/**</exclude>
@@ -200,8 +234,8 @@
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
                                     </excludes>
-                                    <dataFile>${project.reporting.outputDirectory}/unit-test/unit-test.exec</dataFile>
-                                    <outputDirectory>${project.reporting.outputDirectory}/unit-test/report</outputDirectory>
+                                    <dataFile>${project.build.directory}/jacoco-exec/unit-test.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/unit-test</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -252,7 +286,7 @@
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <destFile>${project.reporting.outputDirectory}/integration-test/integration-test.exec</destFile>
+                                    <destFile>${project.build.directory}/jacoco-exec/integration-test.exec</destFile>
                                 </configuration>
                             </execution>
                             <execution>
@@ -266,8 +300,8 @@
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
                                     </excludes>
-                                    <dataFile>${project.reporting.outputDirectory}/integration-test/integration-test.exec</dataFile>
-                                    <outputDirectory>${project.reporting.outputDirectory}/integration-test/report</outputDirectory>
+                                    <dataFile>${project.build.directory}/jacoco-exec/integration-test.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/integration-test</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -318,25 +352,55 @@
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <destFile>${project.reporting.outputDirectory}/e2e-test/e2e-test.exec</destFile>
+                                    <destFile>${project.build.directory}/jacoco-exec/e2e-test.exec</destFile>
                                 </configuration>
                             </execution>
                             <execution>
                                 <id>Test-Report</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>**/entity/**</exclude>
+                                        <exclude>**/control/**</exclude>
+                                    </excludes>
+                                    <dataFile>${project.build.directory}/jacoco-exec/e2e-test.exec</dataFile>    
+                                    <outputDirectory>${project.reporting.outputDirectory}/e2e-test</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <!-- Merged Coverage -->
+                            <execution>
+                                <id>Merge-Results</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>merge</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>${project.build.directory}/jacoco-exec/merged-coverage.exec</destFile>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${project.build.directory}/jacoco-exec</directory>
+                                            <includes>
+                                                <include>*.exec</include>
+                                            </includes>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>merged-report</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
                                 <configuration>
-                                    <dataFileIncludes>
-                                        <dataFileInclude>${project.reporting.outputDirectory}/unit-test/unit-test.exec</dataFileInclude>
-                                        <dataFileInclude>${project.reporting.outputDirectory}/integration-test/integration-test.exec</dataFileInclude>
-                                    </dataFileIncludes>
+                                    <dataFile>${project.build.directory}/jacoco-exec/merged-coverage.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/merged-coverage</outputDirectory>
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
                                     </excludes>
-                                    <dataFile>${project.reporting.outputDirectory}/e2e-test/e2e-test.exec</dataFile>    
-                                    <outputDirectory>${project.reporting.outputDirectory}/e2e-test/report</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
