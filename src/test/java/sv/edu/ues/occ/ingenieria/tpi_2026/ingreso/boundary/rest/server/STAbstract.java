@@ -4,17 +4,15 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.MountableFile;
 
@@ -22,13 +20,11 @@ import org.testcontainers.utility.MountableFile;
  *
  * @author caesar
  */
-public abstract class E2EAbstract {
+public abstract class STAbstract {
 
-    protected static EntityManagerFactory emf;
     protected static Client client;
     protected static WebTarget webTarget;
     private static Network net = Network.newNetwork();
-    private static MountableFile war = MountableFile.forHostPath(Paths.get("target/nuevo-ingreso.war").toAbsolutePath());
     private static final PostgreSQLContainer PG_CONTAINER = new PostgreSQLContainer("postgres:18.2-alpine3.23")
             .withDatabaseName("tpi_db")
             .withUsername("postgres")
@@ -37,8 +33,10 @@ public abstract class E2EAbstract {
             .withExposedPorts(5432)
             .withNetwork(net)
             .withNetworkAliases("pgdb");
-    private static final GenericContainer OL_CONTAINER = new GenericContainer("icr.io/appcafe/open-liberty:25.0.0.6-kernel-slim-java21-openj9-ubi-minimal")
-            .withCopyFileToContainer(war, "/opt/ol/wlp/usr/servers/defaultServer/dropins/nuevo-ingreso.war")
+    private static final GenericContainer OL_CONTAINER = new GenericContainer("icr.io/appcafe/open-liberty:26.0.0.2-full-java21-openj9-ubi-minimal")
+            .withCopyFileToContainer(MountableFile.forHostPath(Paths.get("target/nuevo-ingreso.war").toAbsolutePath()), "/opt/ol/wlp/usr/servers/defaultServer/dropins/nuevo-ingreso.war")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("server.xml"), "/opt/ol/wlp/usr/servers/defaultServer/server.xml")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("postgresql-42.7.10.jar"), "/opt/ol/wlp/usr/servers/defaultServer/lib/postgresql-42.7.10.jar")
             .withExposedPorts(9080)
             .withNetwork(net)
             .withEnv("PGSERVER", "pgdb")
@@ -50,16 +48,13 @@ public abstract class E2EAbstract {
             .waitingFor(Wait.forLogMessage(".*CWWKF0011I.*", 1));
 
     static {
+//        Startables.deepStart(List.of(PG_CONTAINER, OL_CONTAINER));
         PG_CONTAINER.start();
         OL_CONTAINER.start();
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("jakarta.persistence.jdbc.url", PG_CONTAINER.getJdbcUrl());
-        emf = Persistence.createEntityManagerFactory("IngresoIT-PU", properties);
         client = ClientBuilder.newClient();
         webTarget = client.target(String.format("http://localhost:%d/nuevo-ingreso/v1/", OL_CONTAINER.getMappedPort(9080)));
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            emf.close();
             PG_CONTAINER.stop();
             OL_CONTAINER.stop();
         }));

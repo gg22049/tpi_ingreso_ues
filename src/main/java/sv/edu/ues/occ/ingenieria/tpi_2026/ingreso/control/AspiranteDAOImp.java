@@ -22,8 +22,8 @@ public class AspiranteDAOImp extends AbstractCRUD<Aspirante> implements Serializ
     @PersistenceUnit(unitName = "Ingreso-PU")
     EntityManager em;
 
-    public AspiranteDAOImp(Class<Aspirante> tipoDato) {
-        super(tipoDato);
+    public AspiranteDAOImp() {
+        super(Aspirante.class);
     }
 
     @Override

@@ -28,6 +28,7 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
     @BeforeAll
     void init() {
         newEntity = new AreaConocimiento(-1, "TEST");
+        System.out.println(System.getProperty("java.class.path"));
     }
 
     @Test

@@ -8,7 +8,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
  *
  * @author caesar
  */
-public enum ResponseMessage {
+public enum ErrorMessage {
     INTERNAL_EXCEPTION,
     MALFORMED_ENTITY,
     NULL_PAYLOAD,
