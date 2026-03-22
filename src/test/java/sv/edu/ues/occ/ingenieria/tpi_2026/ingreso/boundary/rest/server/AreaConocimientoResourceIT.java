@@ -4,10 +4,12 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.it_base.ITAbstract;
+
 /**
  *
  * @author caesar
  */
-public class AreaConocimientoResourceIT {
+public class AreaConocimientoResourceIT extends ITAbstract {
 
 }
