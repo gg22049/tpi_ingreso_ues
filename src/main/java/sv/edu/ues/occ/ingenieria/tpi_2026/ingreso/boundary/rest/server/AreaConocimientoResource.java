@@ -5,8 +5,11 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -25,6 +28,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
@@ -57,19 +62,16 @@ public class AreaConocimientoResource implements Serializable {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAreaConocimiento(AreaConocimiento ac, @Context UriInfo uriInfo) {
-        if (ac != null && ac.getIdAreaConocimiento() != null) {
-            try {
-                areaConocimientoDI.create(ac);
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-                uriBuilder.path(String.valueOf(ac.getIdAreaConocimiento()));
-                return Response.created(uriBuilder.build()).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(ErrorMessage.INTERNAL_EXCEPTION).build();
-            }
+    public Response createAreaConocimiento(@NotNull @Valid AreaConocimiento entity, @Context UriInfo uriInfo) throws Exception {
+        try {
+            areaConocimientoDI.create(entity);
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
+            return Response.created(uriBuilder.build()).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new Exception();
         }
-        return Response.status(400).entity(ErrorMessage.NULL_PAYLOAD).build();
     }
 
     /**
@@ -87,53 +89,58 @@ public class AreaConocimientoResource implements Serializable {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByIdAreaConocimiento(@PathParam("id") Integer idAreaConocimiento) {
-        if (idAreaConocimiento != null) {
-            try {
-                AreaConocimiento acFound = areaConocimientoDI.findById(idAreaConocimiento);
-                if (acFound == null) {
-                    return Response.status(404).entity(ErrorMessage.NON_EXISTENT_PARAM.toString() + idAreaConocimiento).build();
-                }
-                return Response.ok(acFound).type(MediaType.APPLICATION_JSON).build();
-            } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(ErrorMessage.INTERNAL_EXCEPTION).build();
+    public Response findByIdAreaConocimiento(@NotNull @Min(0) @PathParam("id") Integer id, @Context UriInfo uriInfo) throws Exception {
+        try {
+            AreaConocimiento found = areaConocimientoDI.findById(id);
+            if (found == null) {
+                ErrorDetailDTO error = new ErrorDetailDTO(
+                        ErrorTitle.INVALID_ID.toString(),
+                        404,
+                        "AreaConocimiento with id " + id + " not found",
+                        uriInfo.getPath(),
+                        null
+                );
+
+                return Response
+                        .status(404)
+                        .entity(error)
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
+
+            return Response.ok(found).type(MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new Exception();
         }
-        return Response.status(400).entity(ErrorMessage.NULL_PARAM).build();
     }
 
-//    /**
-//     * Retorna una lista de AreaConocimiento segun el rango especificado. - GET
-//     * /facturas/detalle-sala?offset={offset}&limit={limit}
-//     *
-//     * @param offset índice inicial (>= 0). Default: 0
-//     * @param limit tamaño de página (1..50). Default: 50
-//     * @return
-//     * <ul>
-//     * <li>200 Ok + Json con la lista.</li>
-//     * <li>400 Bad Request Si offset < 0, limit
-//     * > 50 o limit < offset.</li>
-//     * <
-//     * li>500 Internal Server Error en excepciones internas.</li>
-//     * </ul>
-//     */
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response findByRangeAreaConocimiento(@QueryParam("offset") @DefaultValue("0") @Min(0) Integer offset,
-//            @QueryParam("limit") @DefaultValue("50") @Max(50) Integer limit) {
-//        if (offset <= limit && offset >= 0 && limit <= 50) {
-//            try {
-//                List<AreaConocimiento> encontrados = examenJornadaDI.findByRange(offset, limit);
-//                return Response.ok(encontrados).header(ResponseMessage.TOTAL_RECORDS.toString(), encontrados.size()).type(MediaType.APPLICATION_JSON).build();
-//            } catch (Exception e) {
-//                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-//                return Response.status(500).entity(ResponseMessage.INTERNAL_EXCEPTION).build();
-//            }
-//        }
-//        return Response.status(400).entity(ResponseMessage.INVALID_PARAM + " Offset: " + offset.toString() + " Limit:" + limit.toString()).build();
-//    }
-//
+    /**
+     * Retorna una lista de AreaConocimiento segun el rango especificado. - GET
+     * /facturas/detalle-sala?offset={offset}&limit={limit}
+     *
+     * @param offset índice inicial (>= 0). Default: 0
+     * @param limit tamaño de página (1..50). Default: 50
+     * @return
+     * <ul>
+     * <li>200 Ok + Json con la lista.</li>
+     * <li>400 Bad Request Si offset < 0, limit
+     * > 50 o limit < offset.</li> <
+     * li>500 Internal Server Error en excepciones internas.</li>
+     * </ul>
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findByRangeAreaConocimiento(@Valid @BeanParam FindRangeParamDTO params) throws Exception {
+        try {
+            List<AreaConocimiento> resultList = areaConocimientoDI.findByRange(params.getOffset(), params.getLimit());
+            return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new Exception();
+        }
+    }
+
 //    /**
 //     * Actualizar un AreaConocimiento. - PATCH /examen-jornada
 //     *

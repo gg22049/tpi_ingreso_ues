@@ -8,6 +8,6 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
  *
  * @author caesar
  */
-public enum HeaderMessage {
-
+public enum HeaderName {
+    TOTAL_RECORDS
 }
