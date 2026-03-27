@@ -12,7 +12,10 @@ import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import java.util.List;
 import java.util.Map;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.ErrorDetailDTO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorTitle;
 
 /**
  *
@@ -25,6 +28,8 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
     @Override
     public Response toResponse(ConstraintViolationException e) {
+        String errorId = java.util.UUID.randomUUID().toString();
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
         List<Map<String, String>> issues = e
                 .getConstraintViolations()
                 .stream()
@@ -32,9 +37,9 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
                 .toList();
 
         ErrorDetailDTO error = new ErrorDetailDTO(
-                "VALIDATION_ERROR",
+                ErrorTitle.VALIDATION_ERROR.toString(),
                 400,
-                "Invalid Request Parameters",
+                "Invalid Request Parameters. Error UUID: " + errorId,
                 uriInfo.getPath(),
                 issues
         );

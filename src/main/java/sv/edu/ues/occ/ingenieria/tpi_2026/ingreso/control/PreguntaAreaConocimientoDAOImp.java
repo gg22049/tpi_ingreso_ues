@@ -7,9 +7,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento;
 
 /**
@@ -20,11 +19,11 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimient
 @LocalBean
 public class PreguntaAreaConocimientoDAOImp extends AbstractCRUD<PreguntaAreaConocimiento> implements Serializable {
 
-    @PersistenceUnit(unitName = "Ingreso-PU")
+    @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
 
-    public PreguntaAreaConocimientoDAOImp(Class<PreguntaAreaConocimiento> tipoDato) {
-        super(tipoDato);
+    public PreguntaAreaConocimientoDAOImp() {
+        super(PreguntaAreaConocimiento.class);
     }
 
     @Override

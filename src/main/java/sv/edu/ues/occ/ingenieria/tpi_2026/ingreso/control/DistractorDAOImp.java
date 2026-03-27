@@ -7,7 +7,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 
@@ -19,11 +19,11 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 @LocalBean
 public class DistractorDAOImp extends AbstractCRUD<Distractor> implements Serializable {
 
-    @PersistenceUnit(unitName = "Ingreso-PU")
+    @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
 
-    public DistractorDAOImp(Class<Distractor> tipoDato) {
-        super(tipoDato);
+    public DistractorDAOImp() {
+        super(Distractor.class);
     }
 
     @Override

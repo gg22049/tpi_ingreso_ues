@@ -10,24 +10,31 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.ErrorDetailDTO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorTitle;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 
 /**
+ * "Several Internal Server Exception, Could Not Properly Response."
  *
  * @author caesar
  */
 @Provider
-public class InternalExceptionMapper implements ExceptionMapper<Exception> {
+public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
 
     @Context
     UriInfo uriInfo;
 
     @Override
-    public Response toResponse(Exception e) {
+    public Response toResponse(DomainException e) {
+        String errorId = java.util.UUID.randomUUID().toString();
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
         ErrorDetailDTO error = new ErrorDetailDTO(
-                "INTERNAL_EXCEPTION",
+                ErrorTitle.INTERNAL_EXCEPTION.toString(),
                 500,
-                "Several Internal Server Exception, Could Not Properly Response.",
+                "Error UUID: " + errorId,
                 uriInfo.getPath(),
                 null
         );

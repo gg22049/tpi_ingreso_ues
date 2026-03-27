@@ -28,11 +28,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /**
@@ -46,31 +48,29 @@ public class AreaConocimientoResource implements Serializable {
     AreaConocimientoDAOImp areaConocimientoDI;
 
     /**
-     * Crea un AreaConocimiento. - POST /examen-jornada
+     * Crea un AreaConocimiento. - POST /area-conocimiento
      *
-     * @param AreaConocimiento Entidad para crear.
+     * @param entityDTO Entidad para crear.
      * @param uriInfo Contexto de la Request para construir Location.
      * @return
      * <ul>
      * <li>201 Created + Location del recurso creado.</li>
-     * <li>400 Bad Request si el payload es nulo.< 0, limit > 50 o limit <
-     * offset.</li> <
-     * l
-     * i>422 Unprocessable Content con parametros invalidos o faltantes.</li>
+     * <li>400 Bad Request si el payload es nulo o con parametros invalidos.
      * <li>500 Internal Server Error en excepciones internas.</li>
      * </ul>
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAreaConocimiento(@NotNull @Valid AreaConocimiento entity, @Context UriInfo uriInfo) throws Exception {
+    public Response create(@NotNull @Valid AreaConocimiento entity, @Context UriInfo uriInfo) throws DomainException {
         try {
+//            AreaConocimiento entity = new AreaConocimiento();
+//            entity.setNombre(entityDTO.nombre());
             areaConocimientoDI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
             return Response.created(uriBuilder.build()).build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            throw new Exception();
+            throw new DomainException(e);
         }
     }
 
@@ -89,10 +89,11 @@ public class AreaConocimientoResource implements Serializable {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByIdAreaConocimiento(@NotNull @Min(0) @PathParam("id") Integer id, @Context UriInfo uriInfo) throws Exception {
+    public Response findById(@PathParam("id") Integer id, @Context UriInfo uriInfo) throws Exception {
         try {
             AreaConocimiento found = areaConocimientoDI.findById(id);
             if (found == null) {
+                System.out.println(ErrorTitle.INVALID_ID.toString());
                 ErrorDetailDTO error = new ErrorDetailDTO(
                         ErrorTitle.INVALID_ID.toString(),
                         404,
@@ -111,7 +112,7 @@ public class AreaConocimientoResource implements Serializable {
             return Response.ok(found).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            throw new Exception();
+            throw new DomainException(e);
         }
     }
 

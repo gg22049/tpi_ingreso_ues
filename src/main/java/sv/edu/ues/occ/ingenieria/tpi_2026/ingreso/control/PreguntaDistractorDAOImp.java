@@ -7,9 +7,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor;
 
 /**
@@ -20,11 +19,11 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor;
 @LocalBean
 public class PreguntaDistractorDAOImp extends AbstractCRUD<PreguntaDistractor> implements Serializable {
 
-    @PersistenceUnit(unitName = "Ingreso-PU")
+    @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
 
-    public PreguntaDistractorDAOImp(Class<PreguntaDistractor> tipoDato) {
-        super(tipoDato);
+    public PreguntaDistractorDAOImp() {
+        super(PreguntaDistractor.class);
     }
 
     @Override

@@ -32,8 +32,9 @@ public abstract class STAbstract {
             .withInitScript("tpi_ddl.sql")
             .withExposedPorts(5432)
             .withNetwork(net)
-            .withNetworkAliases("pgdb");
-    private static final GenericContainer OL_CONTAINER = new GenericContainer("icr.io/appcafe/open-liberty:26.0.0.2-full-java21-openj9-ubi-minimal")
+            .withNetworkAliases("pgdb")
+            .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*", 1));
+    protected static final GenericContainer OL_CONTAINER = new GenericContainer("icr.io/appcafe/open-liberty:26.0.0.2-full-java21-openj9-ubi-minimal")
             .withCopyFileToContainer(MountableFile.forHostPath(Paths.get("target/nuevo-ingreso.war").toAbsolutePath()), "/opt/ol/wlp/usr/servers/defaultServer/dropins/nuevo-ingreso.war")
             .withCopyFileToContainer(MountableFile.forClasspathResource("server.xml"), "/opt/ol/wlp/usr/servers/defaultServer/server.xml")
             .withCopyFileToContainer(MountableFile.forClasspathResource("postgresql-42.7.10.jar"), "/opt/ol/wlp/usr/servers/defaultServer/lib/postgresql-42.7.10.jar")
@@ -48,12 +49,10 @@ public abstract class STAbstract {
             .waitingFor(Wait.forLogMessage(".*CWWKF0011I.*", 1));
 
     static {
-//        Startables.deepStart(List.of(PG_CONTAINER, OL_CONTAINER));
-        PG_CONTAINER.start();
-        OL_CONTAINER.start();
+        Startables.deepStart(List.of(PG_CONTAINER, OL_CONTAINER)).join();
         client = ClientBuilder.newClient();
         webTarget = client.target(String.format("http://localhost:%d/nuevo-ingreso/v1/", OL_CONTAINER.getMappedPort(9080)));
-
+        System.out.println(OL_CONTAINER.getLogs());
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             PG_CONTAINER.stop();
             OL_CONTAINER.stop();
