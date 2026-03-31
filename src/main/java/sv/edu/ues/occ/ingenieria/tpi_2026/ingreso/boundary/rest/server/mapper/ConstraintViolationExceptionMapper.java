@@ -10,17 +10,19 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorTitle;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.ErrorRecord;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.IssueRecord;
 
 /**
  *
  * @author caesar
  */
+@Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     @Context
@@ -28,19 +30,24 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
     @Override
     public Response toResponse(ConstraintViolationException e) {
-        String errorId = java.util.UUID.randomUUID().toString();
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
-        List<Map<String, String>> issues = e
+
+        Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        List<IssueRecord> issues = e
                 .getConstraintViolations()
                 .stream()
-                .map(v -> Map.of("field", v.getPropertyPath().toString(), "message", v.getMessage()))
+                .map(v -> {
+                    String field = v.getPropertyPath().toString();
+                    field = field.substring(field.lastIndexOf(".") + 1);
+                    return new IssueRecord(field, v.getMessage());
+                })
                 .toList();
 
-        ErrorDetailDTO error = new ErrorDetailDTO(
-                ErrorTitle.VALIDATION_ERROR.toString(),
+        ErrorRecord error = new ErrorRecord(
+                null,
+                ErrorType.VALIDATION_ERROR.toString(),
                 400,
-                "Invalid Request Parameters. Error UUID: " + errorId,
-                uriInfo.getPath(),
+                "Constraint Violation in Resource: " + uriInfo.getPath().toString(),
+                uriInfo.getAbsolutePath().toString(),
                 issues
         );
 
@@ -49,6 +56,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
                 .entity(error)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
+
     }
 
 }

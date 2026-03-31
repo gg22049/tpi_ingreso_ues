@@ -8,8 +8,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
  *
  * @author caesar
  */
-public enum ErrorTitle {
-    INVALID_ID,
+public enum ErrorType {
+    NO_MATCH_ID,
     INTERNAL_EXCEPTION,
     VALIDATION_ERROR
 }

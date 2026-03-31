@@ -62,6 +62,26 @@
 
     <dependencies>
         <!--Jakartaee10-->
+        
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>3.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -320,6 +340,7 @@
                                     <destFile>${project.build.directory}/jacoco-exec/integration-test.exec</destFile>
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
+                                        <exclude>**/boundary/**</exclude>
                                         <exclude>**/DTO/**</exclude>
                                     </excludes>
                                 </configuration>
@@ -333,6 +354,7 @@
                                 <configuration>
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
+                                        <exclude>**/boundary/**</exclude>
                                         <exclude>**/DTO/**</exclude>
                                     </excludes>
                                     <dataFile>${project.build.directory}/jacoco-exec/integration-test.exec</dataFile>

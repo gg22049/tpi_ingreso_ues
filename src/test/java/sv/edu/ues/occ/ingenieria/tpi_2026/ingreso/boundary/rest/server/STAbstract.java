@@ -49,14 +49,16 @@ public abstract class STAbstract {
             .waitingFor(Wait.forLogMessage(".*CWWKF0011I.*", 1));
 
     static {
+
         Startables.deepStart(List.of(PG_CONTAINER, OL_CONTAINER)).join();
         client = ClientBuilder.newClient();
         webTarget = client.target(String.format("http://localhost:%d/nuevo-ingreso/v1/", OL_CONTAINER.getMappedPort(9080)));
-        System.out.println(OL_CONTAINER.getLogs());
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             PG_CONTAINER.stop();
             OL_CONTAINER.stop();
         }));
+
     }
 
 }

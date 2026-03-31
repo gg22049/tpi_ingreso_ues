@@ -10,10 +10,11 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorTitle;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.ErrorRecord;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 
 /**
@@ -31,11 +32,12 @@ public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
     public Response toResponse(DomainException e) {
         String errorId = java.util.UUID.randomUUID().toString();
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
-        ErrorDetailDTO error = new ErrorDetailDTO(
-                ErrorTitle.INTERNAL_EXCEPTION.toString(),
+        ErrorRecord error = new ErrorRecord(
+                errorId,
+                ErrorType.INTERNAL_EXCEPTION.toString(),
                 500,
-                "Error UUID: " + errorId,
-                uriInfo.getPath(),
+                "Unexpected Error in Resource " + uriInfo.getPath().toString(),
+                uriInfo.getAbsolutePath().toString(),
                 null
         );
 

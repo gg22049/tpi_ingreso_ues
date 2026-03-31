@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.QueryParam;
 
@@ -14,11 +15,10 @@ import jakarta.ws.rs.QueryParam;
 @ValidRange
 public class FindRangeParamDTO {
 
-    @NotNull
+    @Min(0)
     @QueryParam("offset")
     private Integer offset;
 
-    @NotNull
     @QueryParam("limit")
     private Integer limit;
 
