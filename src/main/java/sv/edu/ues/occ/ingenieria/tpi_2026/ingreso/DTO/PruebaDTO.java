@@ -15,7 +15,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 public record PruebaDTO(
         Long idPrueba,
         String nombre,
-        String indicciones,
+        String indicaciones,
         BigDecimal puntajeMaximo,
         BigDecimal notaAprobacion,
         Integer duracion,

@@ -21,83 +21,77 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaAulaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.JornadaDTO;
-
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.PreguntaDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaAreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDistractorDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaClaveAreaConocimientoPreguntaDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 /**
  *
  * @author usermein
  */
-@Path("jornada")
-public class JornadaResource implements Serializable {
-
+@Path("pregunta")
+public class PreguntaResource {
     @Inject
-    JornadaDAOImp jornadaDI;
+    PreguntaDAOImp preguntaDI;
     @Inject
-    JornadaAulaDAOImp jornadaAulaDI;
+    PreguntaAreaConocimientoDAOImp preguntaAreaconocimientoDI;
     @Inject
-    PruebaJornadaDAOImp pruebaJornadaDI;
-
-    /**
-     * Metodo para crear una jornada
-     *
-     * @param jornadaDTO
-     * @param uriInfo
-     * @return
-     */
-    @POST
+    PruebaClaveAreaConocimientoPreguntaDAOImp pruebaClaveAreaConocimientoPreguntaDI;
+    @Inject
+    PreguntaDistractorDAOImp preguntaDistractorDAOImp;
+    
+    
+    
+     @POST
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response create(JornadaDTO jornadaDTO, @Context UriInfo uriInfo) {
-        if (jornadaDTO == null) {
+    public Response create(PreguntaDTO preguntaDTO, @Context UriInfo uriInfo) {
+        if (preguntaDTO == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         try {
-            //no hay que hacer set en el id de nueva jornada por que la db lo va a generar
-            //aqui creo que deberiamos validar que ninguna de estos datos sea null
-            Jornada nuevaJornada = new Jornada();
-            nuevaJornada.setNombre(jornadaDTO.nombre());
-            nuevaJornada.setFechaInicio(jornadaDTO.fechaInicio());
-            nuevaJornada.setFechaFin(jornadaDTO.fechaFin());
-            nuevaJornada.setObservaciones(jornadaDTO.observaciones());
+            Pregunta nuevaPregunta = new Pregunta();
+            nuevaPregunta.setValor(preguntaDTO.valor());
+            nuevaPregunta.setActivo(preguntaDTO.activo());
+            nuevaPregunta.setImagenUrl(preguntaDTO.imageUrl());
+            nuevaPregunta.setObservaciones(preguntaDTO.observaciones());
             //creamos la nueva jornada, en teoria se deberia de guardar en la db
-            jornadaDI.create(nuevaJornada);
-            //
+            preguntaDI.create(nuevaPregunta);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
-                    .path(String.valueOf(nuevaJornada.getIdJornada()))
+                    .path(String.valueOf(nuevaPregunta.getIdPregunta()))
                     .build();
 
-            return Response.created(uriCreada).entity(jornadaDTO).build();
+            return Response.created(uriCreada).entity(preguntaDTO).build();
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al crear la jornada", e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al crear la pregunta", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al crear la jornada" + e.getMessage())
+                    .entity("Error al crear la pregunta" + e.getMessage())
                     .build();
         }
 
     }
 
     @DELETE
-    @Path("/{idJornada}")
+    @Path("/{idPregunta}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idJornada") Long idJornada) {
-        if (idJornada != null && idJornada > 0) {
+    public Response delete(@PathParam("idPregunta") Long idPregunta) {
+        if (idPregunta != null && idPregunta > 0) {
             try {
-                Jornada jornada = jornadaDI.findById(idJornada);
-                if (jornada != null) {
-                    jornadaDI.delete(jornada);
+                Pregunta pregunta = preguntaDI.findById(idPregunta);
+                if (pregunta != null) {
+                    preguntaDI.delete(pregunta);
                     return Response.noContent().build();
                 } else {
                     return Response.status(Response.Status.NOT_FOUND)
-                            .entity("Jornada no encontrada con ID " + idJornada).build();
+                            .entity("Pregunta no encontrada con ID " + idPregunta).build();
                 }
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName())
-                        .log(Level.SEVERE, "Error al eliminar Jornada", e);
+                        .log(Level.SEVERE, "Error al eliminar Pregunta", e);
                 return Response.serverError()
                         .entity("Error interno " + e.getMessage())
                         .build();
@@ -110,18 +104,18 @@ public class JornadaResource implements Serializable {
     }
 
     @GET
-    @Path("/{idJornada}")
+    @Path("/{idPregunta}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("idJornada") Long idJornada) {
-        if (idJornada != null && idJornada > 0) {
+    public Response findById(@PathParam("idPregunta") Long idPregunta) {
+        if (idPregunta != null && idPregunta > 0) {
             try {
-                Jornada jornada = jornadaDI.findById(idJornada);
-                if (jornada != null) {
-                    JornadaDTO jornadaDTO = new JornadaDTO(jornada);
-                    return Response.ok(jornadaDTO).build();
+                Pregunta pregunta = preguntaDI.findById(idPregunta);
+                if (pregunta != null) {
+                    PreguntaDTO preguntaDTO = new PreguntaDTO(pregunta);
+                    return Response.ok(preguntaDTO).build();
                 }
-                return Response.status(Response.Status.NOT_FOUND).header("NOT_FOUNT_ID", idJornada)
-                        .entity("No se encontro el recurso con ID: " + idJornada)
+                return Response.status(Response.Status.NOT_FOUND).header("NOT_FOUNT_ID", idPregunta)
+                        .entity("No se encontro el recurso con ID: " + idPregunta)
                         .build();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, "ERROR", e.getMessage());
@@ -129,7 +123,7 @@ public class JornadaResource implements Serializable {
             }
 
         }
-        return Response.status(Response.Status.BAD_REQUEST).header("WRONG_PARAMETER", idJornada).build();
+        return Response.status(Response.Status.BAD_REQUEST).header("WRONG_PARAMETER", idPregunta).build();
     }
 
     @GET
@@ -141,13 +135,13 @@ public class JornadaResource implements Serializable {
     ) {
         try {
             if (first >= 0 && max <= 50) {
-                List<Jornada> lista = jornadaDI.findByRange(first, max);
+                List<Pregunta> lista = preguntaDI.findByRange(first, max);
 
-                List<JornadaDTO> listaDTO = lista
+                List<PreguntaDTO> listaDTO = lista
                         .stream()
-                        .map(jornada -> new JornadaDTO(jornada))
+                        .map(pregunta -> new PreguntaDTO(pregunta))
                         .collect(Collectors.toList());
-                long total = jornadaDI.count();
+                long total = preguntaDI.count();
                 return Response.ok(listaDTO).header("TOTAL_RECORD", total)
                         .build();
 
@@ -163,36 +157,36 @@ public class JornadaResource implements Serializable {
     }
 
     @PUT
-    @Path("/{idJornada}")
+    @Path("/{idPregunta}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idJornada") Long idJornada,
-            JornadaDTO jornadaDTO,
+    public Response update(@PathParam("idPregunta") Long idPregunta,
+            PreguntaDTO preguntaDTO,
             @Context UriInfo uriInfo) {
 
-        if (idJornada != null && jornadaDTO != null) {
+        if (idPregunta != null && preguntaDTO != null) {
             try {
-                Jornada jornadaEncontrada = jornadaDI.findById(idJornada);
-                if (jornadaEncontrada == null) {
+                Pregunta preguntaEncontrada = preguntaDI.findById(idPregunta);
+                if (preguntaEncontrada == null) {
                     return Response.status(Response.Status.NOT_FOUND)
-                            .entity("Jornada no encontrada con ID: " + idJornada)
+                            .entity("Pregunta no encontrada con ID: " + idPregunta)
                             .build();
                 }
                 //Si el campo es null o no está en el combo, el campo no se actualizará en la base de datos.
-                if (jornadaDTO.nombre() != null) {
-                    jornadaEncontrada.setNombre(jornadaDTO.nombre());
+                if (preguntaDTO.valor() != null) {
+                    preguntaEncontrada.setValor(preguntaDTO.valor());
                 }
-                if (jornadaDTO.fechaInicio() != null) {
-                    jornadaEncontrada.setFechaInicio(jornadaDTO.fechaInicio());
+                if (preguntaDTO.activo() != null) {
+                   preguntaEncontrada.setActivo(preguntaDTO.activo());
                 }
-                if (jornadaDTO.fechaFin() != null) {
-                    jornadaEncontrada.setFechaFin(jornadaDTO.fechaFin());
+                if (preguntaDTO.imageUrl() != null) {
+                  preguntaEncontrada.setImagenUrl(preguntaDTO.imageUrl());
                 }
-                if (jornadaDTO.observaciones() != null) {
-                    jornadaEncontrada.setObservaciones(jornadaDTO.observaciones());
+                if (preguntaDTO.observaciones() != null) {
+                    preguntaEncontrada.setObservaciones(preguntaDTO.observaciones());
                 }
 
-                jornadaDI.update(jornadaEncontrada);
+                preguntaDI.update(preguntaEncontrada);
                 return Response.ok()
                         .location(uriInfo.getAbsolutePathBuilder().build())
                         .build();
@@ -213,3 +207,5 @@ public class JornadaResource implements Serializable {
             
     
 }
+    
+

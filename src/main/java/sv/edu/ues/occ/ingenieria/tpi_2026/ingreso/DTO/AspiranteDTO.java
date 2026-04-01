@@ -16,6 +16,12 @@ public record AspiranteDTO(Long idAspirante,
         String observaciones
         ) {
     
+    public AspiranteDTO{
+        if (nombres==null || apellidos==null || fechaNacimiento==null || correo==null || fechaCreacion==null) {
+          throw new IllegalArgumentException("Todos los campos deben de ser validos");
+        }
+    }
+    
  // este con
     public AspiranteDTO(Aspirante aspirante ){
         this(
@@ -29,5 +35,16 @@ public record AspiranteDTO(Long idAspirante,
         );
     }
     
+    public Aspirante toEntity(){
+        Aspirante aspirante=new Aspirante();
+        aspirante.setIdAspirante(idAspirante);
+        aspirante.setNombres(nombres);
+        aspirante.setApellidos(apellidos);
+        aspirante.setFechaNacimiento(fechaNacimiento);
+        aspirante.setCorreo(correo);
+        aspirante.setFechaCreacion(fechaCreacion);
+        aspirante.setObservaciones(observaciones);
+        return aspirante;
+    }
 
 }
