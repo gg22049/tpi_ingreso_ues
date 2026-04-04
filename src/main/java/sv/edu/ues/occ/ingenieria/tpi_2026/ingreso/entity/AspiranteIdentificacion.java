@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -36,6 +37,7 @@ public class AspiranteIdentificacion implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected AspiranteIdentificacionPK aspiranteIdentificacionPK;
+    @NotNull
     @Size(max = 32)
     @Column(name = "valor")
     private String valor;
@@ -53,6 +55,13 @@ public class AspiranteIdentificacion implements Serializable {
     private TipoIdentificacion tipoIdentificacion;
 
     public AspiranteIdentificacion() {
+    }
+
+    public AspiranteIdentificacion(AspiranteIdentificacionPK aspiranteIdentificacionPK, String valor, String imagenUrl, String observaciones) {
+        this.aspiranteIdentificacionPK = aspiranteIdentificacionPK;
+        this.valor = valor;
+        this.imagenUrl = imagenUrl;
+        this.observaciones = observaciones;
     }
 
     public AspiranteIdentificacion(AspiranteIdentificacionPK aspiranteIdentificacionPK) {

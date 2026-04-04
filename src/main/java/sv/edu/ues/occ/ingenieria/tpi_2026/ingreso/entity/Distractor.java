@@ -49,6 +49,7 @@ public class Distractor implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "valor")
     private String valor;
+    @NotNull
     @Column(name = "activo")
     private Boolean activo;
     @Size(max = 64)
@@ -71,6 +72,13 @@ public class Distractor implements Serializable {
     public Distractor(Long idDistractor, String valor) {
         this.idDistractor = idDistractor;
         this.valor = valor;
+    }
+
+    public Distractor(Long idDistractor, String valor, Boolean activo, String imagenUrl) {
+        this.idDistractor = idDistractor;
+        this.valor = valor;
+        this.activo = activo;
+        this.imagenUrl = imagenUrl;
     }
 
     public Long getIdDistractor() {

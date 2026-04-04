@@ -67,6 +67,12 @@ public class PreguntaDistractor implements Serializable {
         this.preguntaDistractorPK = new PreguntaDistractorPK(idPregunta, idDistractor);
     }
 
+    public PreguntaDistractor(PreguntaDistractorPK preguntaDistractorPK, boolean correcto, String observaciones) {
+        this.preguntaDistractorPK = preguntaDistractorPK;
+        this.correcto = correcto;
+        this.observaciones = observaciones;
+    }
+
     public PreguntaDistractorPK getPreguntaDistractorPK() {
         return preguntaDistractorPK;
     }

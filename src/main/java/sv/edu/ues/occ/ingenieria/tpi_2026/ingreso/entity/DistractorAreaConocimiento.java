@@ -51,6 +51,11 @@ public class DistractorAreaConocimiento implements Serializable {
         this.distractorAreaConocimientoPK = distractorAreaConocimientoPK;
     }
 
+    public DistractorAreaConocimiento(DistractorAreaConocimientoPK distractorAreaConocimientoPK, String observaciones) {
+        this.distractorAreaConocimientoPK = distractorAreaConocimientoPK;
+        this.observaciones = observaciones;
+    }
+
     public DistractorAreaConocimiento(long idDistractor, int idAreaConocimiento) {
         this.distractorAreaConocimientoPK = new DistractorAreaConocimientoPK(idDistractor, idAreaConocimiento);
     }

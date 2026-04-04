@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -49,7 +50,7 @@ public class AspiranteOpcion implements Serializable {
     @Column(name = "id_aspirante_opcion")
     private Long idAspiranteOpcion;
     @Basic(optional = false)
-    @NotNull
+    @NotBlank
     @Size(min = 1, max = 124)
     @Column(name = "id_opcion")
     private String idOpcion;
@@ -75,6 +76,13 @@ public class AspiranteOpcion implements Serializable {
         this.idAspiranteOpcion = idAspiranteOpcion;
         this.idOpcion = idOpcion;
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public AspiranteOpcion(Long idAspiranteOpcion, String idOpcion, Date fechaCreacion, Aspirante idAspirante) {
+        this.idAspiranteOpcion = idAspiranteOpcion;
+        this.idOpcion = idOpcion;
+        this.fechaCreacion = fechaCreacion;
+        this.idAspirante = idAspirante;
     }
 
     public Long getIdAspiranteOpcion() {

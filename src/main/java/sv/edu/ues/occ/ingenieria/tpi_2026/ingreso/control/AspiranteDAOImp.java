@@ -9,6 +9,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 
 /**
@@ -17,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
  */
 @Stateless
 @LocalBean
-public class AspiranteDAOImp extends AbstractCRUD<Aspirante> implements Serializable {
+public class AspiranteDAOImp extends AbstractCRUD<Aspirante, AspiranteDTO> implements Serializable {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -29,6 +30,40 @@ public class AspiranteDAOImp extends AbstractCRUD<Aspirante> implements Serializ
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public Aspirante toEntity(AspiranteDTO dto) throws IllegalStateException {
+
+        try {
+            return new Aspirante(
+                    dto.idAspirante(),
+                    dto.nombres(),
+                    dto.apellidos(),
+                    dto.fechaNacimiento(),
+                    dto.correo(),
+                    dto.observaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando dto a entity");
+        }
+    }
+
+    @Override
+    public AspiranteDTO toDto(Aspirante entity) throws IllegalStateException {
+        try {
+            return new AspiranteDTO(
+                    entity.getIdAspirante(),
+                    entity.getNombres(),
+                    entity.getApellidos(),
+                    entity.getFechaNacimiento(),
+                    entity.getCorreo(),
+                    entity.getFechaCreacion(),
+                    entity.getObservaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando entidad a dto");
+        }
     }
 
 }

@@ -77,6 +77,14 @@ public class Pregunta implements Serializable {
         this.valor = valor;
     }
 
+    public Pregunta(Long idPregunta, String valor, Boolean activo, String imagenUrl, String observaciones) {
+        this.idPregunta = idPregunta;
+        this.valor = valor;
+        this.activo = activo;
+        this.imagenUrl = imagenUrl;
+        this.observaciones = observaciones;
+    }
+
     public Long getIdPregunta() {
         return idPregunta;
     }

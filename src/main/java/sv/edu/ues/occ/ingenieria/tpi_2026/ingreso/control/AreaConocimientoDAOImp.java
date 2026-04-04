@@ -8,7 +8,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 
 /**
@@ -17,7 +17,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
  */
 @Stateless
 @LocalBean
-public class AreaConocimientoDAOImp extends AbstractCRUD<AreaConocimiento> implements Serializable {
+public class AreaConocimientoDAOImp extends AbstractCRUD<AreaConocimiento, AreaConocimientoDTO> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -28,7 +28,37 @@ public class AreaConocimientoDAOImp extends AbstractCRUD<AreaConocimiento> imple
 
     @Override
     public EntityManager getEntityManager() {
-        return em;
+        return this.em;
+    }
+
+    @Override
+    public AreaConocimiento toEntity(AreaConocimientoDTO dto) throws IllegalStateException {
+        try {
+            return new AreaConocimiento(
+                    dto.idAreaConocimiento(),
+                    dto.nombre(),
+                    dto.descripcion(),
+                    dto.activo(),
+                    dto.idAreaConocimientoPadre() == null ? null : em.find(AreaConocimiento.class, dto.idAreaConocimientoPadre())
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando dto a entity");
+        }
+    }
+
+    @Override
+    public AreaConocimientoDTO toDto(AreaConocimiento entity) throws IllegalStateException {
+        try {
+            return new AreaConocimientoDTO(
+                    entity.getIdAreaConocimiento(),
+                    entity.getNombre(),
+                    entity.getDescripcion(),
+                    entity.getActivo(),
+                    entity.getIdAreaConocimientoPadre() == null ? null : entity.getIdAreaConocimientoPadre().getIdAreaConocimiento()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando entidad a dto");
+        }
     }
 
 }

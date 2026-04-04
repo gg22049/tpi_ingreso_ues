@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO;
+package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.QueryParam;
 
 /**
@@ -15,10 +15,13 @@ import jakarta.ws.rs.QueryParam;
 @ValidRange
 public class FindRangeParamDTO {
 
-    @Min(0)
+    @NotNull
+    @Size(min = 1, max = Integer.MAX_VALUE)
     @QueryParam("offset")
     private Integer offset;
 
+    @NotNull
+    @Size(min = 1, max = Integer.MAX_VALUE)
     @QueryParam("limit")
     private Integer limit;
 

@@ -58,10 +58,10 @@ public class Prueba implements Serializable {
     @Size(min = 1, max = 124)
     @Column(name = "nombre")
     private String nombre;
+    @NotNull
     @Size(max = 2147483647)
     @Column(name = "indicaciones")
     private String indicaciones;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "puntaje_maximo")
@@ -70,13 +70,14 @@ public class Prueba implements Serializable {
     @NotNull
     @Column(name = "nota_aprobacion")
     private BigDecimal notaAprobacion;
+    @NotNull
     @Column(name = "duracion")
     private Integer duracion;
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
+    @NotNull
     @JoinColumn(name = "id_tipo_prueba", referencedColumnName = "id_tipo_prueba")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TipoPrueba idTipoPrueba;
@@ -100,6 +101,17 @@ public class Prueba implements Serializable {
         this.puntajeMaximo = puntajeMaximo;
         this.notaAprobacion = notaAprobacion;
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public Prueba(Long idPrueba, String nombre, String indicaciones, BigDecimal puntajeMaximo, BigDecimal notaAprobacion, Integer duracion, Date fechaCreacion, TipoPrueba idTipoPrueba) {
+        this.idPrueba = idPrueba;
+        this.nombre = nombre;
+        this.indicaciones = indicaciones;
+        this.puntajeMaximo = puntajeMaximo;
+        this.notaAprobacion = notaAprobacion;
+        this.duracion = duracion;
+        this.fechaCreacion = fechaCreacion;
+        this.idTipoPrueba = idTipoPrueba;
     }
 
     public Long getIdPrueba() {

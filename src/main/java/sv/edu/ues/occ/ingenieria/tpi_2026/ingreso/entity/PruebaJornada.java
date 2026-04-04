@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class PruebaJornada implements Serializable {
     @EmbeddedId
     protected PruebaJornadaPK pruebaJornadaPK;
     @Column(name = "fecha_creacion")
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Size(max = 2147483647)
@@ -60,6 +62,12 @@ public class PruebaJornada implements Serializable {
 
     public PruebaJornada(long idPrueba, long idJornada) {
         this.pruebaJornadaPK = new PruebaJornadaPK(idPrueba, idJornada);
+    }
+
+    public PruebaJornada(PruebaJornadaPK pruebaJornadaPK, Date fechaCreacion, String observaciones) {
+        this.pruebaJornadaPK = pruebaJornadaPK;
+        this.fechaCreacion = fechaCreacion;
+        this.observaciones = observaciones;
     }
 
     public PruebaJornadaPK getPruebaJornadaPK() {

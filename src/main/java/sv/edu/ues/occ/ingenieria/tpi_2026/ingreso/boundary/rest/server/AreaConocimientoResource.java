@@ -22,23 +22,23 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
-import java.io.Serializable;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.FindRangeParamDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.ErrorRecord;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
 
 /**
  *
  * @author caesar
  */
 @Path("area-conocimiento")
-public class AreaConocimientoResource implements Serializable {
+public class AreaConocimientoResource {
 
     @Inject
-    AreaConocimientoDAOImp DAOImp;
+    AreaConocimientoDAOImp DI;
 
     /**
      * Crea un AreaConocimiento. - POST /area-conocimiento
@@ -55,39 +55,42 @@ public class AreaConocimientoResource implements Serializable {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@Valid AreaConocimiento entity, @Context UriInfo uriInfo) throws DomainException {
+    public Response create(@Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
-            DAOImp.create(entity);
+            AreaConocimiento entity = DI.toEntity(dto);
+            DI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
-            return Response.created(uriBuilder.build()).build();
+            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento().toString()));
+            return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
     }
 
     /**
-     * // * Retorna un AreaConocimiento segun id. - GET /examen-jornada/{id} //
-     * * // * @param idAreaConocimiento Id para realizar la busqueda. //
+     * Retorna un AreaConocimiento segun id. - GET /area-conocimiento/{id}
+     *
+     * @param idAreaConocimiento Id para realizar la busqueda.
      *
      *
-     * @return // * <ul>
-     * // * <li>200 Ok + Json de la entidad.</li>
-     * // * <li>400 Bad Request Por parametro nulo.</li>
-     * // * <li>404 Not Found + Id invalido.</li>
-     * // * <li>500 Internal Server Error en excepciones internas.</li>
-     * // * </ul> //
+     * @return
+     * <ul>
+     * <li>200 Ok + Json de la entidad.</li>
+     * <li>400 Bad Request Por parametro invalido.</li>
+     * <li>404 Not Found + Id no encontrado.</li>
+     * <li>500 Internal Server Error en excepciones internas.</li>
+     * </ul>
      */
     @GET
     @Path("/{id:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) throws DomainException {
         try {
-            AreaConocimiento found = DAOImp.findById(id);
+            AreaConocimiento found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)
-                        .entity(new ErrorRecord(
+                        .entity(new ErrorDetailDTO(
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
@@ -98,7 +101,7 @@ public class AreaConocimientoResource implements Serializable {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-            return Response.ok(found, MediaType.APPLICATION_JSON).build();
+            return Response.ok(DI.toDto(found), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
@@ -106,23 +109,22 @@ public class AreaConocimientoResource implements Serializable {
 
     /**
      * Retorna una lista de AreaConocimiento segun el rango especificado. - GET
-     * /facturas/detalle-sala?offset={offset}&limit={limit}
+     * /area-conocimiento?offset={offset}&limit={limit}
      *
-     * @param offset índice inicial (>= 0). Default: 0
-     * @param limit tamaño de página (1..50). Default: 50
+     * @param offset índice inicial (>= 0).
+     * @param limit tamaño de página (>= offset).
      * @return
      * <ul>
      * <li>200 Ok + Json con la lista.</li>
-     * <li>400 Bad Request Si offset < 0, limit
-     * > 50 o limit < offset.</li> <
-     * li>500 Internal Server Error en excepciones internas.</li>
+     * <li>400 Bad Request Si limit mayor que offset.</li>
+     * <li>500 Internal Server Error en excepciones internas.</li>
      * </ul>
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
         try {
-            List<AreaConocimiento> resultList = DAOImp.findByRange(params.getOffset(), params.getLimit());
+            List<AreaConocimientoDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
             return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -130,15 +132,15 @@ public class AreaConocimientoResource implements Serializable {
     }
 
     /**
-     * Actualizar un AreaConocimiento. - PATCH /examen-jornada
+     * Actualiza un AreaConocimiento. - put /area-conocimiento/{id}
      *
-     * @param ej Entidad modificada.
+     * @param id Id de entidad modificada.
+     * @param dto Entidad modificada.
      * @return
      * <ul>
      * <li>204 No Content Entidad actualizada.</li>
-     * <li>400 Bad Request Si el payload es nulo o alguno de sus valores
-     * obligatorios.</li>
-     * <li>422 Unprocessable Content con parametros invalidos.</li>
+     * <li>400 Bad Request Payload invalido o id invalido.</li>
+     * <li>404 Not Found + Id no encontrado.</li>
      * <li>500 Internal Server Error en excepciones internas.</li>
      * </ul>
      */
@@ -146,52 +148,63 @@ public class AreaConocimientoResource implements Serializable {
     @Path("/{id:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") Integer id, @Valid AreaConocimiento entity, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("id") @Min(1) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DAOImp.findById(id);
+            AreaConocimiento found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)
-                        .entity(
-                                new ErrorRecord(
-                                        null,
-                                        ErrorType.NO_MATCH_ID.toString(),
-                                        404,
-                                        "No entity with id: " + id,
-                                        uriInfo.getAbsolutePath().toString(),
-                                        null
-                                )
+                        .entity(new ErrorDetailDTO(
+                                null,
+                                ErrorType.NO_MATCH_ID.toString(),
+                                404,
+                                "No entity with id: " + id,
+                                uriInfo.getAbsolutePath().toString(),
+                                null
+                        )
                         ).build();
             }
+            AreaConocimiento entity = DI.toEntity(dto);
             entity.setIdAreaConocimiento(id);
-            DAOImp.update(entity);
+            DI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
     }
 
+    /**
+     * Elimina un AreaConocimiento. - DELETE /area-conocimiento/{id}
+     *
+     * @param id Id de entidad modificada.
+     * @return
+     * <ul>
+     * <li>204 No Content Entidad actualizada.</li>
+     * <li>400 Bad Request Id invalido.</li>
+     * <li>404 Not Found + Id no encontrado.</li>
+     * <li>500 Internal Server Error en excepciones internas.</li>
+     * </ul>
+     */
     @DELETE
     @Path("/{id:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DAOImp.findById(id);
+            AreaConocimiento found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)
-                        .entity(
-                                new ErrorRecord(
-                                        null,
-                                        ErrorType.NO_MATCH_ID.toString(),
-                                        404,
-                                        "No entity with id: " + id,
-                                        uriInfo.getAbsolutePath().toString(),
-                                        null
-                                )
+                        .entity(new ErrorDetailDTO(
+                                null,
+                                ErrorType.NO_MATCH_ID.toString(),
+                                404,
+                                "No entity with id: " + id,
+                                uriInfo.getAbsolutePath().toString(),
+                                null
+                        )
                         ).build();
             }
-            DAOImp.delete(found);
+            DI.delete(found);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);

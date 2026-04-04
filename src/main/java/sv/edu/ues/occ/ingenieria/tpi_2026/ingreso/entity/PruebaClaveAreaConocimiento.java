@@ -15,6 +15,8 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
@@ -41,7 +43,8 @@ public class PruebaClaveAreaConocimiento implements Serializable {
     protected PruebaClaveAreaConocimientoPK pruebaClaveAreaConocimientoPK;
     @Column(name = "cantidad")
     private Integer cantidad;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Min(value = 0)
+    @Max(value = 100)
     @Column(name = "porcentaje")
     private BigDecimal porcentaje;
     @JoinColumn(name = "id_area_conocimiento", referencedColumnName = "id_area_conocimiento", insertable = false, updatable = false)
@@ -62,6 +65,12 @@ public class PruebaClaveAreaConocimiento implements Serializable {
 
     public PruebaClaveAreaConocimiento(long idPruebaClave, int idAreaConocimiento) {
         this.pruebaClaveAreaConocimientoPK = new PruebaClaveAreaConocimientoPK(idPruebaClave, idAreaConocimiento);
+    }
+
+    public PruebaClaveAreaConocimiento(PruebaClaveAreaConocimientoPK pruebaClaveAreaConocimientoPK, Integer cantidad, BigDecimal porcentaje) {
+        this.pruebaClaveAreaConocimientoPK = pruebaClaveAreaConocimientoPK;
+        this.cantidad = cantidad;
+        this.porcentaje = porcentaje;
     }
 
     public PruebaClaveAreaConocimientoPK getPruebaClaveAreaConocimientoPK() {

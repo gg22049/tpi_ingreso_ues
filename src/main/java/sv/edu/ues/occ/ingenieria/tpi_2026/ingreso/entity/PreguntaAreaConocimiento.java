@@ -55,6 +55,11 @@ public class PreguntaAreaConocimiento implements Serializable {
         this.preguntaAreaConocimientoPK = new PreguntaAreaConocimientoPK(idPregunta, idAreaConocimiento);
     }
 
+    public PreguntaAreaConocimiento(PreguntaAreaConocimientoPK preguntaAreaConocimientoPK, String observaciones) {
+        this.preguntaAreaConocimientoPK = preguntaAreaConocimientoPK;
+        this.observaciones = observaciones;
+    }
+
     public PreguntaAreaConocimientoPK getPreguntaAreaConocimientoPK() {
         return preguntaAreaConocimientoPK;
     }

@@ -9,6 +9,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @param <T> Parametro generico a suministrar.
  * @author caesar
  */
-public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
+public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable {
 
     private final Class<T> tipoDato;
 
@@ -29,6 +30,22 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
      * @return Retorna un Entity Manager.
      */
     public abstract EntityManager getEntityManager();
+
+    /**
+     * Metodo para obtener el entity de un dto.
+     *
+     * @param dto DTO a transdormar.
+     * @return Entity transformada y con relaciones resueltas.
+     */
+    public abstract T toEntity(U dto);
+
+    /**
+     * Metodo para obtener un dto de una entidad.
+     *
+     * @param entity Entity a transformar.
+     * @return DTO plano transformado.
+     */
+    public abstract U toDto(T entity);
 
     /**
      * Metodo constructor de la clase abstracta.
@@ -46,7 +63,6 @@ public abstract class AbstractCRUD<T> implements DefaultDAO<T> {
      * @throws IllegalStateException En caso de error en el proceso.
      * @throws IllegalArgumentException si la entidad es invalida.
      */
-    @Override
     public void create(final T entity) throws IllegalStateException, IllegalArgumentException {
         EntityManager em = null;
         if (entity == null) {

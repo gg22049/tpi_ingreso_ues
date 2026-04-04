@@ -40,7 +40,7 @@ public class AreaConocimientoResourceST extends STAbstract {
         // 400 - constraint validation
         String json = """
     {
-        "nombre": null
+      "activo":true
     }
     """;
         Response response = webTarget
@@ -69,7 +69,9 @@ public class AreaConocimientoResourceST extends STAbstract {
         // 201 - created
         json = """
     {
-        "nombre": "valido"
+        "nombre": "valido",
+        "activo":true
+               
     }
     """;
         response = webTarget
@@ -209,7 +211,8 @@ public class AreaConocimientoResourceST extends STAbstract {
         // 400 - constraint validation
         String json = """
     {
-        "nombre": null
+        "nombre": null,
+        "activo": false 
     }
     """;
         Response response = webTarget
@@ -237,12 +240,13 @@ public class AreaConocimientoResourceST extends STAbstract {
 
         // 404 - not found
         json = """
-    {
-        "nombre": "actualizado"
+        {
+            "nombre": "actualizado",
+            "activo": false
     }
     """;
         response = webTarget
-                .path(PATH + "/0")
+                .path(PATH + "/100")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(json, MediaType.APPLICATION_JSON));
 
@@ -262,7 +266,8 @@ public class AreaConocimientoResourceST extends STAbstract {
         // 204 - updated
         json = """
     {
-        "nombre":  "actualizado"
+        "nombre": "actualizado",
+        "activo": false
     }
     """;
         response = webTarget

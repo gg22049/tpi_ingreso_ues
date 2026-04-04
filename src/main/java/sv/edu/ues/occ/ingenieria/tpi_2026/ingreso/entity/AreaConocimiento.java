@@ -54,6 +54,7 @@ public class AreaConocimiento implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "descripcion")
     private String descripcion;
+    @NotNull
     @Column(name = "activo")
     private Boolean activo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
@@ -78,6 +79,14 @@ public class AreaConocimiento implements Serializable {
     public AreaConocimiento(Integer idAreaConocimiento, String nombre) {
         this.idAreaConocimiento = idAreaConocimiento;
         this.nombre = nombre;
+    }
+
+    public AreaConocimiento(Integer idAreaConocimiento, String nombre, String descripcion, Boolean activo, AreaConocimiento areaConocimientoPadre) {
+        this.idAreaConocimiento = idAreaConocimiento;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.activo = activo;
+        this.idAreaConocimientoPadre = areaConocimientoPadre;
     }
 
     public Integer getIdAreaConocimiento() {

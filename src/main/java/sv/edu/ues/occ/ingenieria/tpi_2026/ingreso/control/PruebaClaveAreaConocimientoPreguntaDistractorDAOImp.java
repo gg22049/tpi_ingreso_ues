@@ -9,7 +9,9 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoPreguntaDistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPreguntaDistractor;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPreguntaDistractorPK;
 
 /**
  *
@@ -17,7 +19,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimi
  */
 @Stateless
 @LocalBean
-public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImp extends AbstractCRUD<PruebaClaveAreaConocimientoPreguntaDistractor> implements Serializable {
+public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImp extends AbstractCRUD<PruebaClaveAreaConocimientoPreguntaDistractor, PruebaClaveAreaConocimientoPreguntaDistractorDTO> implements Serializable {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -29,6 +31,35 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImp extends Abstrac
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public PruebaClaveAreaConocimientoPreguntaDistractor toEntity(PruebaClaveAreaConocimientoPreguntaDistractorDTO dto) throws IllegalStateException {
+        try {
+            return new PruebaClaveAreaConocimientoPreguntaDistractor(
+                    new PruebaClaveAreaConocimientoPreguntaDistractorPK(dto.idPruebaClave(), dto.idAreaConocimiento(), dto.idPregunta(), dto.idDistractor()),
+                    dto.fechaCracion(),
+                    dto.observaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando dto a entity");
+        }
+    }
+
+    @Override
+    public PruebaClaveAreaConocimientoPreguntaDistractorDTO toDto(PruebaClaveAreaConocimientoPreguntaDistractor entity) throws IllegalStateException {
+        try {
+            return new PruebaClaveAreaConocimientoPreguntaDistractorDTO(
+                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdPruebaClave(),
+                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdAreaConocimiento(),
+                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdPregunta(),
+                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdDistractor(),
+                    entity.getFechaCreacion(),
+                    entity.getObservaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando entidad a dto");
+        }
     }
 
 }

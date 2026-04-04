@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.ErrorRecord;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 
 /**
@@ -32,7 +32,7 @@ public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
     public Response toResponse(DomainException e) {
         String errorId = java.util.UUID.randomUUID().toString();
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
-        ErrorRecord error = new ErrorRecord(
+        ErrorDetailDTO error = new ErrorDetailDTO(
                 errorId,
                 ErrorType.INTERNAL_EXCEPTION.toString(),
                 500,

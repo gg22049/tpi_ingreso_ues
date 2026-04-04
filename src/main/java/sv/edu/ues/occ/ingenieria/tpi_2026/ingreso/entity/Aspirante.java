@@ -70,7 +70,7 @@ public class Aspirante implements Serializable {
     @Size(min = 1, max = 124)
     @Column(name = "correo")
     private String correo;
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Size(max = 2147483647)
@@ -94,6 +94,15 @@ public class Aspirante implements Serializable {
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;
         this.correo = correo;
+    }
+
+    public Aspirante(Long idAspirante, String nombres, String apellidos, Date fechaNacimiento, String correo, String observaciones) {
+        this.idAspirante = idAspirante;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.fechaNacimiento = fechaNacimiento;
+        this.correo = correo;
+        this.observaciones = observaciones;
     }
 
     public Long getIdAspirante() {

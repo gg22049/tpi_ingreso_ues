@@ -49,6 +49,7 @@ public class TipoPrueba implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "valor")
     private String valor;
+    @NotNull
     @Column(name = "activo")
     private Boolean activo;
     @Size(max = 2147483647)
@@ -67,6 +68,13 @@ public class TipoPrueba implements Serializable {
     public TipoPrueba(Integer idTipoPrueba, String valor) {
         this.idTipoPrueba = idTipoPrueba;
         this.valor = valor;
+    }
+
+    public TipoPrueba(Integer idTipoPrueba, String valor, Boolean activo, String observaciones) {
+        this.idTipoPrueba = idTipoPrueba;
+        this.valor = valor;
+        this.activo = activo;
+        this.observaciones = observaciones;
     }
 
     public Integer getIdTipoPrueba() {

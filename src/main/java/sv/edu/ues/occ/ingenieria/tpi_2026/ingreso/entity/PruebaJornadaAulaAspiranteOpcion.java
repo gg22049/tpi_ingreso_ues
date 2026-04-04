@@ -18,6 +18,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,6 +43,7 @@ public class PruebaJornadaAulaAspiranteOpcion implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PruebaJornadaAulaAspiranteOpcionPK pruebaJornadaAulaAspiranteOpcionPK;
+    @NotNull
     @Column(name = "activo")
     private Boolean activo;
     @Column(name = "fecha")
@@ -70,6 +72,12 @@ public class PruebaJornadaAulaAspiranteOpcion implements Serializable {
 
     public PruebaJornadaAulaAspiranteOpcion(long idPrueba, long idJornada, String idAula, long idAspiranteOpcion) {
         this.pruebaJornadaAulaAspiranteOpcionPK = new PruebaJornadaAulaAspiranteOpcionPK(idPrueba, idJornada, idAula, idAspiranteOpcion);
+    }
+
+    public PruebaJornadaAulaAspiranteOpcion(PruebaJornadaAulaAspiranteOpcionPK pruebaJornadaAulaAspiranteOpcionPK, Boolean activo, Date fecha) {
+        this.pruebaJornadaAulaAspiranteOpcionPK = pruebaJornadaAulaAspiranteOpcionPK;
+        this.activo = activo;
+        this.fecha = fecha;
     }
 
     public PruebaJornadaAulaAspiranteOpcionPK getPruebaJornadaAulaAspiranteOpcionPK() {

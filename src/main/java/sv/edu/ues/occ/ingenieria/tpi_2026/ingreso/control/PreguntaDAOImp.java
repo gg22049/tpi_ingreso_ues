@@ -9,7 +9,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.List;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 
 /**
@@ -18,7 +18,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
  */
 @Stateless
 @LocalBean
-public class PreguntaDAOImp extends AbstractCRUD<Pregunta> implements Serializable {
+public class PreguntaDAOImp extends AbstractCRUD<Pregunta, PreguntaDTO> implements Serializable {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,6 +30,36 @@ public class PreguntaDAOImp extends AbstractCRUD<Pregunta> implements Serializab
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public Pregunta toEntity(PreguntaDTO dto) throws IllegalStateException {
+        try {
+            return new Pregunta(
+                    dto.idPregunta(),
+                    dto.valor(),
+                    dto.activo(),
+                    dto.imageUrl(),
+                    dto.observaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando dto a entity");
+        }
+    }
+
+    @Override
+    public PreguntaDTO toDto(Pregunta entity) throws IllegalStateException {
+        try {
+            return new PreguntaDTO(
+                    entity.getIdPregunta(),
+                    entity.getValor(),
+                    entity.getActivo(),
+                    entity.getImagenUrl(),
+                    entity.getObservaciones()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando entidad a dto");
+        }
     }
 
 }

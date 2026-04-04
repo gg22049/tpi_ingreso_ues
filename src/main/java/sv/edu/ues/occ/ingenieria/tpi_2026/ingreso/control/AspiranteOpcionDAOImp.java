@@ -9,6 +9,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteOpcionDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 
 /**
@@ -17,7 +19,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
  */
 @Stateless
 @LocalBean
-public class AspiranteOpcionDAOImp extends AbstractCRUD<AspiranteOpcion> implements Serializable {
+public class AspiranteOpcionDAOImp extends AbstractCRUD<AspiranteOpcion, AspiranteOpcionDTO> implements Serializable {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -29,6 +31,34 @@ public class AspiranteOpcionDAOImp extends AbstractCRUD<AspiranteOpcion> impleme
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public AspiranteOpcion toEntity(AspiranteOpcionDTO dto) throws IllegalStateException {
+        try {
+            return new AspiranteOpcion(
+                    dto.idAspiranteOpcion(),
+                    dto.idOpcion(),
+                    dto.fechaCreacion(),
+                    em.find(Aspirante.class, dto.idAspirante())
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando dto a entity");
+        }
+    }
+
+    @Override
+    public AspiranteOpcionDTO toDto(AspiranteOpcion entity) throws IllegalStateException {
+        try {
+            return new AspiranteOpcionDTO(
+                    entity.getIdAspiranteOpcion(),
+                    entity.getIdOpcion(),
+                    entity.getFechaCreacion(),
+                    entity.getIdAspirante() == null ? null : entity.getIdAspirante().getIdAspirante()
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException("Error mapeando entidad a dto");
+        }
     }
 
 }

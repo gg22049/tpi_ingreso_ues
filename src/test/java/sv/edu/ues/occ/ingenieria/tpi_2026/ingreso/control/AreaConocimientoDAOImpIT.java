@@ -1,6 +1,5 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.it_base.ITAbstract;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;

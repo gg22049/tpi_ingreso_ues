@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record;
+package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import java.util.List;
  *
  * @author caesar
  */
-public record ErrorRecord(
+public record ErrorDetailDTO(
         String errorId,
         String type,
         int status,
         String detail,
         String instance,
-        List<IssueRecord> issues) {
+        List<IssueDTO> issues) {
 
 }

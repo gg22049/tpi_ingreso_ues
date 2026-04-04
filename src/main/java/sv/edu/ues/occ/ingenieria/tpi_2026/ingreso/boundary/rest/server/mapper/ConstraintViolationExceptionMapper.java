@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.ErrorRecord;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.record.IssueRecord;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.IssueDTO;
 
 /**
  *
@@ -32,17 +32,17 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
     public Response toResponse(ConstraintViolationException e) {
 
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        List<IssueRecord> issues = e
+        List<IssueDTO> issues = e
                 .getConstraintViolations()
                 .stream()
                 .map(v -> {
                     String field = v.getPropertyPath().toString();
                     field = field.substring(field.lastIndexOf(".") + 1);
-                    return new IssueRecord(field, v.getMessage());
+                    return new IssueDTO(field, v.getMessage());
                 })
                 .toList();
 
-        ErrorRecord error = new ErrorRecord(
+        ErrorDetailDTO error = new ErrorDetailDTO(
                 null,
                 ErrorType.VALIDATION_ERROR.toString(),
                 400,

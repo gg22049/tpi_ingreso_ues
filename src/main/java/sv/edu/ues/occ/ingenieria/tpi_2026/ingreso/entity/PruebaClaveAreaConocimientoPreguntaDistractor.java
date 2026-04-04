@@ -41,7 +41,7 @@ public class PruebaClaveAreaConocimientoPreguntaDistractor implements Serializab
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PruebaClaveAreaConocimientoPreguntaDistractorPK pruebaClaveAreaConocimientoPreguntaDistractorPK;
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Size(max = 2147483647)
@@ -70,6 +70,12 @@ public class PruebaClaveAreaConocimientoPreguntaDistractor implements Serializab
 
     public PruebaClaveAreaConocimientoPreguntaDistractorPK getPruebaClaveAreaConocimientoPreguntaDistractorPK() {
         return pruebaClaveAreaConocimientoPreguntaDistractorPK;
+    }
+
+    public PruebaClaveAreaConocimientoPreguntaDistractor(PruebaClaveAreaConocimientoPreguntaDistractorPK pruebaClaveAreaConocimientoPreguntaDistractorPK, Date fechaCreacion, String observaciones) {
+        this.pruebaClaveAreaConocimientoPreguntaDistractorPK = pruebaClaveAreaConocimientoPreguntaDistractorPK;
+        this.fechaCreacion = fechaCreacion;
+        this.observaciones = observaciones;
     }
 
     public void setPruebaClaveAreaConocimientoPreguntaDistractorPK(PruebaClaveAreaConocimientoPreguntaDistractorPK pruebaClaveAreaConocimientoPreguntaDistractorPK) {

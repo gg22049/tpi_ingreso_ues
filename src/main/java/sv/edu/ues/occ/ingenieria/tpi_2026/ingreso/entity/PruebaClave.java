@@ -67,6 +67,12 @@ public class PruebaClave implements Serializable {
         this.nombre = nombre;
     }
 
+    public PruebaClave(Long idPruebaClave, String nombre, Prueba idPrueba) {
+        this.idPruebaClave = idPruebaClave;
+        this.nombre = nombre;
+        this.idPrueba = idPrueba;
+    }
+
     public Long getIdPruebaClave() {
         return idPruebaClave;
     }

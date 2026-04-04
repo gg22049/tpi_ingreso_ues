@@ -46,12 +46,12 @@ public class PruebaJornadaAulaAspiranteOpcionExamen implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PruebaJornadaAulaAspiranteOpcionExamenPK pruebaJornadaAulaAspiranteOpcionExamenPK;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "resultado")
     private BigDecimal resultado;
     @Column(name = "fecha_resultado")
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaResultado;
     @Size(max = 64)
@@ -82,6 +82,14 @@ public class PruebaJornadaAulaAspiranteOpcionExamen implements Serializable {
 
     public PruebaJornadaAulaAspiranteOpcionExamen(long idPrueba, long idJornada, String idAula, long idAspiranteOpcion) {
         this.pruebaJornadaAulaAspiranteOpcionExamenPK = new PruebaJornadaAulaAspiranteOpcionExamenPK(idPrueba, idJornada, idAula, idAspiranteOpcion);
+    }
+
+    public PruebaJornadaAulaAspiranteOpcionExamen(PruebaJornadaAulaAspiranteOpcionExamenPK pruebaJornadaAulaAspiranteOpcionExamenPK, BigDecimal resultado, Date fechaResultado, String imagenUrl, String observaciones) {
+        this.pruebaJornadaAulaAspiranteOpcionExamenPK = pruebaJornadaAulaAspiranteOpcionExamenPK;
+        this.resultado = resultado;
+        this.fechaResultado = fechaResultado;
+        this.imagenUrl = imagenUrl;
+        this.observaciones = observaciones;
     }
 
     public PruebaJornadaAulaAspiranteOpcionExamenPK getPruebaJornadaAulaAspiranteOpcionExamenPK() {

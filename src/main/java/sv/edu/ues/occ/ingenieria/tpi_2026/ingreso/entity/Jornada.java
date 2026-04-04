@@ -85,6 +85,14 @@ public class Jornada implements Serializable {
         this.fechaFin = fechaFin;
     }
 
+    public Jornada(Long idJornada, String nombre, Date fechaInicio, Date fechaFin, String observaciones) {
+        this.idJornada = idJornada;
+        this.nombre = nombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.observaciones = observaciones;
+    }
+
     public Long getIdJornada() {
         return idJornada;
     }

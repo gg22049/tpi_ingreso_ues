@@ -1,7 +1,8 @@
-package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO;
+package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -13,19 +14,13 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
  */
 public record JornadaDTO(
         Long idJornada,
+        @NotBlank
         String nombre,
+        @NotNull
         Date fechaInicio,
+        @NotNull
         Date fechaFin,
         String observaciones
         ) {
 
-    public JornadaDTO(Jornada jornada) {
-        this(
-                jornada.getIdJornada(),
-                jornada.getNombre(),
-                jornada.getFechaInicio(),
-                jornada.getFechaFin(),
-                jornada.getObservaciones()
-        );
-    }
 }

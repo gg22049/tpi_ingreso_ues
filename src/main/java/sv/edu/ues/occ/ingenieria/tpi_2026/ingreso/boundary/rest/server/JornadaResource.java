@@ -25,7 +25,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaAulaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.DTO.JornadaDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 
 /**
  *

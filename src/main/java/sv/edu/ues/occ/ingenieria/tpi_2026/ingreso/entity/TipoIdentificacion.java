@@ -16,6 +16,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -42,6 +43,7 @@ public class TipoIdentificacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_tipo_identificacion")
     private Integer idTipoIdentificacion;
+    @NotBlank
     @Size(max = 64)
     @Column(name = "nombre")
     private String nombre;
@@ -56,6 +58,12 @@ public class TipoIdentificacion implements Serializable {
 
     public TipoIdentificacion(Integer idTipoIdentificacion) {
         this.idTipoIdentificacion = idTipoIdentificacion;
+    }
+
+    public TipoIdentificacion(Integer idTipoIdentificacion, String nombre, String observaciones) {
+        this.idTipoIdentificacion = idTipoIdentificacion;
+        this.nombre = nombre;
+        this.observaciones = observaciones;
     }
 
     public Integer getIdTipoIdentificacion() {

@@ -58,6 +58,11 @@ public class JornadaAula implements Serializable {
         this.jornadaAulaPK = new JornadaAulaPK(idJornada, idAula);
     }
 
+    public JornadaAula(JornadaAulaPK jornadaAulaPK, String observaciones) {
+        this.jornadaAulaPK = jornadaAulaPK;
+        this.observaciones = observaciones;
+    }
+
     public JornadaAulaPK getJornadaAulaPK() {
         return jornadaAulaPK;
     }
