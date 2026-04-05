@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public record AspiranteIdentificacionDTO(
         @NotNull
-        int idAspirante,
+        Long idAspirante,
         @NotNull
         int idTipoIdentificacion,
         @NotBlank

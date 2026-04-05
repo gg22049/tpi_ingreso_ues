@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.tipo_identificacion
 
 CREATE TABLE IF NOT EXISTS public.aspirante_identificacion
 (
-    id_aspirante INTEGER NOT NULL,
+    id_aspirante BIGINT NOT NULL,
     id_tipo_identificacion INTEGER NOT NULL,
     valor character varying(32) NOT NULL,
     imagen_url character varying(64) COLLATE pg_catalog."default",

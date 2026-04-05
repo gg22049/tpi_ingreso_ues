@@ -40,7 +40,7 @@ public class AspiranteOpcionDAOImp extends AbstractCRUD<AspiranteOpcion, Aspiran
                     dto.idAspiranteOpcion(),
                     dto.idOpcion(),
                     dto.fechaCreacion(),
-                    em.find(Aspirante.class, dto.idAspirante())
+                    dto.idAspirante() == null ? null : em.find(Aspirante.class, dto.idAspirante())
             );
         } catch (Exception e) {
             throw new IllegalStateException("Error mapeando dto a entity");

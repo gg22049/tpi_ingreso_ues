@@ -20,7 +20,7 @@ public class AspiranteIdentificacionPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_aspirante")
-    private int idAspirante;
+    private Long idAspirante;
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_tipo_identificacion")
@@ -29,16 +29,16 @@ public class AspiranteIdentificacionPK implements Serializable {
     public AspiranteIdentificacionPK() {
     }
 
-    public AspiranteIdentificacionPK(int idAspirante, int idTipoIdentificacion) {
+    public AspiranteIdentificacionPK(Long idAspirante, int idTipoIdentificacion) {
         this.idAspirante = idAspirante;
         this.idTipoIdentificacion = idTipoIdentificacion;
     }
 
-    public int getIdAspirante() {
+    public Long getIdAspirante() {
         return idAspirante;
     }
 
-    public void setIdAspirante(int idAspirante) {
+    public void setIdAspirante(Long idAspirante) {
         this.idAspirante = idAspirante;
     }
 
@@ -53,7 +53,7 @@ public class AspiranteIdentificacionPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idAspirante;
+        hash += (Long) idAspirante;
         hash += (int) idTipoIdentificacion;
         return hash;
     }

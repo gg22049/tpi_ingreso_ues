@@ -23,25 +23,25 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteOpcionDAOImp;
 
 /**
  *
  * @author caesar
  */
-@Path("area-conocimiento")
-public class AreaConocimientoResource {
+@Path("aspirante-opcion")
+public class AspiranteOpcionResource {
 
     @Inject
-    AreaConocimientoDAOImp DI;
+    AspiranteOpcionDAOImp DI;
 
     /**
-     * Crea un AreaConocimiento. - POST /area-conocimiento
+     * Crea un AspiranteOpcion. - POST /aspirante-opcion
      *
      * @param entity Json de la entidad a persistir
      * @param uriInfo Contexto de la Request para construir Location.
@@ -55,12 +55,12 @@ public class AreaConocimientoResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) throws DomainException {
+    public Response create(@Valid AspiranteOpcionDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
-            AreaConocimiento entity = DI.toEntity(dto);
+            AspiranteOpcion entity = DI.toEntity(dto);
             DI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento().toString()));
+            uriBuilder.path(String.valueOf(entity.getIdAspiranteOpcion().toString()));
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -68,9 +68,9 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Retorna un AreaConocimiento segun id. - GET /area-conocimiento/{id}
+     * Retorna un AspiranteOpcion segun id. - GET /aspirante-opcion/{id}
      *
-     * @param idAreaConocimiento Id para realizar la busqueda.
+     * @param idAspiranteOpcion Id para realizar la busqueda.
      *
      *
      * @return
@@ -84,9 +84,9 @@ public class AreaConocimientoResource {
     @GET
     @Path("/{id:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(@PathParam("id") @Min(1L) @Max(Long.MAX_VALUE) Long id, @Context UriInfo uriInfo) throws DomainException {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteOpcion found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)
@@ -94,7 +94,7 @@ public class AreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: " + id,
+                                "AspiranteOpcion with id " + id + " not found",
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -108,8 +108,8 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Retorna una lista de AreaConocimiento segun el rango especificado. - GET
-     * /area-conocimiento?offset={offset}&limit={limit}
+     * Retorna una lista de AspiranteOpcion segun el rango especificado. - GET
+     * /aspirante-opcion?offset={offset}&limit={limit}
      *
      * @param offset índice inicial (>= 0).
      * @param limit tamaño de página (>= offset).
@@ -124,7 +124,7 @@ public class AreaConocimientoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
         try {
-            List<AreaConocimientoDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
+            List<AspiranteOpcionDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
             return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -132,7 +132,7 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Actualiza un AreaConocimiento. - put /area-conocimiento/{id}
+     * Actualiza un AspiranteOpcion. - put /aspirante-opcion/{id}
      *
      * @param id Id de entidad modificada.
      * @param dto Entidad modificada.
@@ -148,9 +148,9 @@ public class AreaConocimientoResource {
     @Path("/{id:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") @Min(1) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("id") @Min(1L) @Max(Long.MAX_VALUE) Long id, @Valid AspiranteOpcionDTO dto, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteOpcion found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)
@@ -164,8 +164,8 @@ public class AreaConocimientoResource {
                         )
                         ).build();
             }
-            AreaConocimiento entity = DI.toEntity(dto);
-            entity.setIdAreaConocimiento(id);
+            AspiranteOpcion entity = DI.toEntity(dto);
+            entity.setIdAspiranteOpcion(id);
             DI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
@@ -174,7 +174,7 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Elimina un AreaConocimiento. - DELETE /area-conocimiento/{id}
+     * Elimina un AspiranteOpcion. - DELETE /aspirante-opcion/{id}
      *
      * @param id Id de entidad modificada.
      * @return
@@ -188,9 +188,9 @@ public class AreaConocimientoResource {
     @DELETE
     @Path("/{id:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("id") @Min(1L) @Max(Long.MAX_VALUE) Long id, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteOpcion found = DI.findById(id);
             if (found == null) {
                 return Response
                         .status(404)

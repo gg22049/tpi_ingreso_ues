@@ -68,7 +68,7 @@ public class AspiranteIdentificacion implements Serializable {
         this.aspiranteIdentificacionPK = aspiranteIdentificacionPK;
     }
 
-    public AspiranteIdentificacion(int idAspirante, int idTipoIdentificacion) {
+    public AspiranteIdentificacion(Long idAspirante, int idTipoIdentificacion) {
         this.aspiranteIdentificacionPK = new AspiranteIdentificacionPK(idAspirante, idTipoIdentificacion);
     }
 

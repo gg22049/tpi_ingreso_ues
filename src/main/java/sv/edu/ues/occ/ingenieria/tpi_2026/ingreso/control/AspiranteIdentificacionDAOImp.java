@@ -45,15 +45,14 @@ public class AspiranteIdentificacionDAOImp extends AbstractCRUD<AspiranteIdentif
         } catch (Exception e) {
             throw new IllegalStateException("Error mapeando dto a entity");
         }
-
     }
 
     @Override
     public AspiranteIdentificacionDTO toDto(AspiranteIdentificacion entity) throws IllegalStateException {
         try {
             return new AspiranteIdentificacionDTO(
-                    entity.getAspiranteIdentificacionPK().getIdAspirante(),
-                    entity.getAspiranteIdentificacionPK().getIdTipoIdentificacion(),
+                    entity.getAspiranteIdentificacionPK() == null ? null : entity.getAspiranteIdentificacionPK().getIdAspirante(),
+                    entity.getAspiranteIdentificacionPK() == null ? null : entity.getAspiranteIdentificacionPK().getIdTipoIdentificacion(),
                     entity.getValor(),
                     entity.getImagenUrl(),
                     entity.getObservaciones()

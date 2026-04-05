@@ -6,8 +6,6 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -15,7 +13,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -23,27 +20,28 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteIdentificacionDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
 
 /**
  *
  * @author caesar
  */
-@Path("area-conocimiento")
-public class AreaConocimientoResource {
+@Path("aspirante-identificacion")
+public class AspiranteIdentificacionResource {
 
     @Inject
-    AreaConocimientoDAOImp DI;
+    AspiranteIdentificacionDAOImp DI;
 
     /**
-     * Crea un AreaConocimiento. - POST /area-conocimiento
+     * Crea un AspiranteIdentificacion. - POST /aspirante-identificacion
      *
-     * @param entity Json de la entidad a persistir
+     * @param dto Json de la entidad a persistir
      * @param uriInfo Contexto de la Request para construir Location.
      * @return
      * <ul>
@@ -55,12 +53,28 @@ public class AreaConocimientoResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) throws DomainException {
+    public Response create(@Valid AspiranteIdentificacionDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
-            AreaConocimiento entity = DI.toEntity(dto);
+            AspiranteIdentificacion entity = DI.toEntity(dto);
+            if (DI.findById(dto.idAspirante()) == null && DI.findById(dto.idTipoIdentificacion()) == null) {
+                return Response
+                        .status(404)
+                        .entity(new ErrorDetailDTO(
+                                null,
+                                ErrorType.NO_MATCH_ID.toString(),
+                                404,
+                                "No entity with id: IdAspirante:" + dto.idAspirante() + ", IdTipoIdentificacion: " + dto.idTipoIdentificacion(),
+                                uriInfo.getAbsolutePath().toString(),
+                                null
+                        )
+                        ).build();
+            }
             DI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento().toString()));
+            uriBuilder
+                    .queryParam("idAspirante", String.valueOf(dto.idAspirante()))
+                    .queryParam("idTipoAspirante", String.valueOf(dto.idTipoIdentificacion()))
+                    .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -68,9 +82,10 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Retorna un AreaConocimiento segun id. - GET /area-conocimiento/{id}
+     * Retorna un AspiranteIdentificacion segun id. - GET
+     * /aspirante-identificacion/{id}
      *
-     * @param idAreaConocimiento Id para realizar la busqueda.
+     * @param key Id para realizar la busqueda.
      *
      *
      * @return
@@ -82,11 +97,11 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @GET
-    @Path("/{id:\\d+}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(@Valid AspiranteIdentificacionPK key, @Context UriInfo uriInfo) throws DomainException {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteIdentificacion found = DI.findById(key);
             if (found == null) {
                 return Response
                         .status(404)
@@ -94,7 +109,7 @@ public class AreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: " + id,
+                                "No entity with id: IdAspirante:" + key.getIdAspirante() + ", IdTipoIdentificacion: " + key.getIdTipoIdentificacion(),
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -108,8 +123,8 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Retorna una lista de AreaConocimiento segun el rango especificado. - GET
-     * /area-conocimiento?offset={offset}&limit={limit}
+     * Retorna una lista de AspiranteIdentificacion segun el rango especificado.
+     * - GET /aspirante-identificacion?offset={offset}&limit={limit}
      *
      * @param offset índice inicial (>= 0).
      * @param limit tamaño de página (>= offset).
@@ -124,7 +139,7 @@ public class AreaConocimientoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
         try {
-            List<AreaConocimientoDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
+            List<AspiranteIdentificacionDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
             return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -132,9 +147,9 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Actualiza un AreaConocimiento. - put /area-conocimiento/{id}
+     * Actualiza un AspiranteIdentificacion. - put
+     * /aspirante-identificacion/{id}
      *
-     * @param id Id de entidad modificada.
      * @param dto Entidad modificada.
      * @return
      * <ul>
@@ -145,12 +160,11 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @PUT
-    @Path("/{id:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") @Min(1) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
+    public Response update(@Valid AspiranteIdentificacionDTO dto, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteIdentificacion found = DI.findById(new AspiranteIdentificacionPK(dto.idAspirante(), dto.idTipoIdentificacion()));
             if (found == null) {
                 return Response
                         .status(404)
@@ -158,14 +172,13 @@ public class AreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: " + id,
+                                "No entity with id: IdAspirante:" + dto.idAspirante() + ", IdTipoIdentificacion: " + dto.idTipoIdentificacion(),
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
                         ).build();
             }
-            AreaConocimiento entity = DI.toEntity(dto);
-            entity.setIdAreaConocimiento(id);
+            AspiranteIdentificacion entity = DI.toEntity(dto);
             DI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
@@ -174,9 +187,10 @@ public class AreaConocimientoResource {
     }
 
     /**
-     * Elimina un AreaConocimiento. - DELETE /area-conocimiento/{id}
+     * Elimina un AspiranteIdentificacion. - DELETE
+     * /aspirante-identificacion/{id}
      *
-     * @param id Id de entidad modificada.
+     * @param key Id de entidad modificada.
      * @return
      * <ul>
      * <li>204 No Content Entidad actualizada.</li>
@@ -186,11 +200,14 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @DELETE
-    @Path("/{id:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) {
+    public Response delete(@Valid AspiranteIdentificacionPK key, @Context UriInfo uriInfo) {
         try {
-            AreaConocimiento found = DI.findById(id);
+            AspiranteIdentificacion found = DI.findById(
+                    new AspiranteIdentificacionPK(
+                            key.getIdAspirante(),
+                            key.getIdTipoIdentificacion())
+            );
             if (found == null) {
                 return Response
                         .status(404)
@@ -198,7 +215,7 @@ public class AreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: " + id,
+                                "No entity with id: IdAspirante:" + key.getIdAspirante() + ", IdTipoIdentificacion: " + key.getIdTipoIdentificacion(),
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )

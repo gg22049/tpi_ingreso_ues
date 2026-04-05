@@ -16,9 +16,6 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
  * @author usermein lo dejare aqui por si acaso al ser tabla intermedia
  */
 public record AspiranteOpcionDTO(
-        @NotNull
-        @Min(1L)
-        @Max(Long.MAX_VALUE)
         Long idAspiranteOpcion,
         @NotBlank
         String idOpcion,
