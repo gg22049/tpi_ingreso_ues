@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
@@ -18,47 +22,41 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaAulaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.TipoPruebaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoPruebaDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
 
 /**
  *
  * @author usermein
  */
-@Path("jornada")
-public class JornadaResource implements Serializable {
+@Path("tipoPrueba")
+public class TipoPruebaResource {
 
     @Inject
-    JornadaDAOImp jornadaDI;
-    @Inject
-    JornadaAulaDAOImp jornadaAulaDI;
-    @Inject
-    PruebaJornadaDAOImp pruebaJornadaDI;
+    TipoPruebaDAOImp tipoPruebaDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid JornadaDTO jornadaDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid TipoPruebaDTO tipoPruebaDTO, UriInfo uriInfo) throws DomainException {
         try {
-
-            Jornada nuevaJornada = jornadaDI.toEntity(jornadaDTO);
-
-            jornadaDI.create(nuevaJornada);
+            TipoPrueba nuevaTipoPrueba = new TipoPrueba();
+            nuevaTipoPrueba.setValor(tipoPruebaDTO.valor());
+            nuevaTipoPrueba.setActivo(tipoPruebaDTO.activo());
+            nuevaTipoPrueba.setObservaciones(tipoPruebaDTO.observaciones());
+            tipoPruebaDI.create(nuevaTipoPrueba);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
-                    .path(String.valueOf(nuevaJornada.getIdJornada()))
+                    .path(String.valueOf(nuevaTipoPrueba.getIdTipoPrueba()))
                     .build();
             return Response.created(uriCreada)
-                    .entity(jornadaDTO)
+                    .entity(tipoPruebaDTO)
                     .build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -66,23 +64,23 @@ public class JornadaResource implements Serializable {
     }
 
     @DELETE
-    @Path("idJornada:\\d+")
+    @Path("idTipoPrueba:\\d+")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idJornada") @Min(1) @Max(Integer.MAX_VALUE) Integer idJornada, @Context UriInfo uriInfo) throws DomainException {
+    public Response delete(@PathParam("idTipoPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoPrueba, @Context UriInfo uriInfo) throws DomainException {
         try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
+            TipoPrueba tipoPrueba = tipoPruebaDI.findById(idTipoPrueba);
+            if (tipoPrueba == null) {
                 return Response
                         .status(404)
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Jornada con ID: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
+                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-            jornadaDI.delete(jornada);
+            tipoPruebaDI.delete(tipoPrueba);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -90,26 +88,26 @@ public class JornadaResource implements Serializable {
     }
 
     @GET
-    @Path("idJornada:\\d+")
+    @Path("idTipoPrueba:\\d+")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idJornada") @Min(1) @Max(Integer.MAX_VALUE) Integer idJornada,
+    public Response findByID(@PathParam("idTipoPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoPrueba,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
+            TipoPrueba tipoPrueba = tipoPruebaDI.findById(idTipoPrueba);
+            if (tipoPrueba == null) {
                 return Response
                         .status(404)
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Jornada con ID: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
+                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-            JornadaDTO jornadaDTO = jornadaDI.toDto(jornada);
-            return Response.ok(jornadaDTO, MediaType.APPLICATION_JSON).build();
+            TipoPruebaDTO tipoPruebaDTO = tipoPruebaDI.toDto(tipoPrueba);
+            return Response.ok(tipoPruebaDTO, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
@@ -119,14 +117,14 @@ public class JornadaResource implements Serializable {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
         try {
-            List<Jornada> listaJornadas = jornadaDI.findByRange(params.getOffset(), params.getLimit());
-            List<JornadaDTO> listaJornadasDTO = listaJornadas
+            List<TipoPrueba> listaAspirante = tipoPruebaDI.findByRange(params.getOffset(), params.getLimit());
+            List<TipoPruebaDTO> listaTipoPruebaDTOs = listaAspirante
                     .stream()
-                    .map(jornada -> jornadaDI.toDto(jornada))
+                    .map(tipoPrueba -> tipoPruebaDI.toDto(tipoPrueba))
                     .collect(Collectors.toList());
             return Response
-                    .ok(listaJornadasDTO)
-                    .header(HeaderName.TOTAL_RECORDS.toString(), listaJornadasDTO.size())
+                    .ok(listaTipoPruebaDTOs)
+                    .header(HeaderName.TOTAL_RECORDS.toString(), listaTipoPruebaDTOs.size())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
 
@@ -136,39 +134,37 @@ public class JornadaResource implements Serializable {
     }
 
     @PUT
-    @Path("/{idJornada:\\d+}")
+    @Path("/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idJornada") Integer idJornada,
-            JornadaDTO jornadaDTO,
+    public Response update(@PathParam("idTipoPrueba") Integer idTipoPrueba,
+            TipoPruebaDTO tipoPruebaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
+            TipoPrueba tipoPrueba = tipoPruebaDI.findById(idTipoPrueba);
+            if (tipoPrueba == null) {
                 return Response
                         .status(Response.Status.NOT_FOUND)
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Pregunta con ID: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
+                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-            
-            jornada.setNombre(jornadaDTO.nombre());
-            jornada.setFechaInicio(jornadaDTO.fechaInicio());
-            jornada.setFechaFin(jornadaDTO.fechaFin());
-            //estos if los puse por que en tal caso el JASON, llega a venir con campos nulos entonces
-            //los datos se van a actualizar
-            if (jornadaDTO.observaciones() != null) {
-                jornada.setObservaciones(jornadaDTO.observaciones());
+
+            tipoPrueba.setValor(tipoPruebaDTO.valor());
+            tipoPrueba.setActivo(tipoPruebaDTO.activo());
+
+            if (tipoPruebaDTO.observaciones() != null) {
+                tipoPrueba.setObservaciones(tipoPruebaDTO.observaciones());
             }
-           jornadaDI.update(jornada);
+            tipoPruebaDI.update(tipoPrueba);
             return Response.noContent().build();
+
         } catch (Exception e) {
             throw new DomainException(e);
         }
     }
-
 }

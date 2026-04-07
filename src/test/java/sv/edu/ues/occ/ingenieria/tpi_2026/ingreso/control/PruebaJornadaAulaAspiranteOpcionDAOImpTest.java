@@ -29,7 +29,7 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImpTest {
     @Test
     public void toEntityTest() {
         System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImpTest.toEntityTest");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
+        PruebaJornadaAulaAspiranteOpcionDI cut = new PruebaJornadaAulaAspiranteOpcionDI();
         assertThrows(IllegalStateException.class,
                 () -> {
                     cut.toEntity(null);
@@ -46,7 +46,7 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImpTest {
     @Test
     public void toDtoTest() {
         System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImpTest.toDtoTest");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
+        PruebaJornadaAulaAspiranteOpcionDI cut = new PruebaJornadaAulaAspiranteOpcionDI();
         assertThrows(IllegalStateException.class,
                 () -> {
                     cut.toDto(null);
