@@ -48,9 +48,10 @@ public class PreguntaAreaConocimientoDAOImp extends AbstractCRUD<PreguntaAreaCon
     @Override
     public PreguntaAreaConocimientoDTO toDto(PreguntaAreaConocimiento entity) {
         try {
+            PreguntaAreaConocimientoPK key = entity.getPreguntaAreaConocimientoPK();
             return new PreguntaAreaConocimientoDTO(
-                    entity.getPreguntaAreaConocimientoPK().getIdPregunta(),
-                    entity.getPreguntaAreaConocimientoPK().getIdAreaConocimiento(),
+                    key == null ? 0L : key.getIdPregunta(),
+                    key == null ? 0 : key.getIdAreaConocimiento(),
                     entity.getObservaciones()
             );
         } catch (Exception e) {

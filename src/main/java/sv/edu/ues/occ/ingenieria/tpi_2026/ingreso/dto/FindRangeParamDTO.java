@@ -13,15 +13,16 @@ import jakarta.ws.rs.QueryParam;
  * @author caesar
  */
 @ValidRange
+@ValidMaxRange
 public class FindRangeParamDTO {
 
     @NotNull
-    @Size(min = 1, max = Integer.MAX_VALUE)
+    @Size(min = 0, max = Integer.MAX_VALUE)
     @QueryParam("offset")
     private Integer offset;
 
     @NotNull
-    @Size(min = 1, max = Integer.MAX_VALUE)
+    @Size(min = 0, max = Integer.MAX_VALUE)
     @QueryParam("limit")
     private Integer limit;
 

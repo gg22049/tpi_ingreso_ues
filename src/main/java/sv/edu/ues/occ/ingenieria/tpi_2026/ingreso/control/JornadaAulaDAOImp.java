@@ -48,9 +48,10 @@ public class JornadaAulaDAOImp extends AbstractCRUD<JornadaAula, JornadaAulaDTO>
     @Override
     public JornadaAulaDTO toDto(JornadaAula entity) throws IllegalStateException {
         try {
+            JornadaAulaPK key = entity.getJornadaAulaPK();
             return new JornadaAulaDTO(
-                    entity.getJornadaAulaPK().getIdJornada(),
-                    entity.getJornadaAulaPK().getIdAula(),
+                    key == null ? 0L : key.getIdJornada(),
+                    key == null ? "" : key.getIdAula(),
                     entity.getObservaciones()
             );
         } catch (Exception e) {

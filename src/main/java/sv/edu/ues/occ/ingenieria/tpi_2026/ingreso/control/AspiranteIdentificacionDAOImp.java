@@ -50,9 +50,10 @@ public class AspiranteIdentificacionDAOImp extends AbstractCRUD<AspiranteIdentif
     @Override
     public AspiranteIdentificacionDTO toDto(AspiranteIdentificacion entity) throws IllegalStateException {
         try {
+            AspiranteIdentificacionPK key = entity.getAspiranteIdentificacionPK();
             return new AspiranteIdentificacionDTO(
-                    entity.getAspiranteIdentificacionPK() == null ? null : entity.getAspiranteIdentificacionPK().getIdAspirante(),
-                    entity.getAspiranteIdentificacionPK() == null ? null : entity.getAspiranteIdentificacionPK().getIdTipoIdentificacion(),
+                    key == null ? 0L : key.getIdAspirante(),
+                    key == null ? 0 : key.getIdTipoIdentificacion(),
                     entity.getValor(),
                     entity.getImagenUrl(),
                     entity.getObservaciones()

@@ -62,7 +62,7 @@ public class PruebaDAOImp extends AbstractCRUD<Prueba, PruebaDTO> implements Ser
                     entity.getNotaAprobacion(),
                     entity.getDuracion(),
                     entity.getFechaCreacion(),
-                    entity.getIdPrueba() == null ? null : entity.getIdTipoPrueba().getIdTipoPrueba()
+                    entity.getIdTipoPrueba() == null ? null : entity.getIdTipoPrueba().getIdTipoPrueba()
             );
         } catch (Exception e) {
             throw new IllegalStateException("Error mapeando entidad a dto");

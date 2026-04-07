@@ -48,9 +48,10 @@ public class DistractorAreaConocimientoDAOImp extends AbstractCRUD<DistractorAre
     @Override
     public DistractorAreaConocimientoDTO toDto(DistractorAreaConocimiento entity) throws IllegalStateException {
         try {
+            DistractorAreaConocimientoPK key = entity.getDistractorAreaConocimientoPK();
             return new DistractorAreaConocimientoDTO(
-                    entity.getDistractorAreaConocimientoPK().getIdDistractor(),
-                    entity.getDistractorAreaConocimientoPK().getIdAreaConocimiento(),
+                    key == null ? null : key.getIdDistractor(),
+                    key == null ? 0 : key.getIdAreaConocimiento(),
                     entity.getObservaciones()
             );
         } catch (Exception e) {

@@ -23,7 +23,7 @@ class RangeValidator implements ConstraintValidator<ValidRange, FindRangeParamDT
         if (offset == null || limit == null) {
             return true;
         }
-        if (offset <= limit) {
+        if (offset < limit) {
             return true;
         }
         context.disableDefaultConstraintViolation();

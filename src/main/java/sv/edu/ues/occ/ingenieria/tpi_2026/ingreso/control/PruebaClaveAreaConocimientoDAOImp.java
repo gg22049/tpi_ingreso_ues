@@ -49,9 +49,10 @@ public class PruebaClaveAreaConocimientoDAOImp extends AbstractCRUD<PruebaClaveA
     @Override
     public PruebaClaveAreaConocimientoDTO toDto(PruebaClaveAreaConocimiento entity) throws IllegalStateException {
         try {
+            PruebaClaveAreaConocimientoPK key = entity.getPruebaClaveAreaConocimientoPK();
             return new PruebaClaveAreaConocimientoDTO(
-                    entity.getPruebaClaveAreaConocimientoPK().getIdPruebaClave(),
-                    entity.getPruebaClaveAreaConocimientoPK().getIdAreaConocimiento(),
+                    key == null ? 0L : key.getIdPruebaClave(),
+                    key == null ? 0 : key.getIdAreaConocimiento(),
                     entity.getCantidad(),
                     entity.getPorcentaje()
             );

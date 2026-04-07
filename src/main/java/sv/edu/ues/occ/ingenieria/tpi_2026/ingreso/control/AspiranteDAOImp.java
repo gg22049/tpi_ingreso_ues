@@ -42,6 +42,7 @@ public class AspiranteDAOImp extends AbstractCRUD<Aspirante, AspiranteDTO> imple
                     dto.apellidos(),
                     dto.fechaNacimiento(),
                     dto.correo(),
+                    dto.fechaCreacion(),
                     dto.observaciones()
             );
         } catch (Exception e) {

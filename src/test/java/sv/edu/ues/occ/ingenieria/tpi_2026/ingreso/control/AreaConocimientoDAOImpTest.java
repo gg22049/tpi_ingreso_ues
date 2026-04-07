@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 
 /**
@@ -29,12 +30,10 @@ public class AreaConocimientoDAOImpTest {
     @Mock
     EntityManager emMock;
 
-    List<AreaConocimiento> areaList;
+    List<AreaConocimiento> baseList;
 
     public AreaConocimientoDAOImpTest() {
-        AreaConocimiento areaWid = new AreaConocimiento();
-        areaWid.setIdAreaConocimiento(1);
-        areaList = Arrays.asList(areaWid, new AreaConocimiento(), new AreaConocimiento());
+        baseList = Arrays.asList(new AreaConocimiento(1), new AreaConocimiento(), new AreaConocimiento());
     }
 
     @Test
@@ -91,10 +90,10 @@ public class AreaConocimientoDAOImpTest {
         when(cbMock.createQuery(AreaConocimiento.class)).thenReturn(cqMock);
         when(cqMock.from(AreaConocimiento.class)).thenReturn(rMock);
         when(emMock.createQuery(cqMock)).thenReturn(tqMock);
-        when(tqMock.getResultList()).thenReturn(areaList);
+        when(tqMock.getResultList()).thenReturn(baseList);
         List<AreaConocimiento> resultList = cut.findAll();
         assertNotNull(resultList);
-        assertEquals(areaList.size(), resultList.size());
+        assertEquals(baseList.size(), resultList.size());
     }
 
     @Test
@@ -146,10 +145,10 @@ public class AreaConocimientoDAOImpTest {
         when(cbMock.createQuery(AreaConocimiento.class)).thenReturn(cqMock);
         when(cqMock.from(AreaConocimiento.class)).thenReturn(rMock);
         when(emMock.createQuery(cqMock)).thenReturn(tqMock);
-        when(tqMock.getResultList()).thenReturn(areaList);
+        when(tqMock.getResultList()).thenReturn(baseList);
         List<AreaConocimiento> resultList = cut.findByRange(1, 10);
         assertNotNull(resultList);
-        assertEquals(areaList.size(), resultList.size());
+        assertEquals(baseList.size(), resultList.size());
     }
 
     @Test
@@ -191,12 +190,48 @@ public class AreaConocimientoDAOImpTest {
         when(cbMock.createQuery(Long.class)).thenReturn(cqMock);
         when(cqMock.from(AreaConocimiento.class)).thenReturn(rMock);
         when(emMock.createQuery(cqMock)).thenReturn(tqMock);
-        Integer size = areaList.size();
+        Integer size = baseList.size();
         Long sizeExpected = size.longValue();
         when(tqMock.getSingleResult()).thenReturn(sizeExpected);
         Long result = cut.count();
         assertNotNull(result);
         assertEquals(sizeExpected, result);
+    }
+
+    @Test
+    public void toEntityTest() {
+        System.out.println("AreaConocimientoDAOImpTest.toEntityTest");
+        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+        assertThrows(IllegalStateException.class,
+                () -> {
+                    cut.toEntity(null);
+                });
+        cut.em = emMock;
+        when(emMock.find(AreaConocimiento.class, 1)).thenReturn(baseList.getFirst());
+        AreaConocimiento result = cut.toEntity(new AreaConocimientoDTO(1, "nombre", "des", Boolean.TRUE, null));
+        assertNull(result.getIdAreaConocimientoPadre());
+        result = cut.toEntity(new AreaConocimientoDTO(1, "nombre", "des", Boolean.TRUE, 1));
+        assertNotNull(result);
+        assertEquals(1, result.getIdAreaConocimiento());
+        assertEquals(1, result.getIdAreaConocimientoPadre().getIdAreaConocimiento());
+    }
+
+    @Test
+    public void toDtoTest() {
+        System.out.println("AreaConocimientoDAOImpTest.toDtoTest");
+        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+        assertThrows(IllegalStateException.class,
+                () -> {
+                    cut.toDto(null);
+                });
+        AreaConocimientoDTO result = cut.toDto(new AreaConocimiento(1, "name", "desc", Boolean.TRUE, null));
+        assertNotNull(result);
+        assertEquals(1, result.idAreaConocimiento());
+        assertNull(result.idAreaConocimientoPadre());
+        result = cut.toDto(new AreaConocimiento(1, "name", "desc", Boolean.TRUE, baseList.getFirst()));
+        assertNotNull(result);
+        assertEquals(1, result.idAreaConocimiento());
+        assertNotNull(result.idAreaConocimientoPadre());
     }
 
 }

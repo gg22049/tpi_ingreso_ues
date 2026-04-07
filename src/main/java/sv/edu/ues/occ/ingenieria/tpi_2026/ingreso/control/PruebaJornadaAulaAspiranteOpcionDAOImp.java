@@ -49,11 +49,12 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImp extends AbstractCRUD<PruebaJ
     @Override
     public PruebaJornadaAulaAspiranteOpcionDTO toDto(PruebaJornadaAulaAspiranteOpcion entity) throws IllegalStateException {
         try {
+            PruebaJornadaAulaAspiranteOpcionPK key = entity.getPruebaJornadaAulaAspiranteOpcionPK();
             return new PruebaJornadaAulaAspiranteOpcionDTO(
-                    entity.getPruebaJornadaAulaAspiranteOpcionPK().getIdPrueba(),
-                    entity.getPruebaJornadaAulaAspiranteOpcionPK().getIdJornada(),
-                    entity.getPruebaJornadaAulaAspiranteOpcionPK().getIdAula(),
-                    entity.getPruebaJornadaAulaAspiranteOpcionPK().getIdAspiranteOpcion(),
+                    key.getIdPrueba(),
+                    key.getIdJornada(),
+                    key.getIdAula(),
+                    key.getIdAspiranteOpcion(),
                     entity.getActivo(),
                     entity.getFecha()
             );

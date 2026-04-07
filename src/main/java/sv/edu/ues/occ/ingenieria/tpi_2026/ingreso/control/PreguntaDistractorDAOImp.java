@@ -48,9 +48,10 @@ public class PreguntaDistractorDAOImp extends AbstractCRUD<PreguntaDistractor, P
     @Override
     public PreguntaDistractorDTO toDto(PreguntaDistractor entity) throws IllegalStateException {
         try {
+            PreguntaDistractorPK key = entity.getPreguntaDistractorPK();
             return new PreguntaDistractorDTO(
-                    entity.getPreguntaDistractorPK().getIdPregunta(),
-                    entity.getPreguntaDistractorPK().getIdDistractor(),
+                    key == null ? 0L : key.getIdPregunta(),
+                    key == null ? 0L : key.getIdDistractor(),
                     entity.getCorrecto(),
                     entity.getObservaciones()
             );

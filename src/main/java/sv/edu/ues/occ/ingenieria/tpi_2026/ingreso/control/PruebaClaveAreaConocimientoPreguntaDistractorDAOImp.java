@@ -49,11 +49,12 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImp extends Abstrac
     @Override
     public PruebaClaveAreaConocimientoPreguntaDistractorDTO toDto(PruebaClaveAreaConocimientoPreguntaDistractor entity) throws IllegalStateException {
         try {
+            PruebaClaveAreaConocimientoPreguntaDistractorPK key = entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK();
             return new PruebaClaveAreaConocimientoPreguntaDistractorDTO(
-                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdPruebaClave(),
-                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdAreaConocimiento(),
-                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdPregunta(),
-                    entity.getPruebaClaveAreaConocimientoPreguntaDistractorPK().getIdDistractor(),
+                    key == null ? 0L : key.getIdPruebaClave(),
+                    key == null ? 0 : key.getIdAreaConocimiento(),
+                    key == null ? 0L : key.getIdPregunta(),
+                    key == null ? 0L : key.getIdDistractor(),
                     entity.getFechaCreacion(),
                     entity.getObservaciones()
             );
