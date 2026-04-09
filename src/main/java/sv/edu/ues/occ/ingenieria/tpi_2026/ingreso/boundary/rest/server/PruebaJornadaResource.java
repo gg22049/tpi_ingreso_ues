@@ -2,6 +2,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -18,8 +21,6 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaDTO;
@@ -36,32 +37,12 @@ public class PruebaJornadaResource {
     @Inject
     PruebaJornadaDAOImp pruebaJornadaDI;
 
-    @Inject
-    PruebaDAOImp pruebaDI;
-
-    @Inject
-    JornadaDAOImp jornadaDI;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@Valid PruebaJornadaDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             PruebaJornada newPreguntaAreaConocimiento = pruebaJornadaDI.toEntity(dto);
-
-            if (pruebaJornadaDI.findById(dto.idPrueba()) == null && pruebaJornadaDI.findById(dto.idJornada()) == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: IdPrueba:" + dto.idPrueba() + ", IdJornada: " + dto.idJornada(),
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
             pruebaJornadaDI.create(newPreguntaAreaConocimiento);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
@@ -75,14 +56,18 @@ public class PruebaJornadaResource {
     }
 
     @DELETE
+    @Path("/{idPrueba:\\d+}/{idJornada}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@Valid PruebaJornadaPK key, @Context UriInfo uriInfo) {
+    public Response delete(
+            @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,
+            @PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) long idJornada,
+            @Context UriInfo uriInfo) {
         try {
             PruebaJornada found = pruebaJornadaDI.findById(
                     new PruebaJornadaPK(
-                            key.getIdPrueba(),
-                            key.getIdJornada())
-            );
+                            idPrueba,
+                            idJornada
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -90,7 +75,7 @@ public class PruebaJornadaResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPrueba:" + key.getIdPrueba() + ", IdJornada: " + key.getIdJornada(),
+                                "No entity with id: IdPrueba:" + idPrueba + ", IdJornada: " + idJornada,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
@@ -104,11 +89,19 @@ public class PruebaJornadaResource {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{idPrueba:\\d+}/{idJornada}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@Valid PruebaJornadaPK key, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,
+            @PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) long idJornada,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
-            PruebaJornada found = pruebaJornadaDI.findById(key);
+            PruebaJornada found = pruebaJornadaDI.findById(
+                    new PruebaJornadaPK(
+                            idPrueba,
+                            idJornada
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -116,7 +109,7 @@ public class PruebaJornadaResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPrueba:" + key.getIdPrueba() + ", IdJornada: " + key.getIdJornada(),
+                                "No entity with id: IdPrueba:" + idPrueba + ", IdJornada: " + idJornada,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -147,8 +140,7 @@ public class PruebaJornadaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@Valid PruebaJornadaDTO dto, @Context UriInfo uriInfo) {
         try {
-            PruebaJornada found = pruebaJornadaDI
-                    .findById(new PruebaJornadaPK(dto.idPrueba(), dto.idJornada()));
+            PruebaJornada found = pruebaJornadaDI.findById(new PruebaJornadaPK(dto.idPrueba(), dto.idJornada()));
             if (found == null) {
                 return Response
                         .status(404)

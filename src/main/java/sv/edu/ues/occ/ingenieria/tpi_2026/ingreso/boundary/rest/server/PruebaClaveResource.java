@@ -30,7 +30,6 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave;
  *
  * @author usermein
  */
-
 @Path("prueba-clave")
 public class PruebaClaveResource {
 
@@ -69,7 +68,10 @@ public class PruebaClaveResource {
     @GET
     @Path("/{idPruebacClave:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("idPruebaClave") @Min(1) @Max(Integer.MAX_VALUE) Integer idPruebaClave, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) Long idPruebaClave,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
             PruebaClave found = PruebaClaveDI.findById(idPruebaClave);
             if (found == null) {
@@ -137,9 +139,12 @@ public class PruebaClaveResource {
     @Path("/{idPruebaClave:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idPruebaClave") @Min(1) Integer idPruebaClave, @Valid PruebaClaveDTO dto, @Context UriInfo uriInfo) {
+    public Response update(
+            @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) Long idPruebaClave,
+            @Valid PruebaClaveDTO dto,
+            @Context UriInfo uriInfo) {
         try {
-           PruebaClave found = PruebaClaveDI.findById(idPruebaClave);
+            PruebaClave found = PruebaClaveDI.findById(idPruebaClave);
             if (found == null) {
                 return Response
                         .status(404)
@@ -154,7 +159,7 @@ public class PruebaClaveResource {
                         ).build();
             }
             PruebaClave entity = PruebaClaveDI.toEntity(dto);
-            entity.setIdPruebaClave(found.getIdPruebaClave());
+            entity.setIdPruebaClave(idPruebaClave);
             PruebaClaveDI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
@@ -177,9 +182,9 @@ public class PruebaClaveResource {
     @DELETE
     @Path("/{idPruebaClave:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idPruebaClave") @Min(1) @Max(Integer.MAX_VALUE) Integer idPruebaClave, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) Long idPruebaClave, @Context UriInfo uriInfo) {
         try {
-           PruebaClave found = PruebaClaveDI.findById(idPruebaClave);
+            PruebaClave found = PruebaClaveDI.findById(idPruebaClave);
             if (found == null) {
                 return Response
                         .status(404)

@@ -9,6 +9,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -18,9 +19,7 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaAreaConocimientoDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento;
@@ -35,10 +34,6 @@ public class PreguntaAreaConocimientoResource {
 
     @Inject
     PreguntaAreaConocimientoDAOImp preguntaAreaConocimientoDI;
-    @Inject
-    AreaConocimientoDAOImp areaConocimientoDI;
-    @Inject
-    PreguntaDAOImp preguntaDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -46,26 +41,11 @@ public class PreguntaAreaConocimientoResource {
     public Response create(@Valid PreguntaAreaConocimientoDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             PreguntaAreaConocimiento newPreguntaAreaConocimiento = preguntaAreaConocimientoDI.toEntity(dto);
-            //Aqui tengo la duda sobre lo que ibamos a consumir desde fuera, que son las aulas entonces me parece algo ilogico comprobar con el
-            //findById si no tenemos una tabla directamente en eso
-            if (preguntaAreaConocimientoDI.findById(dto.idAreaConocimiento()) == null && preguntaAreaConocimientoDI.findById(dto.idAreaConocimiento()) == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: IdPregunta:" + dto.idPregunta() + ", IdAreaConocimiento: " + dto.idAreaConocimiento(),
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
             preguntaAreaConocimientoDI.create(newPreguntaAreaConocimiento);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
-                    .queryParam("idPregunta", String.valueOf(dto.idPregunta()))
-                    .queryParam("dto.idAreaConocimiento", String.valueOf(dto.idAreaConocimiento()))
+                    .path(String.valueOf(dto.idPregunta()))
+                    .path(String.valueOf(dto.idAreaConocimiento()))
                     .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
@@ -74,14 +54,18 @@ public class PreguntaAreaConocimientoResource {
     }
 
     @DELETE
+    @Path("/{idPregunta:\\d+}/{idAreaConocimiento}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@Valid PreguntaAreaConocimientoPK key, @Context UriInfo uriInfo) {
+    public Response delete(
+            @PathParam("idPregunta") long idPregunta,
+            @PathParam("idAreaConocimiento") int idAreaConocimiento,
+            @Context UriInfo uriInfo) {
         try {
             PreguntaAreaConocimiento found = preguntaAreaConocimientoDI.findById(
                     new PreguntaAreaConocimientoPK(
-                            key.getIdPregunta(),
-                            key.getIdAreaConocimiento())
-            );
+                            idPregunta,
+                            idAreaConocimiento
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -89,7 +73,7 @@ public class PreguntaAreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPregunta:" + key.getIdPregunta() + ", IdAreaConocimiento: " + key.getIdAreaConocimiento(),
+                                "No entity with id: idPregunta " + idPregunta + ", idAreaConocimiento " + idAreaConocimiento,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
@@ -103,11 +87,19 @@ public class PreguntaAreaConocimientoResource {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{idPregunta:\\d+}/{idAreaConocimiento}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@Valid PreguntaAreaConocimientoPK key, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idPregunta") long idPregunta,
+            @PathParam("idAreaConocimiento") int idAreaConocimiento,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
-            PreguntaAreaConocimiento found = preguntaAreaConocimientoDI.findById(key);
+            PreguntaAreaConocimiento found = preguntaAreaConocimientoDI.findById(
+                    new PreguntaAreaConocimientoPK(
+                            idPregunta,
+                            idAreaConocimiento
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -115,7 +107,7 @@ public class PreguntaAreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPregunta:" + key.getIdPregunta() + ", IdAreaConocimiento: " + key.getIdAreaConocimiento(),
+                                "No entity with id: idPregunta " + idPregunta + ", idAreaConocimiento " + idAreaConocimiento,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))

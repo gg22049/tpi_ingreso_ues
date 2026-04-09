@@ -239,7 +239,6 @@
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
-                                        <exclude>**/DTO/**</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
@@ -254,7 +253,6 @@
                                     <excludes>
                                         <exclude>**/boundary/**</exclude>
                                         <exclude>**/entity/**</exclude>
-                                        <exclude>**/DTO/**</exclude>
                                     </excludes>
                                     <rules>
                                         <rule>
@@ -282,7 +280,6 @@
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
-                                        <exclude>**/DTO/**</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
@@ -333,7 +330,7 @@
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
-                                        <exclude>**/DTO/**</exclude>
+                                        <exclude>**/dto/**</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
@@ -347,7 +344,7 @@
                                     <excludes>
                                         <exclude>**/entity/**</exclude>
                                         <exclude>**/boundary/**</exclude>
-                                        <exclude>**/DTO/**</exclude>
+                                        <exclude>**/dto/**</exclude>
                                     </excludes>
                                     <dataFile>${project.build.directory}/jacoco-exec/integration-test.exec</dataFile>
                                     <outputDirectory>${project.reporting.outputDirectory}/integration-test</outputDirectory>

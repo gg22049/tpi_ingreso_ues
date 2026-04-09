@@ -6,6 +6,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -56,24 +58,11 @@ public class AspiranteIdentificacionResource {
     public Response create(@Valid AspiranteIdentificacionDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             AspiranteIdentificacion entity = DI.toEntity(dto);
-            if (DI.findById(dto.idAspirante()) == null && DI.findById(dto.idTipoIdentificacion()) == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: IdAspirante:" + dto.idAspirante() + ", IdTipoIdentificacion: " + dto.idTipoIdentificacion(),
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
             DI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
-                    .queryParam("idAspirante", String.valueOf(dto.idAspirante()))
-                    .queryParam("idTipoAspirante", String.valueOf(dto.idTipoIdentificacion()))
+                    .path(String.valueOf(dto.idAspirante()))
+                    .path(String.valueOf(dto.idTipoIdentificacion()))
                     .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
@@ -97,11 +86,14 @@ public class AspiranteIdentificacionResource {
      * </ul>
      */
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{idAspirante:\\d+}/{idTipoIdentificacion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@Valid AspiranteIdentificacionPK key, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idTipoIdentificacion") @Min(1) int idTipoIdentificacion,
+            @Context UriInfo uriInfo) throws DomainException {
         try {
-            AspiranteIdentificacion found = DI.findById(key);
+            AspiranteIdentificacion found = DI.findById(new AspiranteIdentificacionPK(idAspirante, idTipoIdentificacion));
             if (found == null) {
                 return Response
                         .status(404)
@@ -109,7 +101,7 @@ public class AspiranteIdentificacionResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdAspirante:" + key.getIdAspirante() + ", IdTipoIdentificacion: " + key.getIdTipoIdentificacion(),
+                                "No entity with id: idAspirante " + idAspirante + ", idTipoIdentificacion " + idTipoIdentificacion,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -172,7 +164,7 @@ public class AspiranteIdentificacionResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdAspirante:" + dto.idAspirante() + ", IdTipoIdentificacion: " + dto.idTipoIdentificacion(),
+                                "No entity with id: idAspirante " + dto.idAspirante() + ", idTipoIdentificacion " + dto.idTipoIdentificacion(),
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
@@ -200,13 +192,18 @@ public class AspiranteIdentificacionResource {
      * </ul>
      */
     @DELETE
+    @Path("/{idAspirante:\\d+}/{idTipoIdentificacion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@Valid AspiranteIdentificacionPK key, @Context UriInfo uriInfo) {
+    public Response delete(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idTipoIdentificacion") @Min(1) int idTipoIdentificacion,
+            @Context UriInfo uriInfo) {
         try {
             AspiranteIdentificacion found = DI.findById(
                     new AspiranteIdentificacionPK(
-                            key.getIdAspirante(),
-                            key.getIdTipoIdentificacion())
+                            idAspirante,
+                            idTipoIdentificacion
+                    )
             );
             if (found == null) {
                 return Response
@@ -215,7 +212,7 @@ public class AspiranteIdentificacionResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdAspirante:" + key.getIdAspirante() + ", IdTipoIdentificacion: " + key.getIdTipoIdentificacion(),
+                                "No entity with id: idAspirante " + idAspirante + ", idTipoIdentificacion " + idTipoIdentificacion,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )

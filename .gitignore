@@ -6,3 +6,4 @@ target/
 /nbbuild/
 /dist/
 /nbdist/
+/nbproject/

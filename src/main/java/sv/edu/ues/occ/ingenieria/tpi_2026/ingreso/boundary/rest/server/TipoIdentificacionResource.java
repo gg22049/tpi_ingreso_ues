@@ -43,11 +43,7 @@ public class TipoIdentificacionResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@NotNull @Valid TipoIdentificacionDTO tipoIdentificacionDTO, UriInfo uriInfo) throws DomainException {
         try {
-
-            //TipoIdentificacion nuevoTipoIdentificacion = new TipoIdentificacion();
             TipoIdentificacion nuevoTipoIdentificacion = tipoIdentificacionDI.toEntity(tipoIdentificacionDTO);
-            //nuevoTipoIdentificacion.setNombre(tipoIdentificacionDTO.nombre());
-            // nuevoTipoIdentificacion.setObservaciones(tipoIdentificacionDTO.observaciones());
             tipoIdentificacionDI.create(nuevoTipoIdentificacion);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevoTipoIdentificacion.getIdTipoIdentificacion()))
@@ -61,7 +57,7 @@ public class TipoIdentificacionResource {
     }
 
     @DELETE
-    @Path("idTipoIdentificacion:\\d+")
+    @Path("/{idTipoIdentificacion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idTipoIdentificacion") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoIdentificacion, @Context UriInfo uriInfo) throws DomainException {
         try {
@@ -73,7 +69,7 @@ public class TipoIdentificacionResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe TipoPrueba con ID: " + idTipoIdentificacion,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
@@ -85,9 +81,9 @@ public class TipoIdentificacionResource {
     }
 
     @GET
-    @Path("idTipoIdentificacion:\\d+")
+    @Path("/{idTipoIdentificacion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idTipoIdentificacion") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoIdentificacion,
+    public Response findById(@PathParam("idTipoIdentificacion") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoIdentificacion,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -99,15 +95,12 @@ public class TipoIdentificacionResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe TipoPrueba con ID: " + idTipoIdentificacion,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-            //Por mientras voy a ocupar el constructor normal ya que vamos a borrar los otros
-            TipoIdentificacionDTO tipoIdentificacionDTO = new TipoIdentificacionDTO(idTipoIdentificacion,
-                    tipoIdentificacion.getNombre(),
-                    tipoIdentificacion.getObservaciones());
-            return Response.ok(tipoIdentificacionDTO, MediaType.APPLICATION_JSON).build();
+            TipoIdentificacionDTO dto = tipoIdentificacionDI.toDto(tipoIdentificacion);
+            return Response.ok(dto, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
@@ -139,8 +132,9 @@ public class TipoIdentificacionResource {
     @Path("/{idTipoIdentificacion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idTipoIdentificacion") Integer idTipoIdentificacion,
-            TipoIdentificacionDTO tipoIdentificacionDTO,
+    public Response update(
+            @PathParam("idTipoIdentificacion") Integer idTipoIdentificacion,
+            @Valid TipoIdentificacionDTO tipoIdentificacionDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
             TipoIdentificacion tipoIdentificacion = tipoIdentificacionDI.findById(idTipoIdentificacion);
@@ -158,13 +152,8 @@ public class TipoIdentificacionResource {
                                 )
                         ).build();
             }
-            if (tipoIdentificacionDTO.nombre() != null) {
-                tipoIdentificacion.setNombre(tipoIdentificacionDTO.nombre());
-
-            }
-            if (tipoIdentificacionDTO.observaciones() != null) {
-                tipoIdentificacion.setObservaciones(tipoIdentificacionDTO.observaciones());
-            }
+            TipoIdentificacion entity = tipoIdentificacionDI.toEntity(tipoIdentificacionDTO);
+            entity.setIdTipoIdentificacion(idTipoIdentificacion);
             tipoIdentificacionDI.update(tipoIdentificacion);
             return Response.noContent().build();
 

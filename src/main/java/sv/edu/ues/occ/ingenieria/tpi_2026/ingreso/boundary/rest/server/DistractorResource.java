@@ -23,10 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.DistractorAreaConocimientoDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.DistractorDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDistractorDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaClaveAreaConocimientoPreguntaDistractorDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
@@ -40,15 +37,6 @@ public class DistractorResource {
 
     @Inject
     DistractorDAOImp distractorDI;
-
-    @Inject
-    PruebaClaveAreaConocimientoPreguntaDistractorDAOImp pruebaClaveAreaConocimientoPreguntaDistractorDI;
-
-    @Inject
-    DistractorAreaConocimientoDAOImp distractorAreaConocimientoDI;
-
-    @Inject
-    PreguntaDistractorDAOImp preguntaDistractorDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -164,7 +152,7 @@ public class DistractorResource {
             distractor.setValor(distractorDTO.valor());
             distractor.setActivo(distractorDTO.activo());
             distractor.setImagenUrl(distractorDTO.imagenUrl());
-            
+
             distractorDI.update(distractor);
             return Response.noContent().build();
         } catch (Exception e) {

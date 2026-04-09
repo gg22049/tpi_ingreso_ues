@@ -96,12 +96,13 @@ public class Aspirante implements Serializable {
         this.correo = correo;
     }
 
-    public Aspirante(Long idAspirante, String nombres, String apellidos, Date fechaNacimiento, String correo, String observaciones) {
+    public Aspirante(Long idAspirante, String nombres, String apellidos, Date fechaNacimiento, String correo, Date fechaCreacion, String observaciones) {
         this.idAspirante = idAspirante;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;
         this.correo = correo;
+        this.fechaCreacion = fechaCreacion;
         this.observaciones = observaciones;
     }
 

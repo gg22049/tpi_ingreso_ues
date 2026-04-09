@@ -40,19 +40,13 @@ public class JornadaResource implements Serializable {
 
     @Inject
     JornadaDAOImp jornadaDI;
-    @Inject
-    JornadaAulaDAOImp jornadaAulaDI;
-    @Inject
-    PruebaJornadaDAOImp pruebaJornadaDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@NotNull @Valid JornadaDTO jornadaDTO, UriInfo uriInfo) throws DomainException {
         try {
-
             Jornada nuevaJornada = jornadaDI.toEntity(jornadaDTO);
-
             jornadaDI.create(nuevaJornada);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevaJornada.getIdJornada()))
@@ -66,9 +60,9 @@ public class JornadaResource implements Serializable {
     }
 
     @DELETE
-    @Path("idJornada:\\d+")
+    @Path("/{idJornada:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idJornada") @Min(1) @Max(Integer.MAX_VALUE) Integer idJornada, @Context UriInfo uriInfo) throws DomainException {
+    public Response delete(@PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada, @Context UriInfo uriInfo) throws DomainException {
         try {
             Jornada jornada = jornadaDI.findById(idJornada);
             if (jornada == null) {
@@ -90,9 +84,9 @@ public class JornadaResource implements Serializable {
     }
 
     @GET
-    @Path("idJornada:\\d+")
+    @Path("/{idJornada:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idJornada") @Min(1) @Max(Integer.MAX_VALUE) Integer idJornada,
+    public Response findById(@PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -129,7 +123,6 @@ public class JornadaResource implements Serializable {
                     .header(HeaderName.TOTAL_RECORDS.toString(), listaJornadasDTO.size())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-
         } catch (Exception e) {
             throw new DomainException(e);
         }
@@ -139,8 +132,9 @@ public class JornadaResource implements Serializable {
     @Path("/{idJornada:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idJornada") Integer idJornada,
-            JornadaDTO jornadaDTO,
+    public Response update(
+            @PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada,
+            @Valid JornadaDTO jornadaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
             Jornada jornada = jornadaDI.findById(idJornada);
@@ -155,20 +149,12 @@ public class JornadaResource implements Serializable {
                                 null))
                         .build();
             }
-            
-            jornada.setNombre(jornadaDTO.nombre());
-            jornada.setFechaInicio(jornadaDTO.fechaInicio());
-            jornada.setFechaFin(jornadaDTO.fechaFin());
-            //estos if los puse por que en tal caso el JASON, llega a venir con campos nulos entonces
-            //los datos se van a actualizar
-            if (jornadaDTO.observaciones() != null) {
-                jornada.setObservaciones(jornadaDTO.observaciones());
-            }
-           jornadaDI.update(jornada);
+            Jornada entity = jornadaDI.toEntity(jornadaDTO);
+            entity.setIdJornada(idJornada);
+            jornadaDI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
     }
-
 }

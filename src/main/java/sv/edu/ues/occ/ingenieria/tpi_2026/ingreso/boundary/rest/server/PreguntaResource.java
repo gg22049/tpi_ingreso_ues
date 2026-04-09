@@ -23,10 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaAreaConocimientoDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDistractorDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaClaveAreaConocimientoPreguntaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
@@ -37,25 +34,16 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
  */
 @Path("pregunta")
 public class PreguntaResource {
+
     @Inject
     PreguntaDAOImp preguntaDI;
-    @Inject
-    PreguntaAreaConocimientoDAOImp preguntaAreaconocimientoDI;
-    @Inject
-    PruebaClaveAreaConocimientoPreguntaDAOImp pruebaClaveAreaConocimientoPreguntaDI;
-    @Inject
-    PreguntaDistractorDAOImp preguntaDistractorDAOImp;
-    
-    
-    
-     @POST
+
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@NotNull @Valid PreguntaDTO preguntaDTO, UriInfo uriInfo) throws DomainException {
         try {
-           // Prueba nuevaPrueba = new Prueba();
-            Pregunta nuevaPregunta=preguntaDI.toEntity(preguntaDTO);
-            
+            Pregunta nuevaPregunta = preguntaDI.toEntity(preguntaDTO);
             preguntaDI.create(nuevaPregunta);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevaPregunta.getIdPregunta()))
@@ -69,11 +57,11 @@ public class PreguntaResource {
     }
 
     @DELETE
-    @Path("idPregunta:\\d+")
+    @Path("/{idPregunta:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idPregunta") @Min(1) @Max(Integer.MAX_VALUE) Integer idPregunta, @Context UriInfo uriInfo) throws DomainException {
         try {
-            Pregunta pregunta= preguntaDI.findById(idPregunta);
+            Pregunta pregunta = preguntaDI.findById(idPregunta);
             if (pregunta == null) {
                 return Response
                         .status(404)
@@ -81,11 +69,11 @@ public class PreguntaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe Pregunta con ID: " + idPregunta,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-           preguntaDI.delete(pregunta);
+            preguntaDI.delete(pregunta);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -93,9 +81,10 @@ public class PreguntaResource {
     }
 
     @GET
-    @Path("idPregunta:\\d+")
+    @Path("/{idPregunta:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idPregunta") @Min(1) @Max(Integer.MAX_VALUE) Integer idPregunta,
+    public Response findById(
+            @PathParam("idPregunta") @Min(1L) @Max(Long.MAX_VALUE) Long idPregunta,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -106,8 +95,8 @@ public class PreguntaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Pregunta con ID: " +idPregunta,
-                                 uriInfo.getAbsolutePath().toString(),
+                                "No existe Pregunta con ID: " + idPregunta,
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
@@ -125,7 +114,7 @@ public class PreguntaResource {
             List<Pregunta> listaPreguntas = preguntaDI.findByRange(params.getOffset(), params.getLimit());
             List<PreguntaDTO> listaPrreguntasDTO = listaPreguntas
                     .stream()
-                    .map( pregunta-> preguntaDI.toDto(pregunta))
+                    .map(pregunta -> preguntaDI.toDto(pregunta))
                     .collect(Collectors.toList());
             return Response
                     .ok(listaPrreguntasDTO)
@@ -142,8 +131,9 @@ public class PreguntaResource {
     @Path("/{idPregunta:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idPregunta") Integer idPregunta,
-            PreguntaDTO preguntaDTO,
+    public Response update(
+            @PathParam("idPregunta") Long idPregunta,
+            @Valid PreguntaDTO preguntaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
             Pregunta pregunta = preguntaDI.findById(idPregunta);
@@ -153,31 +143,18 @@ public class PreguntaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Pregunta con ID: " +idPregunta,
-                                 uriInfo.getAbsolutePath().toString(),
+                                "No existe Pregunta con ID: " + idPregunta,
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-
-           pregunta.setValor(preguntaDTO.valor());
-           pregunta.setActivo(preguntaDTO.activo());
-           //estos if los puse por que en tal caso el JASON, llega a venir con campos nulos entonces
-           //los datos se van a actualizar
-            if (preguntaDTO.imageUrl()!=null) {
-                pregunta.setImagenUrl(preguntaDTO.imageUrl()); 
-            }
-            if (preguntaDTO.observaciones()!=null) {
-                pregunta.setObservaciones(preguntaDTO.observaciones());
-            }
-            preguntaDI.update(pregunta);
+            Pregunta entity = preguntaDI.toEntity(preguntaDTO);
+            entity.setIdPregunta(idPregunta);
+            preguntaDI.update(entity);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
         }
     }
 
-            
-    
 }
-    
-

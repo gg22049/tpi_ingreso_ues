@@ -9,6 +9,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -18,8 +19,6 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.DistractorDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PreguntaDistractorDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDistractorDTO;
@@ -35,12 +34,6 @@ public class PreguntaDistractorResource {
 
     @Inject
     PreguntaDistractorDAOImp preguntaDistractorDI;
-    
-    @Inject
-    PreguntaDAOImp preguntaDI;
-    
-    @Inject 
-    DistractorDAOImp distractorDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -48,24 +41,11 @@ public class PreguntaDistractorResource {
     public Response create(@Valid PreguntaDistractorDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             PreguntaDistractor nuevaPreguntaDistractor = preguntaDistractorDI.toEntity(dto);
-            if (preguntaDistractorDI.findById(dto.idPregunta()) == null && preguntaDistractorDI.findById(dto.idDistractor()) == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: IdPregunta:" + dto.idPregunta() + ", IdTDistractor: " + dto.idDistractor(),
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
             preguntaDistractorDI.create(nuevaPreguntaDistractor);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
-                    .queryParam("idPregunta", String.valueOf(dto.idPregunta()))
-                    .queryParam("idDistractor", String.valueOf(dto.idDistractor()))
+                    .path(String.valueOf(dto.idPregunta()))
+                    .path(String.valueOf(dto.idDistractor()))
                     .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
@@ -74,14 +54,19 @@ public class PreguntaDistractorResource {
     }
 
     @DELETE
+    @Path("/{idPregunta:\\d+}/{idDistractor}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@Valid PreguntaDistractorPK key, @Context UriInfo uriInfo) {
+    public Response delete(
+            @PathParam("idPregunta") long idPregunta,
+            @PathParam("idDistractor") long idDistractor,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
             PreguntaDistractor found = preguntaDistractorDI.findById(
                     new PreguntaDistractorPK(
-                            key.getIdPregunta(),
-                            key.getIdDistractor())
-            );
+                            idPregunta,
+                            idDistractor
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -89,7 +74,7 @@ public class PreguntaDistractorResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPregunta:" + key.getIdPregunta() + ", IdDistractor: " + key.getIdDistractor(),
+                                "No entity with id: IdPregunta:" + idPregunta + ", IdDistractor: " + idDistractor,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
@@ -103,11 +88,17 @@ public class PreguntaDistractorResource {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{idPregunta:\\d+}/{idDistractor}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@Valid PreguntaDistractorPK key, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idPregunta") long idPregunta,
+            @PathParam("idDistractor") long idDistractor,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
-            PreguntaDistractor found = preguntaDistractorDI.findById(key);
+            PreguntaDistractor found = preguntaDistractorDI.findById(
+                    new PreguntaDistractorPK(idPregunta, idDistractor
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -115,7 +106,7 @@ public class PreguntaDistractorResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPregunta:" + key.getIdPregunta() + ", IdDistractor: " + key.getIdDistractor(),
+                                "No entity with id: IdPregunta:" + idPregunta + ", IdDistractor: " + idDistractor,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -144,7 +135,7 @@ public class PreguntaDistractorResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@Valid PreguntaDistractorDTO dto, @Context UriInfo uriInfo) {
+    public Response update(@Valid PreguntaDistractorDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             PreguntaDistractor found = preguntaDistractorDI.findById(new PreguntaDistractorPK(dto.idPregunta(), dto.idDistractor()));
             if (found == null) {

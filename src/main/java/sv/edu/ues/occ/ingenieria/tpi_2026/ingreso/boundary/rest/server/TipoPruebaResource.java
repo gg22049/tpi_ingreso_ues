@@ -47,10 +47,7 @@ public class TipoPruebaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@NotNull @Valid TipoPruebaDTO tipoPruebaDTO, UriInfo uriInfo) throws DomainException {
         try {
-            TipoPrueba nuevaTipoPrueba = new TipoPrueba();
-            nuevaTipoPrueba.setValor(tipoPruebaDTO.valor());
-            nuevaTipoPrueba.setActivo(tipoPruebaDTO.activo());
-            nuevaTipoPrueba.setObservaciones(tipoPruebaDTO.observaciones());
+            TipoPrueba nuevaTipoPrueba = tipoPruebaDI.toEntity(tipoPruebaDTO);
             tipoPruebaDI.create(nuevaTipoPrueba);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevaTipoPrueba.getIdTipoPrueba()))
@@ -76,7 +73,7 @@ public class TipoPruebaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe TipoPrueba con ID: " + idTipoPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
@@ -102,7 +99,7 @@ public class TipoPruebaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe TipoPrueba con ID: " + idTipoPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
@@ -137,8 +134,9 @@ public class TipoPruebaResource {
     @Path("/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idTipoPrueba") Integer idTipoPrueba,
-            TipoPruebaDTO tipoPruebaDTO,
+    public Response update(
+            @PathParam("idTipoPrueba") Integer idTipoPrueba,
+            @Valid TipoPruebaDTO tipoPruebaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
             TipoPrueba tipoPrueba = tipoPruebaDI.findById(idTipoPrueba);
@@ -149,20 +147,15 @@ public class TipoPruebaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe TipoPrueba con ID: " + idTipoPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
 
-            tipoPrueba.setValor(tipoPruebaDTO.valor());
-            tipoPrueba.setActivo(tipoPruebaDTO.activo());
-
-            if (tipoPruebaDTO.observaciones() != null) {
-                tipoPrueba.setObservaciones(tipoPruebaDTO.observaciones());
-            }
+            TipoPrueba entity = tipoPruebaDI.toEntity(tipoPruebaDTO);
+            entity.setIdTipoPrueba(idTipoPrueba);
             tipoPruebaDI.update(tipoPrueba);
             return Response.noContent().build();
-
         } catch (Exception e) {
             throw new DomainException(e);
         }

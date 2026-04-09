@@ -43,8 +43,9 @@ public class AreaConocimientoResource {
     /**
      * Crea un AreaConocimiento. - POST /area-conocimiento
      *
-     * @param entity Json de la entidad a persistir
+     * @param dto Json de la entidad a persistir
      * @param uriInfo Contexto de la Request para construir Location.
+     *
      * @return
      * <ul>
      * <li>201 Created + Location del recurso creado.</li>
@@ -60,7 +61,7 @@ public class AreaConocimientoResource {
             AreaConocimiento entity = DI.toEntity(dto);
             DI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento().toString()));
+            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -71,7 +72,6 @@ public class AreaConocimientoResource {
      * Retorna un AreaConocimiento segun id. - GET /area-conocimiento/{id}
      *
      * @param idAreaConocimiento Id para realizar la busqueda.
-     *
      *
      * @return
      * <ul>
@@ -113,6 +113,7 @@ public class AreaConocimientoResource {
      *
      * @param offset índice inicial (>= 0).
      * @param limit tamaño de página (>= offset).
+     *
      * @return
      * <ul>
      * <li>200 Ok + Json con la lista.</li>
@@ -136,6 +137,7 @@ public class AreaConocimientoResource {
      *
      * @param id Id de entidad modificada.
      * @param dto Entidad modificada.
+     *
      * @return
      * <ul>
      * <li>204 No Content Entidad actualizada.</li>
@@ -148,7 +150,7 @@ public class AreaConocimientoResource {
     @Path("/{id:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") @Min(1) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
         try {
             AreaConocimiento found = DI.findById(id);
             if (found == null) {
@@ -177,6 +179,7 @@ public class AreaConocimientoResource {
      * Elimina un AreaConocimiento. - DELETE /area-conocimiento/{id}
      *
      * @param id Id de entidad modificada.
+     *
      * @return
      * <ul>
      * <li>204 No Content Entidad actualizada.</li>

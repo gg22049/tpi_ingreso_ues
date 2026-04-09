@@ -2,6 +2,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -9,6 +11,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -40,31 +43,12 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
     public Response create(@Valid PruebaClaveAreaConocimientoPreguntaDistractorDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
             PruebaClaveAreaConocimientoPreguntaDistractor newPruebaClaveAreaConocimientoPreguntaDistractor = PruebaClaveAreaConocimientoPreguntaDistractorDI.toEntity(dto);
-            //Aqui tengo la duda sobre lo que ibamos a consumir desde fuera, que son las aulas entonces me parece algo ilogico comprobar con el
-            //findById si no tenemos una tabla directamente en eso
-            if (PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(dto.idPruebaClave()) == null
-                    && PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(dto.idAreaConocimiento()) == null
-                    && PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(dto.idPregunta()) == null
-                    && PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(dto.idDistractor()) == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: IdPruebaClave:" + dto.idPruebaClave() + ", IdAreaConocimiento: " + dto.idAreaConocimiento()
-                                + ", IdPregunta: " + dto.idPregunta() + ", IdDistractor: " + dto.idDistractor(),
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
             PruebaClaveAreaConocimientoPreguntaDistractorDI.create(newPruebaClaveAreaConocimientoPreguntaDistractor);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
                     .queryParam("idPruebaClave", String.valueOf(dto.idPruebaClave()))
                     .queryParam("idAreaConocimiento", String.valueOf(dto.idAreaConocimiento()))
-                    .queryParam("idAula", String.valueOf(dto.idPregunta()))
+                    .queryParam("idPregunta", String.valueOf(dto.idPregunta()))
                     .queryParam("idDistractor", String.valueOf(dto.idDistractor()))
                     .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
@@ -74,16 +58,23 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
     }
 
     @DELETE
+    @Path("/{idPruebaClave:\\d+}/{idAreaConocimiento:\\d+}/{idPregunta:\\d+}/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@Valid PruebaClaveAreaConocimientoPreguntaDistractorPK key, @Context UriInfo uriInfo) {
+    public Response delete(
+            @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) long idPruebaClave,
+            @PathParam("idAreaConocimiento") @Min(1) @Max(Integer.MAX_VALUE) int idAreaConocimiento,
+            @PathParam("idPregunta") @Min(1L) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idDistractor") @Min(1L) @Max(Long.MAX_VALUE) long idDistractor,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
             PruebaClaveAreaConocimientoPreguntaDistractor found = PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(
                     new PruebaClaveAreaConocimientoPreguntaDistractorPK(
-                            key.getIdPruebaClave(),
-                            key.getIdAreaConocimiento(),
-                            key.getIdPregunta(),
-                            key.getIdDistractor())
-            );
+                            idPruebaClave,
+                            idAreaConocimiento,
+                            idPregunta,
+                            idDistractor
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -91,8 +82,8 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPruebaClave:" + key.getIdPruebaClave() + ", IdAreaConocimiento: " + key.getIdAreaConocimiento()
-                                + ", IdPregunta: " + key.getIdPregunta() + ", IdDistractor: " + key.getIdDistractor(),
+                                "No entity with id: IdPruebaClave:" + idPruebaClave + ", IdAreaConocimiento: " + idAreaConocimiento
+                                + ", IdPregunta: " + idPregunta + ", IdDistractor: " + idDistractor,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )
@@ -106,11 +97,22 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{idPruebaClave:\\d+}/{idAreaConocimiento:\\d+}/{idPregunta:\\d+}/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@Valid PruebaClaveAreaConocimientoPreguntaDistractorPK key, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(
+            @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) long idPruebaClave,
+            @PathParam("idAreaConocimiento") @Min(1) @Max(Integer.MAX_VALUE) int idAreaConocimiento,
+            @PathParam("idPregunta") @Min(1L) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idDistractor") @Min(1L) @Max(Long.MAX_VALUE) long idDistractor,
+            @Context UriInfo uriInfo) throws DomainException {
         try {
-            PruebaClaveAreaConocimientoPreguntaDistractor found = PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(key);
+            PruebaClaveAreaConocimientoPreguntaDistractor found = PruebaClaveAreaConocimientoPreguntaDistractorDI.findById(
+                    new PruebaClaveAreaConocimientoPreguntaDistractorPK(
+                            idPruebaClave,
+                            idAreaConocimiento,
+                            idPregunta,
+                            idDistractor
+                    ));
             if (found == null) {
                 return Response
                         .status(404)
@@ -118,8 +120,8 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPruebaClave:" + key.getIdPruebaClave() + ", IdAreaConocimiento: " + key.getIdAreaConocimiento()
-                                + ", IdPregunta: " + key.getIdPregunta() + ", IdDistractor: " + key.getIdDistractor(),
+                                "No entity with id: IdPruebaClave:" + idPruebaClave + ", IdAreaConocimiento: " + idAreaConocimiento
+                                + ", IdPregunta: " + idPregunta + ", IdDistractor: " + idDistractor,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))
@@ -148,7 +150,10 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@Valid PruebaClaveAreaConocimientoPreguntaDistractorDTO dto, @Context UriInfo uriInfo) {
+    public Response update(
+            @Valid PruebaClaveAreaConocimientoPreguntaDistractorDTO dto,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
             PruebaClaveAreaConocimientoPreguntaDistractor found = PruebaClaveAreaConocimientoPreguntaDistractorDI
                     .findById(new PruebaClaveAreaConocimientoPreguntaDistractorPK(

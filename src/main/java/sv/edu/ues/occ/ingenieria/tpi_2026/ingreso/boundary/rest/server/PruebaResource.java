@@ -23,15 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaClaveDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaAulaAspiranteOpcionDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.TipoPruebaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
 
 /**
  *
@@ -43,27 +38,12 @@ public class PruebaResource {
     @Inject
     PruebaDAOImp pruebaDI;
 
-    @Inject
-    TipoPruebaDAOImp tipoPruebaDI;
-
-    @Inject
-    PruebaJornadaAulaAspiranteOpcionDAOImp pruebaJornadaAulaAspiranteOpcionDI;
-
-    @Inject
-    PruebaClaveDAOImp pruebaClaveDI;
-
-    @Inject
-    PruebaJornadaDAOImp pruebaJornadaDI;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@NotNull @Valid PruebaDTO pruebaDTO, UriInfo uriInfo) throws DomainException {
         try {
-           // Prueba nuevaPrueba = new Prueba();
-            Prueba nuevaPrueba=pruebaDI.toEntity(pruebaDTO);
-            TipoPrueba relacionTipoPrueba = new TipoPrueba(pruebaDTO.idTipoPrueba());
-            nuevaPrueba.setIdTipoPrueba(relacionTipoPrueba);
+            Prueba nuevaPrueba = pruebaDI.toEntity(pruebaDTO);
             pruebaDI.create(nuevaPrueba);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevaPrueba.getIdPrueba()))
@@ -77,11 +57,11 @@ public class PruebaResource {
     }
 
     @DELETE
-    @Path("idPrueba:\\d+")
+    @Path("/{idPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idPrueba, @Context UriInfo uriInfo) throws DomainException {
         try {
-            Prueba prueba= pruebaDI.findById(idPrueba);
+            Prueba prueba = pruebaDI.findById(idPrueba);
             if (prueba == null) {
                 return Response
                         .status(404)
@@ -89,11 +69,11 @@ public class PruebaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe Prueba con ID: " + idPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-           pruebaDI.delete(prueba);
+            pruebaDI.delete(prueba);
             return Response.noContent().build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -101,9 +81,10 @@ public class PruebaResource {
     }
 
     @GET
-    @Path("idPrueba:\\d+")
+    @Path("/{idPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idPrueba,
+    public Response findByID(
+            @PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idPrueba,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -115,7 +96,7 @@ public class PruebaResource {
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
                                 "No existe Prueba con ID: " + idPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
@@ -150,8 +131,9 @@ public class PruebaResource {
     @Path("/{idPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idPrueba") Integer idPrueba,
-            PruebaDTO pruebaDTO,
+    public Response update(
+            @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) Long idPrueba,
+            @Valid PruebaDTO pruebaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
             Prueba prueba = pruebaDI.findById(idPrueba);
@@ -161,35 +143,13 @@ public class PruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Prueba con ID: " +idPrueba,
-                                 uriInfo.getAbsolutePath().toString(),
+                                "No existe Prueba con ID: " + idPrueba,
+                                uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
             }
-            
-
-            prueba.setNombre(pruebaDTO.nombre());
-            prueba.setIndicaciones(pruebaDTO.indicciones());
-            prueba.setPuntajeMaximo(pruebaDTO.puntajeMaximo());
-            prueba.setNotaAprobacion(pruebaDTO.notaAprobacion());
-            prueba.setDuracion(pruebaDTO.duracion());
-            //duda sobre si hacer algo directo aqui en el REST para que se aplique la fecha de creacion
-            // no voy a setear el fechaCreacion ya que no tiene logica cambiar un campo que se deberia se asignar solo cuando se crea
-            prueba.setFechaCreacion(pruebaDTO.fechaCreacion());
-            //
-            TipoPrueba tipoPrueba=tipoPruebaDI.findById(pruebaDTO.idTipoPrueba());
-            if (tipoPrueba==null) {
-                return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No existe TipoPrueba para asignar con ID " +pruebaDTO.idTipoPrueba(),
-                                 uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            prueba.setIdTipoPrueba(tipoPrueba);
+            Prueba entity = pruebaDI.toEntity(pruebaDTO);
+            entity.setIdPrueba(idPrueba);
             pruebaDI.update(prueba);
             return Response.noContent().build();
         } catch (Exception e) {
