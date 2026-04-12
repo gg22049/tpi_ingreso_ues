@@ -56,7 +56,7 @@ public class AspiranteOpcion implements Serializable {
     private String idOpcion;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "aspiranteOpcion", fetch = FetchType.LAZY)

@@ -4,15 +4,10 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
-import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonObject;
-import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,7 +15,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 
 /**
  *
@@ -38,46 +34,32 @@ public class AreaConocimientoResourceST extends STAbstract {
         System.out.println("AreaConocimientoResource.create");
 
         // 400 - constraint validation
-        String json = """
-    {
-      "activo":true
-    }
-    """;
+        AreaConocimientoDTO dto = new AreaConocimientoDTO(null, null, null, true, null);
         Response response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(json, MediaType.APPLICATION_JSON));
+                .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
-        assertNotNull(response);
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
         assertEquals(400, response.getStatus());
 
-        String body = response.readEntity(String.class);
-        JsonObject jsonObj = Json.createReader(new StringReader(body)).readObject();
+        ErrorDetailDTO body = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(400, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.containsKey("instance"));
-        JsonArray issues = jsonObj.getJsonArray("issues");
-        assertNotNull(issues);
-        assertFalse(issues.isEmpty());
-        JsonObject issue = issues.getJsonObject(0);
-        assertEquals("nombre", issue.getString("field"));
-        assertTrue(issue.getString("message").contains("must not be null"));
+        assertEquals(400, body.status());
+        assertNotNull(body.type());
+        assertNotNull(body.detail());
+        assertNotNull(body.instance());
+        assertNotNull(body.issues());
+        assertFalse(body.issues().isEmpty());
+        assertEquals("nombre", body.issues().getFirst().field());
+        assertTrue(body.issues().getFirst().message().contains("must not be null"));
 
         // 201 - created
-        json = """
-    {
-        "nombre": "valido",
-        "activo":true
-               
-    }
-    """;
+        dto = new AreaConocimientoDTO(null, "name", null, true, null);
         response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(json, MediaType.APPLICATION_JSON));
+                .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
         assertNotNull(response);
         assertEquals(201, response.getStatus());
@@ -97,23 +79,19 @@ public class AreaConocimientoResourceST extends STAbstract {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertNotNull(response);
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
         assertEquals(400, response.getStatus());
 
-        String body = response.readEntity(String.class);
-        JsonObject jsonObj = Json.createReader(new StringReader(body)).readObject();
+        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(400, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.containsKey("instance"));
-        JsonArray issues = jsonObj.getJsonArray("issues");
-        assertNotNull(issues);
-        assertFalse(issues.isEmpty());
-        JsonObject issue = issues.getJsonObject(0);
-        assertEquals("arg0", issue.getString("field"));
-        assertTrue(issue.getString("message").contains("must be greater than or equal to 1"));
+        assertEquals(400, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertNotNull(dtoError.issues());
+        assertFalse(dtoError.issues().isEmpty());
+        assertEquals("arg0", dtoError.issues().getFirst().field());
+        assertTrue(dtoError.issues().getFirst().message().contains("must be greater than or equal to 1"));
 
         // 404 - not found
         response = webTarget
@@ -125,16 +103,13 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
         assertEquals(404, response.getStatus());
 
-        body = response.readEntity(String.class);
-        jsonObj = Json.createReader(new StringReader(body)).readObject();
+        dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(404, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.getString("detail").contains("AreaConocimiento with id"));
-        assertTrue(jsonObj.containsKey("instance"));
-        String detail = jsonObj.getString("detail");
-        assertTrue(detail.contains("AreaConocimiento with id"));
+        assertEquals(404, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertTrue(dtoError.detail().contains("No entity with id: 100"));
 
         // 200 - found
         response = webTarget
@@ -146,11 +121,11 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        body = response.readEntity(String.class);
-        jsonObj = Json.createReader(new StringReader(body)).readObject();
+        AreaConocimientoDTO dtoResponse = response.readEntity(AreaConocimientoDTO.class);
 
-        assertEquals(1, jsonObj.getInt("idAreaConocimiento"));
-        assertTrue(jsonObj.containsKey("nombre"));
+        assertEquals(1, dtoResponse.idAreaConocimiento());
+        assertNotNull(dtoResponse.nombre());
+        assertFalse(dtoResponse.nombre().isBlank());
 
     }
 
@@ -171,13 +146,12 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(400, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        String body = response.readEntity(String.class);
-        JsonObject jsonObj = Json.createReader(new StringReader(body)).readObject();
+        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(400, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.containsKey("instance"));
+        assertEquals(400, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
 
         // 200 - found
         response = webTarget
@@ -191,15 +165,14 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        body = response.readEntity(String.class);
-        List<AreaConocimiento> resultList = JsonbBuilder.create().fromJson(body, new ArrayList<AreaConocimiento>() {
-        }.getClass().getGenericSuperclass());
+        List<AreaConocimientoDTO> resultList = response.readEntity(new GenericType<List<AreaConocimientoDTO>>() {
+        });
         assertNotNull(resultList);
         assertFalse(resultList.isEmpty());
 
-        AreaConocimiento result = resultList.getFirst();
-        assertNotNull(result.getIdAreaConocimiento());
-        assertNotNull(result.getNombre());
+        AreaConocimientoDTO result = resultList.getFirst();
+        assertNotNull(result.idAreaConocimiento());
+        assertNotNull(result.nombre());
 
     }
 
@@ -209,71 +182,52 @@ public class AreaConocimientoResourceST extends STAbstract {
         System.out.println("AreaConocimientoResource.update");
 
         // 400 - constraint validation
-        String json = """
-    {
-        "nombre": null,
-        "activo": false 
-    }
-    """;
+        AreaConocimientoDTO dto = new AreaConocimientoDTO(null, null, null, false, null);
         Response response = webTarget
                 .path(PATH + "/1")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.entity(json, MediaType.APPLICATION_JSON));
+                .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
         assertNotNull(response);
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
         assertEquals(400, response.getStatus());
 
-        String body = response.readEntity(String.class);
-        JsonObject jsonObj = Json.createReader(new StringReader(body)).readObject();
+        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(400, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.containsKey("instance"));
-        JsonArray issues = jsonObj.getJsonArray("issues");
-        assertNotNull(issues);
-        assertFalse(issues.isEmpty());
-        JsonObject issue = issues.getJsonObject(0);
-        assertEquals("nombre", issue.getString("field"));
-        assertTrue(issue.getString("message").contains("must not be null"));
+        assertEquals(400, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertNotNull(dtoError.issues());
+        assertFalse(dtoError.issues().isEmpty());
+        assertEquals("nombre", dtoError.issues().getFirst().field());
+        assertTrue(dtoError.issues().getFirst().message().contains("must not be null"));
 
         // 404 - not found
-        json = """
-        {
-            "nombre": "actualizado",
-            "activo": false
-    }
-    """;
+        dto = new AreaConocimientoDTO(null, "actualizado", null, false, null);
         response = webTarget
                 .path(PATH + "/100")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.entity(json, MediaType.APPLICATION_JSON));
+                .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
         assertNotNull(response);
         assertEquals(404, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        body = response.readEntity(String.class);
-        jsonObj = Json.createReader(new StringReader(body)).readObject();
+        dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(404, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.getString("detail").contains("No entity with id:"));
-        assertTrue(jsonObj.containsKey("instance"));
+        assertEquals(404, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertTrue(dtoError.detail().contains("No entity with id:"));
 
         // 204 - updated
-        json = """
-    {
-        "nombre": "actualizado",
-        "activo": false
-    }
-    """;
+        dto = new AreaConocimientoDTO(null, "actualizado", null, false, null);
         response = webTarget
                 .path(PATH + "/1")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.entity(json, MediaType.APPLICATION_JSON));
+                .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
         assertNotNull(response);
         assertEquals(204, response.getStatus());
@@ -284,7 +238,7 @@ public class AreaConocimientoResourceST extends STAbstract {
     public void delete() {
         System.out.println("AreaConocimientoResource.delete");
 
-// 400 - constraint validation
+        // 400 - constraint validation
         Response response = webTarget
                 .path(PATH + "/0")
                 .request(MediaType.APPLICATION_JSON)
@@ -294,19 +248,16 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
         assertEquals(400, response.getStatus());
 
-        String body = response.readEntity(String.class);
-        JsonObject jsonObj = Json.createReader(new StringReader(body)).readObject();
+        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(400, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.containsKey("instance"));
-        JsonArray issues = jsonObj.getJsonArray("issues");
-        assertNotNull(issues);
-        assertFalse(issues.isEmpty());
-        JsonObject issue = issues.getJsonObject(0);
-        assertEquals("arg0", issue.getString("field"));
-        assertTrue(issue.getString("message").contains("must be greater than or equal to 1"));
+        assertEquals(400, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertNotNull(dtoError.issues());
+        assertFalse(dtoError.issues().isEmpty());
+        assertEquals("arg0", dtoError.issues().getFirst().field());
+        assertTrue(dtoError.issues().getFirst().message().contains("must be greater than or equal to 1"));
 
         // 404 - not found
         response = webTarget
@@ -318,21 +269,20 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(404, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        body = response.readEntity(String.class);
-        jsonObj = Json.createReader(new StringReader(body)).readObject();
+        dtoError = response.readEntity(ErrorDetailDTO.class);
 
-        assertEquals(404, jsonObj.getInt("status"));
-        assertTrue(jsonObj.containsKey("type"));
-        assertTrue(jsonObj.containsKey("detail"));
-        assertTrue(jsonObj.getString("detail").contains("No entity with id:"));
-        assertTrue(jsonObj.containsKey("instance"));
+        assertEquals(404, dtoError.status());
+        assertNotNull(dtoError.type());
+        assertNotNull(dtoError.detail());
+        assertNotNull(dtoError.instance());
+        assertTrue(dtoError.detail().contains("No entity with id:"));
 
         //204 - deleted
         response = webTarget
-                .path(PATH + "/1")
+                .path(PATH + "/2")
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
-
+        System.out.println(OL_CONTAINER.getLogs());
         assertNotNull(response);
         assertEquals(204, response.getStatus());
     }

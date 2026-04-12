@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -33,16 +34,15 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 @Path("aspirante")
 public class AspiranteResource {
 
-     @Inject
+    @Inject
     AspiranteDAOImp AspiranteDI;
 
-   
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(@Valid AspiranteDTO dto, @Context UriInfo uriInfo) throws DomainException {
         try {
-           Aspirante entity = AspiranteDI.toEntity(dto);
+            Aspirante entity = AspiranteDI.toEntity(dto);
             AspiranteDI.create(entity);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder.path(String.valueOf(entity.getIdAspirante().toString()));
@@ -106,10 +106,9 @@ public class AspiranteResource {
                                 "No entity with id: " + idAspirante,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
-                        )
-                        ).build();
+                        )).build();
             }
-           Aspirante entity = AspiranteDI.toEntity(dto);
+            Aspirante entity = AspiranteDI.toEntity(dto);
             entity.setIdAspirante(found.getIdAspirante());
             AspiranteDI.update(entity);
             return Response.noContent().build();
@@ -118,13 +117,12 @@ public class AspiranteResource {
         }
     }
 
-   
     @DELETE
     @Path("/{idAspirante:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idAspirante") @Min(1) @Max(Integer.MAX_VALUE) Integer idAspirante, @Context UriInfo uriInfo) {
         try {
-           Aspirante found = AspiranteDI.findById(idAspirante);
+            Aspirante found = AspiranteDI.findById(idAspirante);
             if (found == null) {
                 return Response
                         .status(404)
@@ -135,8 +133,60 @@ public class AspiranteResource {
                                 "No entity with id: " + idAspirante,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
-                        )
-                        ).build();
+                        ))
+                        .build();
+            }
+            AspiranteDI.delete(found);
+            return Response.noContent().build();
+        } catch (Exception e) {
+            throw new DomainException(e);
+        }
+    }
+
+    @GET
+    @Path("/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findByEmail(@PathParam("email") @NotBlank String email, @Context UriInfo uriInfo) throws DomainException {
+        try {
+            Aspirante found = AspiranteDI.findByEmail(email);
+            if (found == null) {
+                return Response
+                        .status(404)
+                        .entity(new ErrorDetailDTO(
+                                null,
+                                ErrorType.NO_MATCH_ID.toString(),
+                                404,
+                                "No entity with email: " + email,
+                                uriInfo.getAbsolutePath().toString(),
+                                null
+                        ))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+            return Response.ok(AspiranteDI.toDto(found), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            throw new DomainException(e);
+        }
+    }
+
+    @DELETE
+    @Path("/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteByEmail(@PathParam("email") @NotBlank String email, @Context UriInfo uriInfo) {
+        try {
+            Aspirante found = AspiranteDI.findByEmail(email);
+            if (found == null) {
+                return Response
+                        .status(404)
+                        .entity(new ErrorDetailDTO(
+                                null,
+                                ErrorType.NO_MATCH_ID.toString(),
+                                404,
+                                "No entity with email: " + email,
+                                uriInfo.getAbsolutePath().toString(),
+                                null
+                        ))
+                        .build();
             }
             AspiranteDI.delete(found);
             return Response.noContent().build();

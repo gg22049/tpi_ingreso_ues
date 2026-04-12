@@ -39,8 +39,7 @@ public class PruebaJornada implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected PruebaJornadaPK pruebaJornadaPK;
-    @Column(name = "fecha_creacion")
-    @NotNull
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     @Size(max = 2147483647)

@@ -11,7 +11,7 @@ import jakarta.validation.ConstraintValidatorContext;
  *
  * @author caesar
  */
-class MaxRangeValidator implements ConstraintValidator<ValidRange, FindRangeParamDTO> {
+class MaxRangeValidator implements ConstraintValidator<ValidMaxRange, FindRangeParamDTO> {
 
     @Override
     public boolean isValid(FindRangeParamDTO value, ConstraintValidatorContext context) {

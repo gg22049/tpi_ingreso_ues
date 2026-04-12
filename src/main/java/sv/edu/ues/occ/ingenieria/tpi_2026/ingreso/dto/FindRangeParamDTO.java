@@ -4,8 +4,9 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.QueryParam;
 
 /**
@@ -17,12 +18,14 @@ import jakarta.ws.rs.QueryParam;
 public class FindRangeParamDTO {
 
     @NotNull
-    @Size(min = 0, max = Integer.MAX_VALUE)
+    @Min(0)
+    @Max(Integer.MAX_VALUE)
     @QueryParam("offset")
     private Integer offset;
 
     @NotNull
-    @Size(min = 0, max = Integer.MAX_VALUE)
+    @Min(0)
+    @Max(Integer.MAX_VALUE)
     @QueryParam("limit")
     private Integer limit;
 

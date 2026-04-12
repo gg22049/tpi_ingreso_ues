@@ -16,7 +16,6 @@ public record PruebaJornadaDTO(
         long idPrueba,
         @NotNull
         long idJornada,
-        @NotNull
         Date fechaCreacion,
         String observaciones
         ) {
