@@ -86,7 +86,7 @@ public class DistractorResource {
     @GET
     @Path("idDistractor:\\d+")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idDistractor") @Min(1) @Max(Integer.MAX_VALUE) Integer idDistractor,
+    public Response findByID(@PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) Long idDistractor,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {

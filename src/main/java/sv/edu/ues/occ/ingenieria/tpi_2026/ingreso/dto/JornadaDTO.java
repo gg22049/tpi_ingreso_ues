@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;

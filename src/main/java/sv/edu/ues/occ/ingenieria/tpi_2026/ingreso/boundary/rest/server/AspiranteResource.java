@@ -55,7 +55,7 @@ public class AspiranteResource {
     @GET
     @Path("/{idAspirante:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("idAspirante") @Min(1) @Max(Integer.MAX_VALUE) Integer idAspirante, @Context UriInfo uriInfo) throws DomainException {
+    public Response findById(@PathParam("idAspirante") @Min(1) @Max(Long.MAX_VALUE) Long idAspirante, @Context UriInfo uriInfo) throws DomainException {
         try {
             Aspirante found = AspiranteDI.findById(idAspirante);
             if (found == null) {

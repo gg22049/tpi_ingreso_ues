@@ -44,7 +44,7 @@ public class JornadaResource implements Serializable {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid JornadaDTO jornadaDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid JornadaDTO jornadaDTO,@Context UriInfo uriInfo) throws DomainException {
         try {
             Jornada nuevaJornada = jornadaDI.toEntity(jornadaDTO);
             jornadaDI.create(nuevaJornada);
