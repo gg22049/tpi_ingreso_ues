@@ -56,7 +56,7 @@ public class PruebaJornadaResource {
     }
 
     @DELETE
-    @Path("/{idPrueba:\\d+}/{idJornada}")
+    @Path("/{idPrueba:\\d+}/{idJornada:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(
             @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,
@@ -89,7 +89,7 @@ public class PruebaJornadaResource {
     }
 
     @GET
-    @Path("/{idPrueba:\\d+}/{idJornada}")
+    @Path("/{idPrueba:\\d+}/{idJornada:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
             @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,

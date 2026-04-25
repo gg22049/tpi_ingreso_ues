@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaAulaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.PruebaJornadaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
@@ -44,7 +42,7 @@ public class JornadaResource implements Serializable {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid JornadaDTO jornadaDTO,@Context UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid JornadaDTO jornadaDTO, @Context UriInfo uriInfo) throws DomainException {
         try {
             Jornada nuevaJornada = jornadaDI.toEntity(jornadaDTO);
             jornadaDI.create(nuevaJornada);
@@ -71,7 +69,7 @@ public class JornadaResource implements Serializable {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Jornada con ID: " + idJornada,
+                                "No entity with id: " + idJornada,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -97,7 +95,7 @@ public class JornadaResource implements Serializable {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Jornada con ID: " + idJornada,
+                                "No entity with id: " + idJornada,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -144,7 +142,7 @@ public class JornadaResource implements Serializable {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Pregunta con ID: " + idJornada,
+                                "No entity with id: " + idJornada,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();

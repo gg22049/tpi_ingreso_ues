@@ -54,9 +54,9 @@ public class PruebaClaveDAOImpTest {
                 });
         PruebaClaveDTO result = cut.toDto(new PruebaClave(1L, "name", null));
         assertNull(result.idPrueba());
-        assertEquals(1L, result.idPruevaClave());
+        assertEquals(1L, result.idPruebaClave());
         result = cut.toDto(new PruebaClave(1L, "name", new Prueba(1L)));
-        assertEquals(1L, result.idPruevaClave());
+        assertEquals(1L, result.idPruebaClave());
         assertEquals(1L, result.idPrueba());
     }
 

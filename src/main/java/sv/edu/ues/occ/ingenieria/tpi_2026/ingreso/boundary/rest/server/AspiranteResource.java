@@ -93,7 +93,7 @@ public class AspiranteResource {
     @Path("/{idAspirante:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idAspirante") @Min(1) Integer idAspirante, @Valid AspiranteDTO dto, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("idAspirante") @Min(1L) @Max(Long.MAX_VALUE) Long idAspirante, @Valid AspiranteDTO dto, @Context UriInfo uriInfo) {
         try {
             Aspirante found = AspiranteDI.findById(idAspirante);
             if (found == null) {
@@ -120,7 +120,7 @@ public class AspiranteResource {
     @DELETE
     @Path("/{idAspirante:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idAspirante") @Min(1) @Max(Integer.MAX_VALUE) Integer idAspirante, @Context UriInfo uriInfo) {
+    public Response delete(@PathParam("idAspirante") @Min(1L) @Max(Long.MAX_VALUE) Long idAspirante, @Context UriInfo uriInfo) {
         try {
             Aspirante found = AspiranteDI.findById(idAspirante);
             if (found == null) {

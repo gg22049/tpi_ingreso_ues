@@ -37,7 +37,7 @@ public class PruebaClaveDAOImp extends AbstractCRUD<PruebaClave, PruebaClaveDTO>
     public PruebaClave toEntity(PruebaClaveDTO dto) throws IllegalStateException {
         try {
             return new PruebaClave(
-                    dto.idPruevaClave(),
+                    dto.idPruebaClave(),
                     dto.nombre(),
                     dto.idPrueba() == null ? null : em.find(Prueba.class, dto.idPrueba())
             );

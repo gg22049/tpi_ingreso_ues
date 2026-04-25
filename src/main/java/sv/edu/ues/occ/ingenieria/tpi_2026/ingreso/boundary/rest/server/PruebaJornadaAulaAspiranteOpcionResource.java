@@ -59,7 +59,7 @@ public class PruebaJornadaAulaAspiranteOpcionResource {
     }
 
     @DELETE
-    @Path("/{idPrueba:\\d}/{idJornada:\\d+}/{idAula}/{idAspiranteOpcion:\\d+}")
+    @Path("/{idPrueba:\\d+}/{idJornada:\\d+}/{idAula}/{idAspiranteOpcion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(
             @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,
@@ -70,7 +70,7 @@ public class PruebaJornadaAulaAspiranteOpcionResource {
     ) throws DomainException {
         try {
             PruebaJornadaAulaAspiranteOpcion found = PruebaJornadaAulaAspiranteOpcionDI.findById(
-                    new PruebaJornadaAulaAspiranteOpcion(
+                    new PruebaJornadaAulaAspiranteOpcionPK(
                             idPrueba,
                             idJornada,
                             idAula,
@@ -98,7 +98,7 @@ public class PruebaJornadaAulaAspiranteOpcionResource {
     }
 
     @GET
-    @Path("/{idPrueba:\\d}/{idJornada:\\d+}/{idAula}/{idAspiranteOpcion:\\d+}")
+    @Path("/{idPrueba:\\d+}/{idJornada:\\d+}/{idAula}/{idAspiranteOpcion:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
             @PathParam("idPrueba") @Min(1L) @Max(Long.MAX_VALUE) long idPrueba,

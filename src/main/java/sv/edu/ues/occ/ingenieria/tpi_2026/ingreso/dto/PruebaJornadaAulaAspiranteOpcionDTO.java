@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public record PruebaJornadaAulaAspiranteOpcionDTO(
         long idPrueba,
         @NotNull
         long idJornada,
-        @NotNull
+        @NotBlank
         String idAula,
         @NotNull
         long idAspiranteOpcion,

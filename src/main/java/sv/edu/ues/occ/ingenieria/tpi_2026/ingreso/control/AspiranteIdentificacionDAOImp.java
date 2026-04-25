@@ -39,7 +39,7 @@ public class AspiranteIdentificacionDAOImp extends AbstractCRUD<AspiranteIdentif
             return new AspiranteIdentificacion(
                     new AspiranteIdentificacionPK(dto.idAspirante(), dto.idTipoIdentificacion()),
                     dto.valor(),
-                    dto.toString(),
+                    dto.imagenUrl(),
                     dto.observaciones()
             );
         } catch (Exception e) {

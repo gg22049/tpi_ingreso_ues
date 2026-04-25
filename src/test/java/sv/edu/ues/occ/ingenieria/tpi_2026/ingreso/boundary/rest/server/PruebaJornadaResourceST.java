@@ -8,15 +8,19 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 
 /**
  *
@@ -24,18 +28,33 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.Error
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AreaConocimientoResourceST extends STAbstract {
+public class PruebaJornadaResourceST extends STAbstract {
 
-    private final String PATH = "area-conocimiento";
-    private Integer idArea;
+    private final String PATH = "prueba-jornada";
+    private Long idPrueba = 1L;
+    private Long idJornada;
+
+    @BeforeAll
+    void init() {
+        JornadaDTO jdto = new JornadaDTO(null, "jornada 2020", Date.from(Instant.now()), Date.from(Instant.now()), null);
+        Response response = webTarget
+                .path("jornada")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(jdto, MediaType.APPLICATION_JSON));
+
+        String location = response.getHeaderString("Location");
+        idJornada = Long.valueOf(
+                location.substring(location.lastIndexOf("/") + 1)
+        );
+    }
 
     @Test
     @Order(1)
     void create() {
-        System.out.println("AreaConocimientoResource.create");
+        System.out.println("PruebaJornadaResource.create");
 
         // 400 - constraint validation
-        AreaConocimientoDTO dto = new AreaConocimientoDTO(null, null, null, true, null);
+        PruebaJornadaDTO dto = new PruebaJornadaDTO(0, 0, null, null);
         Response response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
@@ -52,11 +71,9 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertNotNull(body.instance());
         assertNotNull(body.issues());
         assertFalse(body.issues().isEmpty());
-        assertEquals("nombre", body.issues().getFirst().field());
-        assertTrue(body.issues().getFirst().message().contains("must not be blank"));
 
         // 201 - created
-        dto = new AreaConocimientoDTO(null, "name", null, true, null);
+        dto = new PruebaJornadaDTO(idPrueba, idJornada, Date.from(Instant.now()), null);
         response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
@@ -67,19 +84,17 @@ public class AreaConocimientoResourceST extends STAbstract {
         String location = response.getHeaderString("Location");
         assertNotNull(location);
         assertTrue(location.contains(webTarget.getUri().toString() + PATH));
-        idArea = Integer.valueOf(
-                location.substring(location.lastIndexOf("/") + 1)
-        );
+
     }
 
     @Test
     @Order(2)
     void findById() {
-        System.out.println("AreaConocimientoResource.findById");
+        System.out.println("PruebaJornadaResource.findById");
 
         // 400 - constraint validation
         Response response = webTarget
-                .path(PATH + "/0")
+                .path(PATH + "/0/0")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -94,12 +109,10 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertNotNull(dtoError.instance());
         assertNotNull(dtoError.issues());
         assertFalse(dtoError.issues().isEmpty());
-        assertEquals("arg0", dtoError.issues().getFirst().field());
-        assertTrue(dtoError.issues().getFirst().message().contains("must be greater than or equal to 1"));
 
         // 404 - not found
         response = webTarget
-                .path(PATH + "/100")
+                .path(PATH + "/100/100")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -117,7 +130,7 @@ public class AreaConocimientoResourceST extends STAbstract {
 
         // 200 - found
         response = webTarget
-                .path(PATH + "/" + idArea)
+                .path(PATH + "/" + idPrueba + "/" + idJornada)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -125,18 +138,17 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        AreaConocimientoDTO dtoResponse = response.readEntity(AreaConocimientoDTO.class);
+        PruebaJornadaDTO dtoResponse = response.readEntity(PruebaJornadaDTO.class);
 
-        assertEquals(idArea, dtoResponse.idAreaConocimiento());
-        assertNotNull(dtoResponse.nombre());
-        assertFalse(dtoResponse.nombre().isBlank());
+        assertEquals(idPrueba, dtoResponse.idPrueba());
+        assertEquals(idJornada, dtoResponse.idJornada());
 
     }
 
     @Test
     @Order(3)
     public void findByRange() {
-        System.out.println("AreaConocimientoResource.findByRange");
+        System.out.println("PruebaJornadaResource.findByRange");
 
         // 400 - constraint validation
         Response response = webTarget
@@ -169,7 +181,7 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        List<AreaConocimientoDTO> resultList = response.readEntity(new GenericType<List<AreaConocimientoDTO>>() {
+        List<PruebaJornadaDTO> resultList = response.readEntity(new GenericType<List<PruebaJornadaDTO>>() {
         });
         assertNotNull(resultList);
         assertFalse(resultList.isEmpty());
@@ -179,12 +191,12 @@ public class AreaConocimientoResourceST extends STAbstract {
     @Test
     @Order(4)
     public void update() {
-        System.out.println("AreaConocimientoResource.update");
+        System.out.println("PruebaJornadaResource.update");
 
         // 400 - constraint validation
-        AreaConocimientoDTO dto = new AreaConocimientoDTO(null, null, null, false, null);
+        PruebaJornadaDTO dto = new PruebaJornadaDTO(0L, 0L, null, null);
         Response response = webTarget
-                .path(PATH + "/1")
+                .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
@@ -200,13 +212,11 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertNotNull(dtoError.instance());
         assertNotNull(dtoError.issues());
         assertFalse(dtoError.issues().isEmpty());
-        assertEquals("nombre", dtoError.issues().getFirst().field());
-        assertTrue(dtoError.issues().getFirst().message().contains("must not be blank"));
 
         // 404 - not found
-        dto = new AreaConocimientoDTO(null, "actualizado", null, false, null);
+        dto = new PruebaJornadaDTO(100L, 100L, Date.from(Instant.now()), null);
         response = webTarget
-                .path(PATH + "/100")
+                .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
@@ -223,9 +233,9 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertTrue(dtoError.detail().contains("No entity with id:"));
 
         // 204 - updated
-        dto = new AreaConocimientoDTO(null, "actualizado", null, false, null);
+        dto = new PruebaJornadaDTO(idPrueba, idJornada, Date.from(Instant.now()), null);
         response = webTarget
-                .path(PATH + "/" + idArea)
+                .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
@@ -236,11 +246,11 @@ public class AreaConocimientoResourceST extends STAbstract {
     @Test
     @Order(5)
     public void delete() {
-        System.out.println("AreaConocimientoResource.delete");
+        System.out.println("PruebaJornadaResource.delete");
 
         // 400 - constraint validation
         Response response = webTarget
-                .path(PATH + "/0")
+                .path(PATH + "/0/0")
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
 
@@ -256,12 +266,10 @@ public class AreaConocimientoResourceST extends STAbstract {
         assertNotNull(dtoError.instance());
         assertNotNull(dtoError.issues());
         assertFalse(dtoError.issues().isEmpty());
-        assertEquals("arg0", dtoError.issues().getFirst().field());
-        assertTrue(dtoError.issues().getFirst().message().contains("must be greater than or equal to 1"));
 
         // 404 - not found
         response = webTarget
-                .path(PATH + "/100")
+                .path(PATH + "/100/100")
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
 
@@ -279,7 +287,7 @@ public class AreaConocimientoResourceST extends STAbstract {
 
         //204 - deleted
         response = webTarget
-                .path(PATH + "/" + idArea)
+                .path(PATH + "/" + idPrueba + "/" + idJornada)
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
 

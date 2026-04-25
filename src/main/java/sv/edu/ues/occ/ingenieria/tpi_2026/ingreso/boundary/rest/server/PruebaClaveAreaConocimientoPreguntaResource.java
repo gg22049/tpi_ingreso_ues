@@ -31,7 +31,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimi
  *
  * @author usermein
  */
-@Path("prueba-clave-area-pregunta")
+@Path("prueba-clave-area-conocimiento-pregunta")
 public class PruebaClaveAreaConocimientoPreguntaResource {
 
     @Inject

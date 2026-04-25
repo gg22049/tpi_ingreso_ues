@@ -1,7 +1,6 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import java.util.Date;
 

@@ -2,6 +2,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -29,7 +31,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimient
  *
  * @author usermein
  */
-@Path("pregunta-areaconocimiento")
+@Path("pregunta-area-conocimiento")
 public class PreguntaAreaConocimientoResource {
 
     @Inject
@@ -57,8 +59,8 @@ public class PreguntaAreaConocimientoResource {
     @Path("/{idPregunta:\\d+}/{idAreaConocimiento}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(
-            @PathParam("idPregunta") long idPregunta,
-            @PathParam("idAreaConocimiento") int idAreaConocimiento,
+            @PathParam("idPregunta") @Min(1) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idAreaConocimiento") @Min(1) @Max(Integer.MAX_VALUE) int idAreaConocimiento,
             @Context UriInfo uriInfo) {
         try {
             PreguntaAreaConocimiento found = preguntaAreaConocimientoDI.findById(
@@ -90,8 +92,8 @@ public class PreguntaAreaConocimientoResource {
     @Path("/{idPregunta:\\d+}/{idAreaConocimiento}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
-            @PathParam("idPregunta") long idPregunta,
-            @PathParam("idAreaConocimiento") int idAreaConocimiento,
+            @PathParam("idPregunta") @Min(1) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idAreaConocimiento") @Min(1) @Max(Integer.MAX_VALUE) int idAreaConocimiento,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {

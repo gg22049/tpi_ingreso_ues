@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -12,8 +14,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public record PreguntaAreaConocimientoDTO(
         @NotNull
+        @Min(1)
+        @Max(Long.MAX_VALUE)
         long idPregunta,
         @NotNull
+        @Min(1)
+        @Max(Integer.MAX_VALUE)
         int idAreaConocimiento,
         String observaciones
         ) {

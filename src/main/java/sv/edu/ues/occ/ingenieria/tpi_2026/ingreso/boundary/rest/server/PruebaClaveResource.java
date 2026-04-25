@@ -66,7 +66,7 @@ public class PruebaClaveResource {
      * </ul>
      */
     @GET
-    @Path("/{idPruebacClave:\\d+}")
+    @Path("/{idPruebaClave:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
             @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) Long idPruebaClave,

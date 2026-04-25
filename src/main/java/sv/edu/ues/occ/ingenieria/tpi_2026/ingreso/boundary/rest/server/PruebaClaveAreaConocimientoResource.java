@@ -31,7 +31,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimi
  *
  * @author usermein
  */
-@Path("prueba-clave-area")
+@Path("prueba-clave-area-conocimiento")
 public class PruebaClaveAreaConocimientoResource {
 
     @Inject
@@ -132,18 +132,15 @@ public class PruebaClaveAreaConocimientoResource {
     }
 
     @PUT
-    @Path("/{idPruebaClave:\\d+}/{idAreaConocimiento:\\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(
-            @PathParam("idPruebaClave") @Min(1L) @Max(Long.MAX_VALUE) long idPruebaClave,
-            @PathParam("idAreaConocimiento") @Min(1) @Max(Integer.MAX_VALUE) int idAreaConocimiento,
             @Valid PruebaClaveAreaConocimientoDTO dto,
             @Context UriInfo uriInfo)
             throws DomainException {
         try {
             PruebaClaveAreaConocimiento found = pruebaClaveAreaConocimientoDI.findById(
-                    new PruebaClaveAreaConocimientoPK(idPruebaClave, idAreaConocimiento
+                    new PruebaClaveAreaConocimientoPK(dto.idPruebaClave(), dto.idAreaConocimiento()
                     ));
             if (found == null) {
                 return Response
@@ -152,7 +149,7 @@ public class PruebaClaveAreaConocimientoResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No entity with id: IdPruebaClave:" + idPruebaClave + ", IdAreaConocimiento: " + idAreaConocimiento,
+                                "No entity with id: IdPruebaClave:" + dto.idPruebaClave() + ", IdAreaConocimiento: " + dto.idAreaConocimiento(),
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         )

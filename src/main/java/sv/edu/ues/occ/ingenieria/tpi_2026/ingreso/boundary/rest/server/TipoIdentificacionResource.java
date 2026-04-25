@@ -32,7 +32,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
  *
  * @author usermein
  */
-@Path("tipoIdentificacion")
+@Path("tipo-identificacion")
 public class TipoIdentificacionResource {
 
     @Inject
@@ -41,7 +41,7 @@ public class TipoIdentificacionResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid TipoIdentificacionDTO tipoIdentificacionDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid TipoIdentificacionDTO tipoIdentificacionDTO, @Context UriInfo uriInfo) throws DomainException {
         try {
             TipoIdentificacion nuevoTipoIdentificacion = tipoIdentificacionDI.toEntity(tipoIdentificacionDTO);
             tipoIdentificacionDI.create(nuevoTipoIdentificacion);
@@ -68,7 +68,7 @@ public class TipoIdentificacionResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe TipoPrueba con ID: " + idTipoIdentificacion,
+                                "No entity with id: " + idTipoIdentificacion,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -94,7 +94,7 @@ public class TipoIdentificacionResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe TipoPrueba con ID: " + idTipoIdentificacion,
+                                "No entity with id: " + idTipoIdentificacion,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -146,7 +146,7 @@ public class TipoIdentificacionResource {
                                         null,
                                         ErrorType.NO_MATCH_ID.toString(),
                                         404,
-                                        "No existe TipoIdentificacion con ID: " + idTipoIdentificacion,
+                                        "No entity with id: " + idTipoIdentificacion,
                                         uriInfo.getAbsolutePath().toString(),
                                         null
                                 )

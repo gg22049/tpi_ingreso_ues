@@ -41,7 +41,7 @@ public class PruebaResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid PruebaDTO pruebaDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid PruebaDTO pruebaDTO, @Context UriInfo uriInfo) throws DomainException {
         try {
             Prueba nuevaPrueba = pruebaDI.toEntity(pruebaDTO);
             pruebaDI.create(nuevaPrueba);
@@ -59,7 +59,10 @@ public class PruebaResource {
     @DELETE
     @Path("/{idPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idPrueba, @Context UriInfo uriInfo) throws DomainException {
+    public Response delete(
+            @PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Long idPrueba,
+            @Context UriInfo uriInfo
+    ) throws DomainException {
         try {
             Prueba prueba = pruebaDI.findById(idPrueba);
             if (prueba == null) {
@@ -68,7 +71,7 @@ public class PruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Prueba con ID: " + idPrueba,
+                                "No entity with id: " + idPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -84,7 +87,7 @@ public class PruebaResource {
     @Path("/{idPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByID(
-            @PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idPrueba,
+            @PathParam("idPrueba") @Min(1) @Max(Integer.MAX_VALUE) Long idPrueba,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -95,7 +98,7 @@ public class PruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Prueba con ID: " + idPrueba,
+                                "No entity with id: " + idPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -143,7 +146,7 @@ public class PruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Prueba con ID: " + idPrueba,
+                                "No entity with id: " + idPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();

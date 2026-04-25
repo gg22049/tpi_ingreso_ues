@@ -36,7 +36,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
  *
  * @author usermein
  */
-@Path("tipoPrueba")
+@Path("tipo-prueba")
 public class TipoPruebaResource {
 
     @Inject
@@ -45,7 +45,7 @@ public class TipoPruebaResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid TipoPruebaDTO tipoPruebaDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid TipoPruebaDTO tipoPruebaDTO, @Context UriInfo uriInfo) throws DomainException {
         try {
             TipoPrueba nuevaTipoPrueba = tipoPruebaDI.toEntity(tipoPruebaDTO);
             tipoPruebaDI.create(nuevaTipoPrueba);
@@ -61,7 +61,7 @@ public class TipoPruebaResource {
     }
 
     @DELETE
-    @Path("idTipoPrueba:\\d+")
+    @Path("/{idTipoPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idTipoPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoPrueba, @Context UriInfo uriInfo) throws DomainException {
         try {
@@ -72,7 +72,7 @@ public class TipoPruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                "No entity with id: " + idTipoPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -85,7 +85,7 @@ public class TipoPruebaResource {
     }
 
     @GET
-    @Path("idTipoPrueba:\\d+")
+    @Path("/{idTipoPrueba:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByID(@PathParam("idTipoPrueba") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoPrueba,
             @Context UriInfo uriInfo
@@ -98,7 +98,7 @@ public class TipoPruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                "No entity with id: " + idTipoPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();
@@ -135,7 +135,7 @@ public class TipoPruebaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(
-            @PathParam("idTipoPrueba") Integer idTipoPrueba,
+            @PathParam("idDistractor") @Min(1) @Max(Integer.MAX_VALUE) Integer idTipoPrueba,
             @Valid TipoPruebaDTO tipoPruebaDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
@@ -146,7 +146,7 @@ public class TipoPruebaResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe TipoPrueba con ID: " + idTipoPrueba,
+                                "No entity with id: " + idTipoPrueba,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();

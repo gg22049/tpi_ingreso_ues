@@ -14,8 +14,12 @@ import java.math.BigDecimal;
  * @author usermein
  */
 public record PruebaClaveAreaConocimientoDTO(
+        @Min(1)
+        @Max(Long.MAX_VALUE)
         @NotNull
         long idPruebaClave,
+        @Min(1)
+        @Max(Integer.MAX_VALUE)
         @NotNull
         int idAreaConocimiento,
         Integer cantidad,

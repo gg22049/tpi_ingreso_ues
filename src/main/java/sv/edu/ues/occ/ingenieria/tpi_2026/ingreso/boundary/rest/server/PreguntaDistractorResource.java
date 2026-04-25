@@ -2,6 +2,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -57,8 +59,8 @@ public class PreguntaDistractorResource {
     @Path("/{idPregunta:\\d+}/{idDistractor}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(
-            @PathParam("idPregunta") long idPregunta,
-            @PathParam("idDistractor") long idDistractor,
+            @PathParam("idPregunta") @Min(1) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) long idDistractor,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {
@@ -91,8 +93,8 @@ public class PreguntaDistractorResource {
     @Path("/{idPregunta:\\d+}/{idDistractor}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(
-            @PathParam("idPregunta") long idPregunta,
-            @PathParam("idDistractor") long idDistractor,
+            @PathParam("idPregunta") @Min(1) @Max(Long.MAX_VALUE) long idPregunta,
+            @PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) long idDistractor,
             @Context UriInfo uriInfo
     ) throws DomainException {
         try {

@@ -41,18 +41,17 @@ public class DistractorResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid DistractorDTO distractorDTO, UriInfo uriInfo) throws DomainException {
+    public Response create(@NotNull @Valid DistractorDTO distractorDTO, @Context UriInfo uriInfo) throws DomainException {
         try {
             Distractor nuevoDistractor = distractorDI.toEntity(distractorDTO);
-            //nuevoDistractor.setValor(distractorDTO.valor());
-            //nuevoDistractor.setActivo(distractorDTO.activo());
-            //nuevoDistractor.setImagenUrl(distractorDTO.imagenUrl());
             distractorDI.create(nuevoDistractor);
             URI uriCreada = uriInfo.getAbsolutePathBuilder()
                     .path(String.valueOf(nuevoDistractor.getIdDistractor()))
                     .build();
-            return Response.created(uriCreada)
+            return Response
+                    .created(uriCreada)
                     .entity(distractorDTO)
+                    .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
             throw new DomainException(e);
@@ -60,9 +59,9 @@ public class DistractorResource {
     }
 
     @DELETE
-    @Path("idDistractor:\\d+")
+    @Path("/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idDistractor") @Min(1) @Max(Integer.MAX_VALUE) Integer idDistractor, @Context UriInfo uriInfo) throws DomainException {
+    public Response delete(@PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) Long idDistractor, @Context UriInfo uriInfo) throws DomainException {
         try {
             Distractor distractor = distractorDI.findById(idDistractor);
             if (distractor == null) {
@@ -84,7 +83,7 @@ public class DistractorResource {
     }
 
     @GET
-    @Path("idDistractor:\\d+")
+    @Path("/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByID(@PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) Long idDistractor,
             @Context UriInfo uriInfo
@@ -133,7 +132,7 @@ public class DistractorResource {
     @Path("/{idDistractor:\\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idTipoPrueba") Integer idDistractor,
+    public Response update(@PathParam("idDistractor") @Min(1) Long idDistractor,
             DistractorDTO distractorDTO,
             @Context UriInfo uriInfo) throws DomainException {
         try {
@@ -144,7 +143,7 @@ public class DistractorResource {
                         .entity(new ErrorDetailDTO(null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "No existe Distractor con ID: " + idDistractor,
+                                "No entity with id: " + idDistractor,
                                 uriInfo.getAbsolutePath().toString(),
                                 null))
                         .build();

@@ -94,7 +94,7 @@ public class AspiranteOpcionResource {
                                 null,
                                 ErrorType.NO_MATCH_ID.toString(),
                                 404,
-                                "AspiranteOpcion with id " + id + " not found",
+                                "No entity with id: " + id,
                                 uriInfo.getAbsolutePath().toString(),
                                 null
                         ))

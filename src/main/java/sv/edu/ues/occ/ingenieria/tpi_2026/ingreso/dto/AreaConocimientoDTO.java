@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -8,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public record AreaConocimientoDTO(
         Integer idAreaConocimiento,
-        @NotNull
+        @NotBlank
         String nombre,
         String descripcion,
         @NotNull
