@@ -38,6 +38,7 @@ public class RegistrarNuevoAspiranteE2E extends STAbstract {
 
     @When("registro un aspirante con:")
     public void test(DataTable table) {
+        
         Map<String, String> data = table.asMap(String.class, String.class);
         AspiranteDTO dto = new AspiranteDTO(
                 null,

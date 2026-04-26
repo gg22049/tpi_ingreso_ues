@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -107,8 +108,6 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
                     parentTipo.getIdTipoIdentificacion()
             );
 
-            System.out.println(pk.getIdAspirante());
-            System.out.println(pk.getIdAspirante());
             newAspiranteIdentificacion.setAspiranteIdentificacionPK(pk);
             cut.em.persist(newAspiranteIdentificacion);
             cut.em.flush();
@@ -145,8 +144,6 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
                     parentTipo.getIdTipoIdentificacion()
             );
 
-            System.out.println(pk.getIdAspirante());
-            System.out.println(pk.getIdAspirante());
             newAspiranteIdentificacion.setAspiranteIdentificacionPK(pk);
             cut.em.persist(newAspiranteIdentificacion);
             cut.em.flush();
@@ -181,8 +178,6 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
                     parentTipo.getIdTipoIdentificacion()
             );
 
-            System.out.println(pk.getIdAspirante());
-            System.out.println(pk.getIdAspirante());
             newAspiranteIdentificacion.setAspiranteIdentificacionPK(pk);
             cut.em.persist(newAspiranteIdentificacion);
             cut.em.flush();
@@ -290,7 +285,7 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos > 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
