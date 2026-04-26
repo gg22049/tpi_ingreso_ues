@@ -34,8 +34,8 @@ public class CreacionJordanasAndAsignacionAulasE2E extends STAbstract {
     private String aulaA3;
     private String aulaA4;
     private Response response;
-    @Given("Se tiene un servidor corriendo con la aplicacion desplegada")
-    public void se_tiene_un_servidor_corriendo_con_la_aplicacion_desplegada() {
+    @Given("Se tiene un servidor corriendo con la aplicacion desplegada y respondiendo")
+public void se_tiene_un_servidor_corriendo_con_la_aplicacion_desplegada_y_respondiendo(){
         System.out.println("--------------------------------------------");
         System.out.println("-------------SERVIDOR CORRIENDO--------------");
         System.out.println("--------------------------------------------");

@@ -14,63 +14,59 @@ import io.cucumber.java.en.When;
  * @author cesar
  */
 public class CrearBancoPreguntasConAreaYDistractoresE2E extends STAbstract{
-@Given("crear un tipo de prueba {string} {string}:")
-   @Given("se tiene un servidor corriendo con la aplicación desplegada")
-    public void servidor_corriendo() {
-        // Aquí podrías inicializar cliente HTTP o validar que el server responde
-    }
-
-    @When("creo un area de conocimiento llamada {string}")
-    public void creo_area_conocimiento(String nombre) {
-        // Llamar POST /areaConocimiento
-        // guardar ID para usar después
-    }
-
-    @And("creo una pregunta con el texto {string}")
-    public void creo_pregunta(String texto) {
-        // POST /pregunta
-    }
-
-    @And("asocio la pregunta al area de conocimiento {string}")
-    public void asocio_pregunta_area(String nombreArea) {
-        // POST relación pregunta-area
-    }
-
-    @And("creo el distractor {int} como opcion incorrecta {string}")
-    public void creo_distractor_incorrecto(Integer valor, String estado) {
-        boolean esCorrecto = Boolean.parseBoolean(estado);
-        // POST distractor incorrecto
-    }
-
-    @And("creo el distractor {int} como opcion correcta {string}")
-    public void creo_distractor_correcto(Integer valor, String estado) {
-        boolean esCorrecto = Boolean.parseBoolean(estado);
-        // POST distractor correcto
-    }
-
-    @And("asocio los distractores a la pregunta")
-    public void asocio_distractores() {
-        // POST relación pregunta-distractores
-    }
-
-    @Then("puedo consultar la pregunta recien creada")
-    public void consultar_pregunta() {
-        // GET /pregunta/{id}
-        // assertNotNull(response);
-    }
-
-    @And("verifico que la pregunta pertenece al area {string}")
-    public void verificar_area(String nombreArea) {
-        // assertEquals(nombreArea, respuesta.getArea())
-    }
-
-    @And("verifico que la pregunta tiene el distractor {int}")
-    public void verificar_distractor(Integer valor) {
-        // assertTrue(listaDistractores.contains(valor))
-    }
-
-    @And("verifico que el distractor {int} esta marcado como correcto")
-    public void verificar_distractor_correcto(Integer valor) {
-        // buscar distractor y validar flag correcto == true
-    }
+@Given("la API REST está desplegada y operativa")
+public void la_api_rest_está_desplegada_y_operativa() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("creo un area de conocimiento llamada {string}")
+public void creo_un_area_de_conocimiento_llamada(String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("creo una pregunta con el texto {string}")
+public void creo_una_pregunta_con_el_texto(String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("asocio la pregunta al area de conocimiento {string}")
+public void asocio_la_pregunta_al_area_de_conocimiento(String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("creo el distractor {int} como opcion incorrecta {string}")
+public void creo_el_distractor_como_opcion_incorrecta(Integer int1, String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("creo el distractor {int} como opcion correcta {string}")
+public void creo_el_distractor_como_opcion_correcta(Integer int1, String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("asocio los distractores a la pregunta")
+public void asocio_los_distractores_a_la_pregunta() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@Then("puedo consultar la pregunta recien creada")
+public void puedo_consultar_la_pregunta_recien_creada() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@Then("verifico que la pregunta pertenece al area {string}")
+public void verifico_que_la_pregunta_pertenece_al_area(String string) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@Then("verifico que la pregunta tiene el distractor {int}")
+public void verifico_que_la_pregunta_tiene_el_distractor(Integer int1) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@Then("verifico que el distractor {int} esta marcado como correcto")
+public void verifico_que_el_distractor_esta_marcado_como_correcto(Integer int1) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
 }

@@ -1,7 +1,7 @@
 Feature: Crear pregunta con area de conocimiento y distractoress
 
 Scenario: Crear pregunta con area de conocimiento y distractores
-  Given se tiene un servidor corriendo con la aplicación desplegada
+  Given la API REST está desplegada y operativa
   When creo un area de conocimiento llamada "matematicas"
   And creo una pregunta con el texto "Cuanto es 2 + 2?"
   And asocio la pregunta al area de conocimiento "matematicas"

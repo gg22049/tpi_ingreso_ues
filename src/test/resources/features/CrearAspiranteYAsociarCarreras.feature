@@ -1,7 +1,7 @@
 Feature:Crear perfil de aspirante, asociarle una identificacion y asociarlo a varias opciones de carrera
 
 Scenario: Crear perfil de aspirante, asociarle una identificacion y asociarlo a varias opciones de carrera
-  Given se tiene un servidor corriendo con la aplicación desplegada
+  Given la aplicación se encuentra desplegada y el servidor está activo
   When creo un aspirante con nombres, apellidos, fecha de nacimiento y correo:
     | nombres           | Juan                          |
     | apellidos         | Perez                         |

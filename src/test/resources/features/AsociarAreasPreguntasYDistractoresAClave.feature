@@ -1,7 +1,7 @@
 Feature: Construir clave de prueba con area, pregunta y distractores
 
 Scenario: Construir clave de prueba con area, pregunta y distractores
-  Given crear un tipo de prueba "Nuevo Ingreso En linea" "true":
+  Given se tiene un tipo de prueba "Nuevo Ingreso En linea" "true":
   And crear una prueba:
   |tipoPrueba|Nuevo Ingreso|
   |indicaciones|Responda con lapiz H2B|

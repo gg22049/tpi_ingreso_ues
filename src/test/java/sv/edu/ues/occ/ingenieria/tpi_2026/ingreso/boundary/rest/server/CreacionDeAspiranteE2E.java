@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import jakarta.json.bind.Jsonb;
@@ -30,7 +31,12 @@ public class CreacionDeAspiranteE2E extends STAbstract {
     private URI locationAspiranteOpcion;
     // private String path = "aspirante/";
     private Response response;
-
+    
+    @Given("Se tiene un servidor corriendo con la aplicacion desplegada")
+public void se_tiene_un_servidor_corriendo_con_la_aplicacion_desplegada() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
     @When("puedo crear un aspirante")
     public void puedo_crear_un_aspirante() {
         System.out.println("-------------------------------------------------------");
