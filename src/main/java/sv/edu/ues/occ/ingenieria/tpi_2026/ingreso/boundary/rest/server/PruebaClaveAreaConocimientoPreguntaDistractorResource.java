@@ -46,10 +46,10 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResource {
             PruebaClaveAreaConocimientoPreguntaDistractorDI.create(newPruebaClaveAreaConocimientoPreguntaDistractor);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
             uriBuilder
-                    .queryParam("idPruebaClave", String.valueOf(dto.idPruebaClave()))
-                    .queryParam("idAreaConocimiento", String.valueOf(dto.idAreaConocimiento()))
-                    .queryParam("idPregunta", String.valueOf(dto.idPregunta()))
-                    .queryParam("idDistractor", String.valueOf(dto.idDistractor()))
+                    .path(String.valueOf(dto.idPruebaClave()))
+                    .path( String.valueOf(dto.idAreaConocimiento()))
+                    .path( String.valueOf(dto.idPregunta()))
+                    .path(String.valueOf(dto.idDistractor()))
                     .build();
             return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {

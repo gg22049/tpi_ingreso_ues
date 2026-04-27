@@ -27,7 +27,6 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAulaPK;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcion;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionExamen;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionPK;
 
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
