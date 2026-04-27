@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,9 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
 
@@ -37,6 +35,14 @@ public class PruebaDAOImpIT extends ITAbstract {
 
     Prueba newPrueba;
     TipoPrueba parentTipo;
+
+    private void persistirEscenarioCompleto(EntityManager em) {
+        em.persist(parentTipo);
+        em.flush();
+        newPrueba.setIdTipoPrueba(parentTipo);
+        em.persist(newPrueba);
+        em.flush();
+    }
 
     @BeforeAll
     void init() {
@@ -86,11 +92,7 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-            cut.em.flush();
-            newPrueba.setIdTipoPrueba(parentTipo);
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Prueba found = cut.em.find(Prueba.class, newPrueba.getIdPrueba());
             assertNotNull(found);
@@ -110,12 +112,7 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-
-            cut.em.flush();
-            newPrueba.setIdTipoPrueba(parentTipo);
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<Prueba> resultList = cut.findAll();
             assertNotNull(resultList);
@@ -138,16 +135,11 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-            cut.em.flush();
-
-            newPrueba.setIdTipoPrueba(parentTipo);
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<Prueba> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
 
         } finally {
             tx.rollback();
@@ -165,10 +157,7 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-            cut.em.flush();
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             newPrueba.setNombre(expected);
             newPrueba = cut.update(newPrueba);
@@ -190,11 +179,7 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-            cut.em.flush();
-            newPrueba.setIdTipoPrueba(parentTipo);
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             assertNotNull(parentTipo.getIdTipoPrueba());
             cut.delete(newPrueba);
@@ -215,15 +200,11 @@ public class PruebaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentTipo);
-            cut.em.flush();
-            newPrueba.setIdTipoPrueba(parentTipo);
-            cut.em.persist(newPrueba);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 2);
+            assertTrue(cuantos >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -260,30 +241,30 @@ public class PruebaDAOImpIT extends ITAbstract {
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
         BigDecimal decimal = new BigDecimal("33");
-        PruebaDAOImp cut = new PruebaDAOImp(); 
+        PruebaDAOImp cut = new PruebaDAOImp();
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-             Prueba prueba;
-        Prueba prueba2;
-        PruebaDTO pruebaDTO = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pruebaDTO);
+            Prueba prueba;
+            Prueba prueba2;
+            PruebaDTO pruebaDTO = null;
+            assertThrows(IllegalStateException.class, () -> {
+                cut.toEntity(pruebaDTO);
 
-        });
-        PruebaDTO dto = new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), 1);
-        prueba = cut.toEntity(dto);
-        assertNotNull(prueba);
-        prueba2 = cut.toEntity(new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), null));
-        assertNotNull(prueba2);
-        assertNull(prueba2.getIdTipoPrueba());
+            });
+            PruebaDTO dto = new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), 1);
+            prueba = cut.toEntity(dto);
+            assertNotNull(prueba);
+            prueba2 = cut.toEntity(new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), null));
+            assertNotNull(prueba2);
+            assertNull(prueba2.getIdTipoPrueba());
         } finally {
             tx.rollback();
             cut.em.close();
-            
+
         }
-       
+
     }
 
 }

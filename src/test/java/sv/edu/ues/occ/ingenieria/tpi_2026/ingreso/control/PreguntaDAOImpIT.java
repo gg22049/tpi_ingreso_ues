@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -30,17 +31,17 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 public class PreguntaDAOImpIT extends ITAbstract{
     
     Pregunta newPregunta;
+    
+    
 
     @BeforeAll
     void init() {
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
 
-        //parentAspirante = new Aspirante(null, "TEST", "RELACION", cal.getTime(), "relacion@test.com");
-        //aspIdenPK = new AspiranteIdentificacionPK();
+      
         newPregunta = new Pregunta(null, "¿Puede salirse para fuera de la casa?", true,"IMAGEN", "La pregunta esta mal planteada");
-        //newAspiranteIdentificacion.setAspiranteIdentificacionPK(aspIdenPK);
-
+        
     }
 
     @Test

@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -31,15 +32,13 @@ public class DistractorDAOImpIT extends ITAbstract {
 
     Distractor newDistractor;
 
+   
     @BeforeAll
     void init() {
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
 
-        //parentAspirante = new Aspirante(null, "TEST", "RELACION", cal.getTime(), "relacion@test.com");
-        //aspIdenPK = new AspiranteIdentificacionPK();
         newDistractor = new Distractor(null, "Vas a pasar la materia?", true, "IMAGEN");
-        //newAspiranteIdentificacion.setAspiranteIdentificacionPK(aspIdenPK);
 
     }
 
@@ -56,10 +55,8 @@ public class DistractorDAOImpIT extends ITAbstract {
 
             cut.em.persist(newDistractor);
 
-          
-
             cut.create(newDistractor);
-  cut.em.flush();
+            cut.em.flush();
             cut.em.clear();
             Distractor creado = cut.em.find(Distractor.class, newDistractor.getIdDistractor());
             assertNotNull(creado);
@@ -71,7 +68,7 @@ public class DistractorDAOImpIT extends ITAbstract {
         }
 
     }
-   
+
     @Test
     @Order(2)
     void testFindById() {
@@ -82,14 +79,12 @@ public class DistractorDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-           
             cut.em.persist(newDistractor);
             cut.em.flush();
             cut.em.clear();
 
             Distractor found = cut.em.find(Distractor.class, newDistractor.getIdDistractor());
 
-            
             assertNotNull(found);
             assertEquals(newDistractor.getIdDistractor(), found.getIdDistractor());
         } finally {
@@ -97,7 +92,7 @@ public class DistractorDAOImpIT extends ITAbstract {
             cut.em.close();
         }
     }
- 
+
     @Test
     @Order(3)
     void testFindAll() {
@@ -107,7 +102,7 @@ public class DistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-        
+
             cut.em.persist(newDistractor);
             cut.em.flush();
             cut.em.clear();
@@ -120,7 +115,7 @@ public class DistractorDAOImpIT extends ITAbstract {
         }
 
     }
- 
+
     @Test
     @Order(4)
     void testFindRange() {
@@ -144,7 +139,7 @@ public class DistractorDAOImpIT extends ITAbstract {
             cut.em.close();
         }
     }
- 
+
     @Test
     @Order(5)
     void testUpdate() {
@@ -167,7 +162,7 @@ public class DistractorDAOImpIT extends ITAbstract {
             cut.em.close();
         }
     }
- 
+
     @Test
     @Order(6)
     void testDelete() {
@@ -182,15 +177,15 @@ public class DistractorDAOImpIT extends ITAbstract {
             cut.em.flush();
             cut.em.clear();
             cut.delete(newDistractor);
-         
-            Distractor deleted=cut.findById(newDistractor.getIdDistractor());
+
+            Distractor deleted = cut.findById(newDistractor.getIdDistractor());
             assertNull(deleted);
         } finally {
             tx.rollback();
             cut.em.close();
         }
     }
- 
+
     @Test
     @Order(7)
     void testCount() {
@@ -198,7 +193,7 @@ public class DistractorDAOImpIT extends ITAbstract {
         DistractorDAOImp cut = new DistractorDAOImp();
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
-  try {
+        try {
             tx.begin();
             cut.em.persist(newDistractor);
             cut.em.flush();
@@ -211,41 +206,42 @@ public class DistractorDAOImpIT extends ITAbstract {
             cut.em.close();
         }
     }
-      @Test
+
+    @Test
     @Order(8)
-    void testToDto(){
+    void testToDto() {
         System.out.println("DistractorDAOImp.testToDto");
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
         DistractorDAOImp cut = new DistractorDAOImp();
-        Distractor distractor1= new Distractor(1l, "100", true, "imagen");
+        Distractor distractor1 = new Distractor(1l, "100", true, "imagen");
         DistractorDTO distractorDTO;
-        Distractor distractor2=null;
+        Distractor distractor2 = null;
         assertThrows(IllegalStateException.class, () -> {
-          cut.toDto(distractor2);
-           
+            cut.toDto(distractor2);
+
         });
-        
-         distractorDTO=cut.toDto(distractor1);
-         assertNotNull(distractorDTO);
+
+        distractorDTO = cut.toDto(distractor1);
+        assertNotNull(distractorDTO);
     }
-    
-      @Test
+
+    @Test
     @Order(9)
-    void testToEntity(){
+    void testToEntity() {
         System.out.println("DistractorDAOImp.estToEntity");
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
-       DistractorDAOImp cut = new DistractorDAOImp();
-        DistractorDTO distractorDTO1= new DistractorDTO(1l, "100kM", true, "imagen");
+        DistractorDAOImp cut = new DistractorDAOImp();
+        DistractorDTO distractorDTO1 = new DistractorDTO(1l, "100kM", true, "imagen");
         Distractor distractor;
-        DistractorDTO distractor2=null;
+        DistractorDTO distractor2 = null;
         assertThrows(IllegalStateException.class, () -> {
-          cut.toEntity(distractor2);
-           
+            cut.toEntity(distractor2);
+
         });
-        
-         distractor=cut.toEntity(distractorDTO1);
-         assertNotNull(distractor);
+
+        distractor = cut.toEntity(distractorDTO1);
+        assertNotNull(distractor);
     }
 }

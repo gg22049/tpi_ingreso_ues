@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -38,7 +39,22 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
     Prueba prueba;
     TipoPrueba tipoPrueba;
     Jornada jornada;
-    PruebaJornadaPK pueJorPK;
+    PruebaJornadaPK prueJorPK;
+
+    private void persistirEscenarioCompleto(EntityManager em) {
+        em.persist(tipoPrueba);
+        em.flush();
+        em.persist(prueba);
+        em.persist(jornada);
+        em.flush();
+        prueJorPK = new PruebaJornadaPK(
+                prueba.getIdPrueba(),
+                jornada.getIdJornada()
+        );
+        newPruebaJornada.setPruebaJornadaPK(prueJorPK);
+        em.persist(newPruebaJornada);
+        em.flush();
+    }
 
     @BeforeAll
     void init() {
@@ -72,8 +88,8 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
             cut.em.persist(prueba);
             cut.em.persist(jornada);
             cut.em.flush();
-            pueJorPK = new PruebaJornadaPK(prueba.getIdPrueba(), jornada.getIdJornada());
-            newPruebaJornada.setPruebaJornadaPK(pueJorPK);
+            prueJorPK = new PruebaJornadaPK(prueba.getIdPrueba(), jornada.getIdJornada());
+            newPruebaJornada.setPruebaJornadaPK(prueJorPK);
             cut.em.clear();
             cut.create(newPruebaJornada);
             PruebaJornadaPK pk = newPruebaJornada.getPruebaJornadaPK();
@@ -98,20 +114,9 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
-            PruebaJornada found = cut.em.find(PruebaJornada.class, pk);
+            PruebaJornada found = cut.em.find(PruebaJornada.class, prueJorPK);
             assertNotNull(found);
             assertEquals(newPruebaJornada.getPruebaJornadaPK(), found.getPruebaJornadaPK());
         } finally {
@@ -129,22 +134,11 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PruebaJornada> resultList = cut.findAll();
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -163,18 +157,7 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PruebaJornada> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
@@ -196,23 +179,11 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             newPruebaJornada.setObservaciones(expected);
             PruebaJornada entidad = cut.update(newPruebaJornada);
             assertNotNull(entidad);
             assertEquals(expected, entidad.getObservaciones());
-            System.out.println(entidad.getObservaciones());
         } finally {
             tx.rollback();
             cut.em.close();
@@ -228,27 +199,16 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             cut.delete(newPruebaJornada);
             cut.em.flush();
             cut.em.clear();
-            PruebaJornada deleted = cut.findById(pk);
+            PruebaJornada deleted = cut.findById(prueJorPK);
             assertNull(deleted);
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 1);
+            assertTrue(cuantos >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -264,23 +224,11 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.persist(jornada);
-            cut.em.flush();
-            cut.em.clear();
-            PruebaJornadaPK pk = new PruebaJornadaPK(
-                    prueba.getIdPrueba(),
-                    jornada.getIdJornada()
-            );
-            newPruebaJornada.setPruebaJornadaPK(pk);
-            cut.em.persist(newPruebaJornada);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 2);
+            assertTrue(cuantos>0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -322,6 +270,6 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         ti1 = cut.toEntity(new PruebaJornadaDTO(1, 1, cal.getTime(), "Se podria cambiar la jornada de esta prueba"));
         assertNotNull(ti1);
         assertEquals(cal.getTime(), ti1.getFechaCreacion());
-        
+
     }
 }

@@ -132,8 +132,6 @@ public class PruebaClaveAreaConocimientoPreguntaDAOImpIT extends ITAbstract {
             PruebaClaveAreaConocimientoPregunta entidad = cut.findById(pcacPPK);
             assertNotNull(entidad);
             assertEquals(pcacPPK, entidad.getPruebaClaveAreaConocimientoPreguntaPK());
-            System.out.println("-----------------------------------");
-            System.out.println(entidad.getPorcentaje());
         } finally {
             tx.rollback();
             cut.em.close();

@@ -4,7 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
-import jakarta.persistence.EntityManager;
+
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
@@ -46,12 +45,12 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
 
         parentAspirante = new Aspirante(null, "TEST", "RELACION", cal.getTime(), "relacion@test.com");
         parentTipo = new TipoIdentificacion(null, "NIT", null);
-        //aspIdenPK = new AspiranteIdentificacionPK();
+   
         newAspiranteIdentificacion = new AspiranteIdentificacion(null, "4444", "IMAGEN NIT", null);
-        //newAspiranteIdentificacion.setAspiranteIdentificacionPK(aspIdenPK);
+
         newAspiranteIdentificacion.setAspirante(parentAspirante);
         newAspiranteIdentificacion.setTipoIdentificacion(parentTipo);
-        // newAspiranteIdentificacion=new AspiranteIdentificacion();
+    
     }
 
     @Test

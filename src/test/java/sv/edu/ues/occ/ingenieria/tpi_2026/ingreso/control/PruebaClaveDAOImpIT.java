@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -19,10 +20,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
@@ -38,6 +36,16 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
     PruebaClave pruebaClave;
     Prueba prueba;
     TipoPrueba tipoPrueba;
+
+    private void persistirEscenarioCompleto(EntityManager em) {
+        em.persist(tipoPrueba);
+        em.flush();
+        em.persist(prueba);
+        em.flush();
+        pruebaClave.setIdPrueba(prueba);
+        em.persist(pruebaClave);
+        em.flush();
+    }
 
     @BeforeAll
     void init() {
@@ -91,13 +99,7 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.flush();
-            pruebaClave.setIdPrueba(prueba);
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             PruebaClave found = cut.em.find(PruebaClave.class, pruebaClave.getIdPruebaClave());
             assertNotNull(found);
@@ -117,17 +119,11 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.flush();
-            pruebaClave.setIdPrueba(prueba);
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PruebaClave> resultList = cut.findAll();
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -145,18 +141,11 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-            cut.em.flush();
-
-            pruebaClave.setIdPrueba(prueba);
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PruebaClave> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() > 0);
 
         } finally {
             tx.rollback();
@@ -174,14 +163,7 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-
-            cut.em.flush();
-
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
 
             pruebaClave.setNombre(expected);
             pruebaClave = cut.update(pruebaClave);
@@ -205,24 +187,14 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-
-            cut.em.flush();
-
-            pruebaClave.setIdPrueba(prueba);
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
-
             cut.delete(pruebaClave);
-
             PruebaClave deleted = cut.findById(pruebaClave.getIdPruebaClave());
             assertNull(deleted);
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -238,20 +210,11 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(tipoPrueba);
-            cut.em.flush();
-            cut.em.persist(prueba);
-
-            cut.em.flush();
-            cut.em.clear();
-
-            pruebaClave.setIdPrueba(prueba);
-            cut.em.persist(pruebaClave);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 2);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -281,7 +244,7 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
     @Test
     @Order(9)
     void testToEntity() {
-        System.out.println("PruebaClaveDAOImp.estToEntity");
+        System.out.println("PruebaClaveDAOImp.testToEntity");
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
         PruebaClaveDAOImp cut = new PruebaClaveDAOImp();

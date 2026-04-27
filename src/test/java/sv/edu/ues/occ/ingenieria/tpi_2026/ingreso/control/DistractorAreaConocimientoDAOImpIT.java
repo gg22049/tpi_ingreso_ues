@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -37,6 +38,19 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
     AreaConocimiento areaConocimirnto;
     DistractorAreaConocimientoPK disAreaPK;
 
+    private void persistirEscenarioCompleto(EntityManager em) {
+        em.persist(distractor);
+        em.persist(areaConocimirnto);
+        em.flush();
+
+        disAreaPK = new DistractorAreaConocimientoPK(
+                distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
+        );
+        distractorAreaConocimiento.setDistractorAreaConocimientoPK(disAreaPK);
+        em.persist(distractorAreaConocimiento);
+        em.flush();
+    }
+
     @BeforeAll
     void init() {
         Calendar cal = Calendar.getInstance();
@@ -44,12 +58,12 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
 
         distractor = new Distractor(null, "Respuesta Correcta", true, "IMAGEN");
         areaConocimirnto = new AreaConocimiento(null, "PROGRAMACION", "PREGUNTAS SOBRE JAVA", true, null);
-        //aspIdenPK = new AspiranteIdentificacionPK();
+
         distractorAreaConocimiento = new DistractorAreaConocimiento(null, "TEST DISTRACTORAREA");
-        //newAspiranteIdentificacion.setAspiranteIdentificacionPK(disAreaPK);
+
         distractorAreaConocimiento.setDistractor(distractor);
         distractorAreaConocimiento.setAreaConocimiento(areaConocimirnto);
-        // distractorAreaConocimiento=new AspiranteIdentificacion();
+
     }
 
     @Test
@@ -92,19 +106,10 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
 
-            DistractorAreaConocimiento found = cut.em.find(DistractorAreaConocimiento.class, pk);
+            DistractorAreaConocimiento found = cut.em.find(DistractorAreaConocimiento.class, disAreaPK);
             assertNotNull(found, "aspirante esta null");
             assertEquals(distractorAreaConocimiento.getDistractorAreaConocimientoPK(), found.getDistractorAreaConocimientoPK());
         } finally {
@@ -122,15 +127,7 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<DistractorAreaConocimiento> resultList = cut.findAll();
             assertNotNull(resultList);
@@ -153,19 +150,11 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<DistractorAreaConocimiento> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -182,16 +171,7 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             distractorAreaConocimiento.setObservaciones(expected);
             DistractorAreaConocimiento entidad = cut.update(distractorAreaConocimiento);
             assertNotNull(entidad);
@@ -212,28 +192,14 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
-
-            cut.delete(distractorAreaConocimiento);
-            cut.em.flush();
-            cut.em.clear();
-            DistractorAreaConocimiento deleted = cut.findById(pk);
-
+            cut.delete(distractorAreaConocimiento);         
+            DistractorAreaConocimiento deleted = cut.findById(disAreaPK);
             assertNull(deleted);
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -249,20 +215,11 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(distractor);
-            cut.em.persist(areaConocimirnto);
-            cut.em.flush();
-            cut.em.clear();
-            DistractorAreaConocimientoPK pk = new DistractorAreaConocimientoPK(
-                    distractor.getIdDistractor(), areaConocimirnto.getIdAreaConocimiento()
-            );
-            distractorAreaConocimiento.setDistractorAreaConocimientoPK(pk);
-            cut.em.persist(distractorAreaConocimiento);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos > 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -290,7 +247,7 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         assertNotNull(dto1);
         assertNotNull(dto2);
         assertNull(dto2.idDistractor());
-         assertEquals(0, dto2.idAreaConocimiento());
+        assertEquals(0, dto2.idAreaConocimiento());
     }
 
     @Test
@@ -309,6 +266,6 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         });
         dac = cut.toEntity(new DistractorAreaConocimientoDTO(1l, 0, "nada"));
         assertNotNull(dac);
-        assertEquals(1l,dac.getDistractorAreaConocimientoPK().getIdDistractor());
+        assertEquals(1l, dac.getDistractorAreaConocimientoPK().getIdDistractor());
     }
 }

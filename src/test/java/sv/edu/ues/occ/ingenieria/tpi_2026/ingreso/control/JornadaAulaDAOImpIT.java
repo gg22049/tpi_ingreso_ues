@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -19,14 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaAulaDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAulaPK;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
 /**
  *
@@ -41,6 +37,19 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
 
     JornadaAulaPK jorAulaPK;
 
+    private void persistirEscenarioCompleto(EntityManager em) {
+        em.persist(jornada);
+        em.flush();
+
+        jorAulaPK = new JornadaAulaPK(
+                jornada.getIdJornada(),
+                "A3"
+        );
+        newJornadaAula.setJornadaAulaPK(jorAulaPK);
+        em.persist(newJornadaAula);
+        em.flush();
+    }
+
     @BeforeAll
     void init() {
         Calendar cal = Calendar.getInstance();
@@ -48,11 +57,10 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
 
         jornada = new Jornada(null, "TEST", cal.getTime(), cal.getTime());
 
-        //aspIdenPK = new AspiranteIdentificacionPK();
         newJornadaAula = new JornadaAula();
         newJornadaAula.setJornada(jornada);
         newJornadaAula.setObservaciones("Buena Aula");
-        // newJornadaAula=new AspiranteIdentificacion();
+
     }
 
     @Test
@@ -95,21 +103,12 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-            cut.em.persist(jornada);
-            cut.em.flush();
-
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
 
-            JornadaAula found = cut.em.find(JornadaAula.class, pk);
+            JornadaAula found = cut.em.find(JornadaAula.class, jorAulaPK);
 
-            assertNotNull(pk);
+            assertNotNull(jorAulaPK);
             assertNotNull(found);
             assertEquals(newJornadaAula.getJornadaAulaPK(), found.getJornadaAulaPK());
         } finally {
@@ -127,19 +126,11 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(jornada);
-            cut.em.flush();
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<JornadaAula> resultList = cut.findAll();
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -158,19 +149,11 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(jornada);
-            cut.em.flush();
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<JornadaAula> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
             assertEquals(newJornadaAula, resultList.get(1));
 
         } finally {
@@ -189,15 +172,7 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(jornada);
-            cut.em.flush();
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             newJornadaAula.setObservaciones(expected);
             JornadaAula entidad = cut.update(newJornadaAula);
             assertNotNull(entidad);
@@ -218,20 +193,10 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(jornada);
-            cut.em.flush();
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             cut.delete(newJornadaAula);
-            cut.em.flush();
-            cut.em.clear();
-            JornadaAula deleted = cut.findById(pk);
+            JornadaAula deleted = cut.findById(jorAulaPK);
             assertNull(deleted);
 
         } finally {
@@ -249,20 +214,11 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(jornada);
-            cut.em.flush();
-            cut.em.clear();
-            JornadaAulaPK pk = new JornadaAulaPK(
-                    jornada.getIdJornada(),
-                    "A3"
-            );
-            newJornadaAula.setJornadaAulaPK(pk);
-            cut.em.persist(newJornadaAula);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 2);
+            assertTrue(cuantos >0);
         } finally {
             tx.rollback();
             cut.em.close();

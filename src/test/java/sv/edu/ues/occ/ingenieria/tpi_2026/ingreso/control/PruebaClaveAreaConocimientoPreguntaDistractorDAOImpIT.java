@@ -21,12 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import static sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.ITAbstract.emf;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoPreguntaDistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimientoPK;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave;
@@ -164,8 +161,6 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImpIT {
             PruebaClaveAreaConocimientoPreguntaDistractor entidad = cut.findById(pcacpDPK);
             assertNotNull(entidad);
             assertEquals(pcacpDPK, entidad.getPruebaClaveAreaConocimientoPreguntaDistractorPK());
-            System.out.println("-----------------------------------");
-            System.out.println(entidad.getObservaciones());
         } finally {
             tx.rollback();
             cut.em.close();
@@ -252,7 +247,7 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImpIT {
             PruebaClaveAreaConocimientoPreguntaDistractor entidad = cut.update(pcacpD);
             assertNotNull(entidad);
             assertEquals(expected, entidad.getObservaciones());
-            System.out.println(entidad.getObservaciones());
+           
         } finally {
             tx.rollback();
             cut.em.close();

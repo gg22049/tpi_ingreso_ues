@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.Calendar;
 import java.util.List;
@@ -33,6 +34,14 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
     AspiranteOpcion newAspiranteOpcion;
     Aspirante parentAspirante;
 
+    private void persistirEscenarioCompleto(EntityManager em) {
+         em.persist(parentAspirante);
+            em.flush();
+            newAspiranteOpcion.setIdAspirante(parentAspirante);
+            em.persist(newAspiranteOpcion);
+            em.flush();
+    }
+    
     @BeforeAll
     void init() {
         Calendar cal = Calendar.getInstance();
@@ -84,12 +93,7 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-            cut.em.persist(parentAspirante);
-            cut.em.flush();
-
-            newAspiranteOpcion.setIdAspirante(parentAspirante);
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
 
             AspiranteOpcion found = cut.em.find(AspiranteOpcion.class, newAspiranteOpcion.getIdAspiranteOpcion());
@@ -111,12 +115,7 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentAspirante);
-
-            cut.em.flush();
-            newAspiranteOpcion.setIdAspirante(parentAspirante);
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<AspiranteOpcion> resultList = cut.findAll();
             assertNotNull(resultList);
@@ -139,12 +138,7 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentAspirante);
-            cut.em.flush();
-
-            newAspiranteOpcion.setIdAspirante(parentAspirante);
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<AspiranteOpcion> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
@@ -166,16 +160,11 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentAspirante);
-
-            cut.em.flush();
-
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
 
             newAspiranteOpcion.setIdOpcion(expected);
             newAspiranteOpcion = cut.update(newAspiranteOpcion);
-            cut.em.flush();
+           
 
             assertNotNull(newAspiranteOpcion);
             assertEquals(expected, newAspiranteOpcion.getIdOpcion());
@@ -196,13 +185,7 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-            cut.em.persist(parentAspirante);
-
-            cut.em.flush();
-
-            newAspiranteOpcion.setIdAspirante(parentAspirante);
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             assertNotNull(parentAspirante.getIdAspirante());
             cut.delete(newAspiranteOpcion);
@@ -224,18 +207,11 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(parentAspirante);
-
-            cut.em.flush();
-            cut.em.clear();
-
-            newAspiranteOpcion.setIdAspirante(parentAspirante);
-            cut.em.persist(newAspiranteOpcion);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos > 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();

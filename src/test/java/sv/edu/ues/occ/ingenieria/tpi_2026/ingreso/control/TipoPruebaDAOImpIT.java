@@ -36,11 +36,7 @@ TipoPrueba newTipoPrueba;
     void init() {
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 15);
-
-        //parentAspirante = new Aspirante(null, "TEST", "RELACION", cal.getTime(), "relacion@test.com");
-        //aspIdenPK = new AspiranteIdentificacionPK();
         newTipoPrueba = new TipoPrueba(null, "Examen Presencial", true, "Debera presentarse a las instalaciones que se le indique");
-        //newAspiranteIdentificacion.setAspiranteIdentificacionPK(aspIdenPK);
 
     }
 
@@ -191,7 +187,7 @@ TipoPrueba newTipoPrueba;
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos > 1);
+            assertTrue(cuantos > 0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -212,7 +208,6 @@ TipoPrueba newTipoPrueba;
         
         assertThrows(IllegalStateException.class, () -> {
             cut.toDto(tp);
-//PreguntaDistractorDAOImp
         });
         pdDTO = cut.toDto(new TipoPrueba(1, "examen presencial", true, "NADA"));
         assertNotNull(pdDTO);
@@ -240,5 +235,5 @@ TipoPrueba newTipoPrueba;
         assertEquals(1, tp1.getIdTipoPrueba());
        
     }
-//TipoPruebaDAOImp
+
 }

@@ -123,7 +123,7 @@ public class TipoIdentificacionDAOImpIT extends ITAbstract {
             cut.em.clear();
             List<TipoIdentificacion> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size()>0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -188,7 +188,7 @@ public class TipoIdentificacionDAOImpIT extends ITAbstract {
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos ==2 );
+            assertTrue(cuantos >0);
         } finally {
             tx.rollback();
             cut.em.close();

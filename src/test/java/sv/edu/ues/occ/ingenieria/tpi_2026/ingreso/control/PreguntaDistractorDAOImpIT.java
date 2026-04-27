@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -20,14 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDistractorDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractorPK;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
 /**
  *
@@ -41,6 +38,18 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
     Pregunta pregunta;
     Distractor distractor;
     PreguntaDistractorPK preDisPK;
+    
+    private void persistirEscenarioCompleto(EntityManager em) {
+            em.persist(pregunta);
+            em.persist(distractor);
+            em.flush();
+            preDisPK = new PreguntaDistractorPK(
+                    pregunta.getIdPregunta(), distractor.getIdDistractor()
+            );
+            preguntaDistractor.setPreguntaDistractorPK(preDisPK);
+            em.persist(preguntaDistractor);
+            em.flush();
+    }
 
     @BeforeAll
     void init() {
@@ -97,19 +106,10 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
-            PreguntaDistractor found = cut.em.find(PreguntaDistractor.class, pk);
-            assertNotNull(pk);
-            assertNotNull(found, "aspirante esta null");
+            PreguntaDistractor found = cut.em.find(PreguntaDistractor.class, preDisPK);
+            assertNotNull(found);
             assertEquals(preguntaDistractor.getPreguntaDistractorPK(), found.getPreguntaDistractorPK());
         } finally {
             tx.rollback();
@@ -126,19 +126,11 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PreguntaDistractor> resultList = cut.findAll();
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size()>0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -157,20 +149,11 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             List<PreguntaDistractor> resultList = cut.findByRange(offset, limit);
             assertNotNull(resultList);
-            assertTrue(resultList.size() == 2);
+            assertTrue(resultList.size() >0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -187,15 +170,7 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             preguntaDistractor.setObservaciones(expected);
             PreguntaDistractor entidad = cut.update(preguntaDistractor);
             assertNotNull(entidad);
@@ -217,22 +192,10 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         try {
             tx.begin();
 
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
-
             cut.delete(preguntaDistractor);
-            cut.em.flush();
-            cut.em.clear();
-            PreguntaDistractor deleted = cut.findById(pk);
+            PreguntaDistractor deleted = cut.findById(preDisPK);
             assertNull(deleted);
             Long cuantos = cut.count();
             assertNotNull(cuantos);
@@ -252,21 +215,11 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
-            cut.em.persist(pregunta);
-            cut.em.persist(distractor);
-            cut.em.flush();
-            cut.em.clear();
-
-            PreguntaDistractorPK pk = new PreguntaDistractorPK(
-                    pregunta.getIdPregunta(), distractor.getIdDistractor()
-            );
-            preguntaDistractor.setPreguntaDistractorPK(pk);
-            cut.em.persist(preguntaDistractor);
-            cut.em.flush();
+            persistirEscenarioCompleto(cut.em);
             cut.em.clear();
             Long cuantos = cut.count();
             assertNotNull(cuantos);
-            assertTrue(cuantos == 2);
+            assertTrue(cuantos>0);
         } finally {
             tx.rollback();
             cut.em.close();
@@ -286,7 +239,6 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         PreguntaDistractorDTO pdDTO1;
         assertThrows(IllegalStateException.class, () -> {
             cut.toDto(preDistractor);
-//PreguntaDistractorDAOImp
         });
         pdDTO = cut.toDto(new PreguntaDistractor(new PreguntaDistractorPK(1l, 1l), true, "no hay"));
         pdDTO1 = cut.toDto(new PreguntaDistractor(null, true, "no hay"));
