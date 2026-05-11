@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,13 +45,15 @@ import java.util.List;
     @NamedQuery(name = "Prueba.findByPuntajeMaximo", query = "SELECT p FROM Prueba p WHERE p.puntajeMaximo = :puntajeMaximo"),
     @NamedQuery(name = "Prueba.findByNotaAprobacion", query = "SELECT p FROM Prueba p WHERE p.notaAprobacion = :notaAprobacion"),
     @NamedQuery(name = "Prueba.findByDuracion", query = "SELECT p FROM Prueba p WHERE p.duracion = :duracion"),
-    @NamedQuery(name = "Prueba.findByFechaCreacion", query = "SELECT p FROM Prueba p WHERE p.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "Prueba.findByFechaCreacion", query = "SELECT p FROM Prueba p WHERE p.fechaCreacion = :fechaCreacion")
+})
 public class Prueba implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_prueba")
     private Long idPrueba;
     @Basic(optional = false)
@@ -77,14 +80,17 @@ public class Prueba implements Serializable {
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-    @NotNull
+    @JsonbTransient
     @JoinColumn(name = "id_tipo_prueba", referencedColumnName = "id_tipo_prueba")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TipoPrueba idTipoPrueba;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prueba", fetch = FetchType.LAZY)
     private List<PruebaJornadaAulaAspiranteOpcion> pruebaJornadaAulaAspiranteOpcionList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPrueba", fetch = FetchType.LAZY)
     private List<PruebaClave> pruebaClaveList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prueba", fetch = FetchType.LAZY)
     private List<PruebaJornada> pruebaJornadaList;
 

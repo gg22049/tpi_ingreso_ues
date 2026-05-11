@@ -8,8 +8,6 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /**
@@ -18,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
  */
 @Stateless
 @LocalBean
-public class JornadaDAOImp extends AbstractCRUD<Jornada, JornadaDTO> implements Serializable {
+public class JornadaDAOImp extends AbstractDefaultDAOImp<Jornada> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,36 +28,6 @@ public class JornadaDAOImp extends AbstractCRUD<Jornada, JornadaDTO> implements 
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public Jornada toEntity(JornadaDTO dto) throws IllegalStateException {
-        try {
-            return new Jornada(
-                    dto.idJornada(),
-                    dto.nombre(),
-                    dto.fechaInicio(),
-                    dto.fechaFin(),
-                    dto.observaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public JornadaDTO toDto(Jornada entity) throws IllegalStateException {
-        try {
-            return new JornadaDTO(
-                    entity.getIdJornada(),
-                    entity.getNombre(),
-                    entity.getFechaInicio(),
-                    entity.getFechaFin(),
-                    entity.getObservaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

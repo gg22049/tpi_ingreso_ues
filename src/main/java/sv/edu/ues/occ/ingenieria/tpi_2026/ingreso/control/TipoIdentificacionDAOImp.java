@@ -8,8 +8,6 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
 /**
@@ -18,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
  */
 @Stateless
 @LocalBean
-public class TipoIdentificacionDAOImp extends AbstractCRUD<TipoIdentificacion, TipoIdentificacionDTO> implements Serializable {
+public class TipoIdentificacionDAOImp extends AbstractDefaultDAOImp<TipoIdentificacion> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,32 +28,6 @@ public class TipoIdentificacionDAOImp extends AbstractCRUD<TipoIdentificacion, T
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public TipoIdentificacion toEntity(TipoIdentificacionDTO dto) throws IllegalStateException {
-        try {
-            return new TipoIdentificacion(
-                    dto.idTipoIdentificacion(),
-                    dto.nombre(),
-                    dto.observaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public TipoIdentificacionDTO toDto(TipoIdentificacion entity) throws IllegalStateException {
-        try {
-            return new TipoIdentificacionDTO(
-                    entity.getIdTipoIdentificacion(),
-                    entity.getNombre(),
-                    entity.getObservaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

@@ -8,10 +8,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimientoPK;
 
 /**
  *
@@ -19,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimient
  */
 @Stateless
 @LocalBean
-public class PreguntaAreaConocimientoDAOImp extends AbstractCRUD<PreguntaAreaConocimiento, PreguntaAreaConocimientoDTO> implements Serializable {
+public class PreguntaAreaConocimientoDAOImp extends AbstractDefaultDAOImp<PreguntaAreaConocimiento> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -31,32 +28,6 @@ public class PreguntaAreaConocimientoDAOImp extends AbstractCRUD<PreguntaAreaCon
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public PreguntaAreaConocimiento toEntity(PreguntaAreaConocimientoDTO dto) {
-        try {
-            return new PreguntaAreaConocimiento(
-                    new PreguntaAreaConocimientoPK(dto.idPregunta(), dto.idAreaConocimiento()),
-                    dto.observaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public PreguntaAreaConocimientoDTO toDto(PreguntaAreaConocimiento entity) {
-        try {
-            PreguntaAreaConocimientoPK key = entity.getPreguntaAreaConocimientoPK();
-            return new PreguntaAreaConocimientoDTO(
-                    key == null ? 0L : key.getIdPregunta(),
-                    key == null ? 0 : key.getIdAreaConocimiento(),
-                    entity.getObservaciones()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

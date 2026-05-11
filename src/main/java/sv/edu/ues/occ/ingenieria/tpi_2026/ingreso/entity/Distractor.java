@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,6 +43,7 @@ public class Distractor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_distractor")
     private Long idDistractor;
     @Basic(optional = false)
@@ -55,10 +57,13 @@ public class Distractor implements Serializable {
     @Size(max = 64)
     @Column(name = "imagen_url")
     private String imagenUrl;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimientoPreguntaDistractor> pruebaClaveAreaConocimientoPreguntaDistractorList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
     private List<DistractorAreaConocimiento> distractorAreaConocimientoList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "distractor", fetch = FetchType.LAZY)
     private List<PreguntaDistractor> preguntaDistractorList;
 

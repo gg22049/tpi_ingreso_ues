@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,6 +17,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -43,13 +45,15 @@ public class Pregunta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_pregunta")
     private Long idPregunta;
     @Basic(optional = false)
-    @NotNull
+    @NotBlank
     @Size(min = 1, max = 2147483647)
     @Column(name = "valor")
     private String valor;
+    @NotNull
     @Column(name = "activo")
     private Boolean activo;
     @Size(max = 64)
@@ -58,10 +62,13 @@ public class Pregunta implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
     private List<PreguntaAreaConocimiento> preguntaAreaConocimientoList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimientoPregunta> pruebaClaveAreaConocimientoPreguntaList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pregunta", fetch = FetchType.LAZY)
     private List<PreguntaDistractor> preguntaDistractorList;
 

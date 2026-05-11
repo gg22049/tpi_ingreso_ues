@@ -8,10 +8,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaAulaAspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcion;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionPK;
 
 /**
  *
@@ -19,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspira
  */
 @Stateless
 @LocalBean
-public class PruebaJornadaAulaAspiranteOpcionDAOImp extends AbstractCRUD<PruebaJornadaAulaAspiranteOpcion, PruebaJornadaAulaAspiranteOpcionDTO> implements Serializable {
+public class PruebaJornadaAulaAspiranteOpcionDAOImp extends AbstractDefaultDAOImp<PruebaJornadaAulaAspiranteOpcion> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -31,36 +28,6 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImp extends AbstractCRUD<PruebaJ
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public PruebaJornadaAulaAspiranteOpcion toEntity(PruebaJornadaAulaAspiranteOpcionDTO dto) throws IllegalStateException {
-        try {
-            return new PruebaJornadaAulaAspiranteOpcion(
-                    new PruebaJornadaAulaAspiranteOpcionPK(dto.idPrueba(), dto.idJornada(), dto.idAula(), dto.idAspiranteOpcion()),
-                    dto.activo(),
-                    dto.fecha()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public PruebaJornadaAulaAspiranteOpcionDTO toDto(PruebaJornadaAulaAspiranteOpcion entity) throws IllegalStateException {
-        try {
-            PruebaJornadaAulaAspiranteOpcionPK key = entity.getPruebaJornadaAulaAspiranteOpcionPK();
-            return new PruebaJornadaAulaAspiranteOpcionDTO(
-                    key.getIdPrueba(),
-                    key.getIdJornada(),
-                    key.getIdAula(),
-                    key.getIdAspiranteOpcion(),
-                    entity.getActivo(),
-                    entity.getFecha()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

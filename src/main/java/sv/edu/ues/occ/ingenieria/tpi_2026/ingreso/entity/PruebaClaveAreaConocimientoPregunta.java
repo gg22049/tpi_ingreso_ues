@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,6 +44,7 @@ public class PruebaClaveAreaConocimientoPregunta implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PruebaClaveAreaConocimientoPreguntaPK pruebaClaveAreaConocimientoPreguntaPK;
     @Min(value = 0)
     @Max(value = 100)
@@ -50,15 +52,18 @@ public class PruebaClaveAreaConocimientoPregunta implements Serializable {
     @NotNull
     @Column(name = "porcentaje")
     private BigDecimal porcentaje;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pruebaClaveAreaConocimientoPregunta", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimientoPreguntaDistractor> pruebaClaveAreaConocimientoPreguntaDistractorList;
     @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Pregunta pregunta;
     @JoinColumns({
         @JoinColumn(name = "id_prueba_clave", referencedColumnName = "id_prueba_clave", insertable = false, updatable = false),
         @JoinColumn(name = "id_area_conocimiento", referencedColumnName = "id_area_conocimiento", insertable = false, updatable = false)})
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonbTransient
     private PruebaClaveAreaConocimiento pruebaClaveAreaConocimiento;
 
     public PruebaClaveAreaConocimientoPregunta() {

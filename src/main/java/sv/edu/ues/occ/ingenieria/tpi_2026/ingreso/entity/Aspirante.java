@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,6 +49,7 @@ public class Aspirante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_aspirante")
     private Long idAspirante;
     @Basic(optional = false)
@@ -76,8 +78,10 @@ public class Aspirante implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "aspirante", fetch = FetchType.LAZY)
     private List<AspiranteIdentificacion> aspiranteIdentificacionList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAspirante", fetch = FetchType.LAZY)
     private List<AspiranteOpcion> aspiranteOpcionList;
 

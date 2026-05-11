@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,6 +43,7 @@ public class PruebaClave implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_prueba_clave")
     private Long idPruebaClave;
     @Basic(optional = false)
@@ -49,9 +51,11 @@ public class PruebaClave implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "nombre")
     private String nombre;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pruebaClave", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimiento> pruebaClaveAreaConocimientoList;
     @JoinColumn(name = "id_prueba", referencedColumnName = "id_prueba")
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Prueba idPrueba;
 

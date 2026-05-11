@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -42,6 +43,7 @@ public class PruebaJornadaAulaAspiranteOpcion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PruebaJornadaAulaAspiranteOpcionPK pruebaJornadaAulaAspiranteOpcionPK;
     @NotNull
     @Column(name = "activo")
@@ -49,17 +51,21 @@ public class PruebaJornadaAulaAspiranteOpcion implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+    @JsonbTransient
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "pruebaJornadaAulaAspiranteOpcion", fetch = FetchType.LAZY)
     private PruebaJornadaAulaAspiranteOpcionExamen pruebaJornadaAulaAspiranteOpcionExamen;
     @JoinColumn(name = "id_aspirante_opcion", referencedColumnName = "id_aspirante_opcion", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private AspiranteOpcion aspiranteOpcion;
     @JoinColumns({
         @JoinColumn(name = "id_jornada", referencedColumnName = "id_jornada", insertable = false, updatable = false),
         @JoinColumn(name = "id_aula", referencedColumnName = "id_aula", insertable = false, updatable = false)})
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private JornadaAula jornadaAula;
     @JoinColumn(name = "id_prueba", referencedColumnName = "id_prueba", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Prueba prueba;
 

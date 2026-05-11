@@ -8,10 +8,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimiento;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPK;
 
 /**
  *
@@ -19,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimi
  */
 @Stateless
 @LocalBean
-public class PruebaClaveAreaConocimientoDAOImp extends AbstractCRUD<PruebaClaveAreaConocimiento, PruebaClaveAreaConocimientoDTO> implements Serializable {
+public class PruebaClaveAreaConocimientoDAOImp extends AbstractDefaultDAOImp<PruebaClaveAreaConocimiento> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -31,34 +28,6 @@ public class PruebaClaveAreaConocimientoDAOImp extends AbstractCRUD<PruebaClaveA
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public PruebaClaveAreaConocimiento toEntity(PruebaClaveAreaConocimientoDTO dto) throws IllegalStateException {
-        try {
-            return new PruebaClaveAreaConocimiento(
-                    new PruebaClaveAreaConocimientoPK(dto.idPruebaClave(), dto.idAreaConocimiento()),
-                    dto.cantidad(),
-                    dto.porcentaje()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public PruebaClaveAreaConocimientoDTO toDto(PruebaClaveAreaConocimiento entity) throws IllegalStateException {
-        try {
-            PruebaClaveAreaConocimientoPK key = entity.getPruebaClaveAreaConocimientoPK();
-            return new PruebaClaveAreaConocimientoDTO(
-                    key == null ? 0L : key.getIdPruebaClave(),
-                    key == null ? 0 : key.getIdAreaConocimiento(),
-                    entity.getCantidad(),
-                    entity.getPorcentaje()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

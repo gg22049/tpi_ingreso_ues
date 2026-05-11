@@ -2,9 +2,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -20,12 +18,17 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.FindRangeDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteIdentificacionDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteOpcionDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.TipoIdentificacionDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
 /**
  *
@@ -35,164 +38,211 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 public class AspiranteResource {
 
     @Inject
-    AspiranteDAOImp AspiranteDI;
+    AspiranteDAOImp aspiranteDI;
+
+    @Inject
+    AspiranteIdentificacionDAOImp aspiranteIdentificacionDI;
+
+    @Inject
+    TipoIdentificacionDAOImp tipoIdentificacionDI;
+
+    @Inject
+    AspiranteOpcionDAOImp aspiranteOpcionDI;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@Valid AspiranteDTO dto, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Aspirante entity = AspiranteDI.toEntity(dto);
-            AspiranteDI.create(entity);
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAspirante().toString()));
-            return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response create(@Valid Aspirante entity, @Context UriInfo uriInfo) {
+
+        aspiranteDI.create(entity);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+        uriBuilder.path(String.valueOf(entity.getIdAspirante().toString()));
+        return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
+
     }
 
     @GET
-    @Path("/{idAspirante:\\d+}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("idAspirante") @Min(1) @Max(Long.MAX_VALUE) Long idAspirante, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Aspirante found = AspiranteDI.findById(idAspirante);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idAspirante,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        ))
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
-            return Response.ok(AspiranteDI.toDto(found), MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response findById(@PathParam("id") @Min(1) Long id) {
+
+        Aspirante found = aspiranteDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
-        try {
-            List<AspiranteDTO> resultList = AspiranteDI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> AspiranteDI.toDto(r)).toList();
-            return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response findByRange(@Valid @BeanParam FindRangeDTO params) {
+
+        List<Aspirante> resultList = aspiranteDI.findByRange(params.getOffset(), params.getLimit());
+        return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
+
     }
 
     @PUT
-    @Path("/{idAspirante:\\d+}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idAspirante") @Min(1L) @Max(Long.MAX_VALUE) Long idAspirante, @Valid AspiranteDTO dto, @Context UriInfo uriInfo) {
-        try {
-            Aspirante found = AspiranteDI.findById(idAspirante);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idAspirante,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )).build();
-            }
-            Aspirante entity = AspiranteDI.toEntity(dto);
-            entity.setIdAspirante(found.getIdAspirante());
-            AspiranteDI.update(entity);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response update(@PathParam("id") @Min(1L) Long id, @Valid Aspirante entity) {
+
+        Aspirante found = aspiranteDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+
+        entity.setIdAspirante(id);
+        aspiranteDI.update(entity);
+        return Response.noContent().build();
+
     }
 
     @DELETE
-    @Path("/{idAspirante:\\d+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idAspirante") @Min(1L) @Max(Long.MAX_VALUE) Long idAspirante, @Context UriInfo uriInfo) {
-        try {
-            Aspirante found = AspiranteDI.findById(idAspirante);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idAspirante,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        ))
-                        .build();
-            }
-            AspiranteDI.delete(found);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    @Path("/{id}")
+    public Response delete(@PathParam("id") @Min(1L) Long id) {
+
+        Aspirante found = aspiranteDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+
+        aspiranteDI.delete(found);
+        return Response.noContent().build();
+
+    }
+
+    @POST
+    @Path("/{idAspirante}/identificacion/{idIdentificacion}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createAspiranteIdentificacion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idIdentificacion") @Min(1) Integer idIdentificacion,
+            @Valid AspiranteIdentificacion entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        Aspirante aspiranteFound = aspiranteDI.findById(idAspirante);
+        if (aspiranteFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspirante);
+        }
+
+        TipoIdentificacion tipoIdentificacionFound = tipoIdentificacionDI.findById(idIdentificacion);
+        if (tipoIdentificacionFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idIdentificacion);
+        }
+
+        entity.setAspiranteIdentificacionPK(new AspiranteIdentificacionPK(idAspirante, idIdentificacion));
+        aspiranteIdentificacionDI.create(entity);
+        return Response.created(uriInfo.getAbsolutePath()).build();
+
     }
 
     @GET
-    @Path("/{email}")
+    @Path("/{idAspirante}/identificacion/{idIdentificacion}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByEmail(@PathParam("email") @NotBlank String email, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Aspirante found = AspiranteDI.findByEmail(email);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with email: " + email,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        ))
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
-            return Response.ok(AspiranteDI.toDto(found), MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response findIdentificacion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idIdentificacion") @Min(1) Integer idIdentificacion
+    ) {
+
+        AspiranteIdentificacion found = aspiranteIdentificacionDI.findById(new AspiranteIdentificacionPK(idAspirante, idIdentificacion));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion("Aspirante: " + idAspirante + " TipoIdentificacion: " + idIdentificacion);
         }
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
     }
 
     @DELETE
-    @Path("/{email}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteByEmail(@PathParam("email") @NotBlank String email, @Context UriInfo uriInfo) {
-        try {
-            Aspirante found = AspiranteDI.findByEmail(email);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with email: " + email,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        ))
-                        .build();
-            }
-            AspiranteDI.delete(found);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    @Path("/{idAspirante}/identificacion/{idIdentificacion}")
+    public Response deleteIdentificacion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idIdentificacion") @Min(1) Integer idIdentificacion
+    ) {
+
+        AspiranteIdentificacion found = aspiranteIdentificacionDI.findById(new AspiranteIdentificacionPK(idAspirante, idIdentificacion));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspirante);
         }
+
+        aspiranteIdentificacionDI.delete(found);
+        return Response.noContent().build();
+
+    }
+
+    @POST
+    @Path("/{idAspirante}/opcion/{idOpcion}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createAspiranteOpcion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idOpcion") @Min(1) String idOpcion,
+            @Valid AspiranteOpcion entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        Aspirante found = aspiranteDI.findById(idAspirante);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspirante);
+        }
+
+        entity.setIdAspirante(found);
+        entity.setIdOpcion(idOpcion);
+        aspiranteOpcionDI.create(entity);
+
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+        uriBuilder
+                .path("aspirante")
+                .path(String.valueOf(entity.getIdAspirante()))
+                .path("opcion")
+                .path(String.valueOf(entity.getIdAspiranteOpcion()));
+        return Response.created(uriBuilder.build()).build();
+
+    }
+
+    @GET
+    @Path("/{idAspirante}/opcion/{idAspiranteOpcion}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAspiranteOpcion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idAspiranteOpcion") @Min(1) Long idAspiranteOpcion
+    ) {
+
+        Aspirante aspiranteFound = aspiranteDI.findById(idAspirante);
+        if (aspiranteFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspirante);
+        }
+
+        AspiranteOpcion aspiranteOpcionFound = aspiranteOpcionDI.findById(idAspiranteOpcion);
+        if (aspiranteOpcionFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspiranteOpcion);
+        }
+
+        return Response.ok(aspiranteOpcionFound, MediaType.APPLICATION_JSON).build();
+
+    }
+
+    @DELETE
+    @Path("/{idAspirante}/opcion/{idAspiranteOpcion}")
+    public Response deleteAspiranteOpcion(
+            @PathParam("idAspirante") @Min(1L) Long idAspirante,
+            @PathParam("idAspiranteOpcion") @Min(1) Long idAspiranteOpcion
+    ) {
+
+        Aspirante aspiranteFound = aspiranteDI.findById(idAspirante);
+        if (aspiranteFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspirante);
+        }
+
+        AspiranteOpcion aspiranteOpcionFound = aspiranteOpcionDI.findById(idAspiranteOpcion);
+        if (aspiranteOpcionFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idAspiranteOpcion);
+        }
+
+        aspiranteOpcionDI.delete(aspiranteOpcionFound);
+        return Response.noContent().build();
+
     }
 
 }

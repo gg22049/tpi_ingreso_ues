@@ -2,9 +2,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -20,13 +18,15 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.DistractorDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.FindRangeDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.DistractorAreaConocimientoDAOImp;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimientoPK;
 
 /**
  *
@@ -38,125 +38,155 @@ public class DistractorResource {
     @Inject
     DistractorDAOImp distractorDI;
 
+    @Inject
+    AreaConocimientoDAOImp areaDI;
+
+    @Inject
+    DistractorAreaConocimientoDAOImp distractorAreaDI;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid DistractorDTO distractorDTO, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Distractor nuevoDistractor = distractorDI.toEntity(distractorDTO);
-            distractorDI.create(nuevoDistractor);
-            URI uriCreada = uriInfo.getAbsolutePathBuilder()
-                    .path(String.valueOf(nuevoDistractor.getIdDistractor()))
-                    .build();
-            return Response
-                    .created(uriCreada)
-                    .entity(distractorDTO)
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response create(
+            @Valid Distractor entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        distractorDI.create(entity);
+        URI uriCreada = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(entity.getIdDistractor()))
+                .build();
+
+        return Response
+                .created(uriCreada)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+
     }
 
     @DELETE
-    @Path("/{idDistractor:\\d+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) Long idDistractor, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Distractor distractor = distractorDI.findById(idDistractor);
-            if (distractor == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No existe TipoPrueba con ID: " + idDistractor,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            distractorDI.delete(distractor);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    @Path("/{idDistractor}")
+    public Response delete(
+            @PathParam("idDistractor")
+            @Min(1L) Long id
+    ) {
+
+        Distractor found = distractorDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        distractorDI.delete(found);
+        return Response.noContent().build();
     }
 
     @GET
-    @Path("/{idDistractor:\\d+}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByID(@PathParam("idDistractor") @Min(1) @Max(Long.MAX_VALUE) Long idDistractor,
-            @Context UriInfo uriInfo
-    ) throws DomainException {
-        try {
-            Distractor distractor = distractorDI.findById(idDistractor);
-            if (distractor == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No existe TipoPrueba con ID: " + idDistractor,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            DistractorDTO distractorDTO = distractorDI.toDto(distractor);
-            return Response.ok(distractorDTO, MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response findByID(
+            @PathParam("id") @Min(1L) Long id
+    ) {
+
+        Distractor found = distractorDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
-        try {
-            List<Distractor> listaDistractores = distractorDI.findByRange(params.getOffset(), params.getLimit());
-            List<DistractorDTO> listaDistracoresDTO = listaDistractores
-                    .stream()
-                    .map(distractor -> distractorDI.toDto(distractor))
-                    .collect(Collectors.toList());
-            return Response
-                    .ok(listaDistracoresDTO)
-                    .header(HeaderName.TOTAL_RECORDS.toString(), listaDistracoresDTO.size())
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
+    public Response findRange(@Valid @BeanParam FindRangeDTO params) {
 
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+        List<Distractor> resultList = distractorDI.findByRange(params.getOffset(), params.getLimit());
+        return Response
+                .ok(resultList)
+                .header(HeaderName.TOTAL_RECORDS.toString(), resultList.size())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+
     }
 
     @PUT
-    @Path("/{idDistractor:\\d+}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idDistractor") @Min(1) Long idDistractor,
-            DistractorDTO distractorDTO,
-            @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Distractor distractor = distractorDI.findById(idDistractor);
-            if (distractor == null) {
-                return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idDistractor,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            distractor.setValor(distractorDTO.valor());
-            distractor.setActivo(distractorDTO.activo());
-            distractor.setImagenUrl(distractorDTO.imagenUrl());
+    public Response update(
+            @PathParam("id") @Min(1L) Long id,
+            Distractor entity
+    ) {
 
-            distractorDI.update(distractor);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+        Distractor found = distractorDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+
+        entity.setIdDistractor(id);
+        distractorDI.update(entity);
+        return Response.noContent().build();
+
+    }
+
+    @POST
+    @Path("/{idDistractor}/area/{idArea}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createDistractorAreaConocimiento(
+            @PathParam("idDistractor") @Min(1L) Long idDistractor,
+            @PathParam("idArea") @Min(1) Integer idArea,
+            @Valid DistractorAreaConocimiento entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        Distractor distractorfound = distractorDI.findById(idDistractor);
+        if (distractorfound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idDistractor);
+        }
+
+        AreaConocimiento areaFound = areaDI.findById(idArea);
+        if (areaFound == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(areaFound);
+        }
+
+        entity.setDistractorAreaConocimientoPK(new DistractorAreaConocimientoPK(idDistractor, idArea));
+        distractorAreaDI.create(entity);
+        return Response
+                .created(uriInfo.getAbsolutePath())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+
+    }
+
+    @GET
+    @Path("/{idDistractor}/area/{idArea}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findDistractorAreaConocimiento(
+            @PathParam("idDistractor") @Min(1L) Long idDistractor,
+            @PathParam("idArea") @Min(1) Integer idArea
+    ) {
+
+        DistractorAreaConocimiento found = distractorAreaDI.findById(new DistractorAreaConocimientoPK(idDistractor, idArea));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion("Distractor:" + idDistractor + " Area:" + idArea);
+        }
+
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
+    }
+
+    @DELETE
+    @Path("/{idDistractor}/area/{idArea}")
+    public Response deleteDistractorAreaConocimiento(
+            @PathParam("idDistractor") @Min(1L) Long idDistractor,
+            @PathParam("idArea") @Min(1) Integer idArea
+    ) {
+
+        DistractorAreaConocimiento found = distractorAreaDI.findById(new DistractorAreaConocimientoPK(idDistractor, idArea));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion("Distractor:" + idDistractor + " Area:" + idArea);
+        }
+
+        distractorAreaDI.delete(found);
+        return Response.noContent().build();
+
     }
 
 }

@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -36,6 +37,7 @@ public class PreguntaDistractor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PreguntaDistractorPK preguntaDistractorPK;
     @Basic(optional = false)
     @NotNull
@@ -45,9 +47,11 @@ public class PreguntaDistractor implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
     @JoinColumn(name = "id_distractor", referencedColumnName = "id_distractor", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Distractor distractor;
     @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Pregunta pregunta;
 

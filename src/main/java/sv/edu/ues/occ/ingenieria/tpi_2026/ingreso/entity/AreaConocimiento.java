@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,6 +45,7 @@ public class AreaConocimiento implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @JsonbTransient
     @Column(name = "id_area_conocimiento")
     private Integer idAreaConocimiento;
     @Basic(optional = false)
@@ -57,15 +59,20 @@ public class AreaConocimiento implements Serializable {
     @NotNull
     @Column(name = "activo")
     private Boolean activo;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimiento> pruebaClaveAreaConocimientoList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
     private List<PreguntaAreaConocimiento> preguntaAreaConocimientoList;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "areaConocimiento", fetch = FetchType.LAZY)
     private List<DistractorAreaConocimiento> distractorAreaConocimientoList;
+    @JsonbTransient
     @OneToMany(mappedBy = "idAreaConocimientoPadre", fetch = FetchType.LAZY)
     private List<AreaConocimiento> areaConocimientoList;
     @JoinColumn(name = "id_area_conocimiento_padre", referencedColumnName = "id_area_conocimiento")
+    @JsonbTransient
     @ManyToOne(fetch = FetchType.LAZY)
     private AreaConocimiento idAreaConocimientoPadre;
 

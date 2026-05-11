@@ -8,8 +8,6 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.Serializable;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 
 /**
@@ -18,7 +16,7 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
  */
 @Stateless
 @LocalBean
-public class DistractorDAOImp extends AbstractCRUD<Distractor, DistractorDTO> implements Serializable {
+public class DistractorDAOImp extends AbstractDefaultDAOImp<Distractor> {
 
     @PersistenceContext(unitName = "Ingreso-PU")
     EntityManager em;
@@ -30,34 +28,6 @@ public class DistractorDAOImp extends AbstractCRUD<Distractor, DistractorDTO> im
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public Distractor toEntity(DistractorDTO dto) throws IllegalStateException {
-        try {
-            return new Distractor(
-                    dto.idDistractor(),
-                    dto.valor(),
-                    dto.activo(),
-                    dto.imagenUrl()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando dto a entity");
-        }
-    }
-
-    @Override
-    public DistractorDTO toDto(Distractor entity) throws IllegalStateException {
-        try {
-            return new DistractorDTO(
-                    entity.getIdDistractor(),
-                    entity.getValor(),
-                    entity.getActivo(),
-                    entity.getImagenUrl()
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException("Error mapeando entidad a dto");
-        }
     }
 
 }

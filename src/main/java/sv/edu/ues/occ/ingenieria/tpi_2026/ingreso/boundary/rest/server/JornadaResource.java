@@ -2,9 +2,8 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -21,13 +20,13 @@ import jakarta.ws.rs.core.UriInfo;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaDAOImp;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.FindRangeDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.JornadaAulaDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAulaPK;
 
 /**
  *
@@ -39,120 +38,129 @@ public class JornadaResource implements Serializable {
     @Inject
     JornadaDAOImp jornadaDI;
 
+    @Inject
+    JornadaAulaDAOImp jornadaAulaDI;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@NotNull @Valid JornadaDTO jornadaDTO, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Jornada nuevaJornada = jornadaDI.toEntity(jornadaDTO);
-            jornadaDI.create(nuevaJornada);
-            URI uriCreada = uriInfo.getAbsolutePathBuilder()
-                    .path(String.valueOf(nuevaJornada.getIdJornada()))
-                    .build();
-            return Response.created(uriCreada)
-                    .entity(jornadaDTO)
-                    .build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response create(@Valid Jornada entity, @Context UriInfo uriInfo) {
+
+        jornadaDI.create(entity);
+        URI uriCreada = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(entity.getIdJornada()))
+                .build();
+        return Response.created(uriCreada).type(MediaType.APPLICATION_JSON).build();
+
     }
 
     @DELETE
-    @Path("/{idJornada:\\d+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            jornadaDI.delete(jornada);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    @Path("/{id}")
+    public Response delete(@PathParam("id") @Min(1L) Long id) {
+
+        Jornada jornada = jornadaDI.findById(id);
+        if (jornada == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        jornadaDI.delete(jornada);
+        return Response.noContent().build();
+
     }
 
     @GET
-    @Path("/{idJornada:\\d+}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada,
-            @Context UriInfo uriInfo
-    ) throws DomainException {
-        try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            JornadaDTO jornadaDTO = jornadaDI.toDto(jornada);
-            return Response.ok(jornadaDTO, MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response findById(@PathParam("id") @Min(1L) Long id) {
+
+        Jornada found = jornadaDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
-        try {
-            List<Jornada> listaJornadas = jornadaDI.findByRange(params.getOffset(), params.getLimit());
-            List<JornadaDTO> listaJornadasDTO = listaJornadas
-                    .stream()
-                    .map(jornada -> jornadaDI.toDto(jornada))
-                    .collect(Collectors.toList());
-            return Response
-                    .ok(listaJornadasDTO)
-                    .header(HeaderName.TOTAL_RECORDS.toString(), listaJornadasDTO.size())
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response findRange(@Valid @BeanParam FindRangeDTO params) {
+        List<Jornada> resultList = jornadaDI.findByRange(params.getOffset(), params.getLimit());
+        return Response
+                .ok(resultList)
+                .header(HeaderName.TOTAL_RECORDS.toString(), resultList.size())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 
     @PUT
-    @Path("/{idJornada:\\d+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(
-            @PathParam("idJornada") @Min(1L) @Max(Long.MAX_VALUE) Long idJornada,
-            @Valid JornadaDTO jornadaDTO,
-            @Context UriInfo uriInfo) throws DomainException {
-        try {
-            Jornada jornada = jornadaDI.findById(idJornada);
-            if (jornada == null) {
-                return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(new ErrorDetailDTO(null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + idJornada,
-                                uriInfo.getAbsolutePath().toString(),
-                                null))
-                        .build();
-            }
-            Jornada entity = jornadaDI.toEntity(jornadaDTO);
-            entity.setIdJornada(idJornada);
-            jornadaDI.update(entity);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+            @PathParam("id") @Min(1L) Long id,
+            @Valid Jornada entity) {
+
+        Jornada found = jornadaDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        entity.setIdJornada(id);
+        jornadaDI.update(entity);
+        return Response.noContent().build();
+
     }
+
+    @POST
+    @Path("/{idJornada}/aula/{idAula}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createJornadaAula(
+            @PathParam("idJornada") @Min(1L) Long idJornada,
+            @PathParam("idAula") @NotBlank String idAula,
+            @Valid JornadaAula entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        Jornada found = jornadaDI.findById(idJornada);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idJornada);
+        }
+
+        entity.setJornadaAulaPK(new JornadaAulaPK(idJornada, idAula));
+        jornadaAulaDI.create(entity);
+        return Response.created(uriInfo.getAbsolutePath()).type(MediaType.APPLICATION_JSON).build();
+
+    }
+
+    @GET
+    @Path("/{idJornada}/aula/{idAula}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findJornadaAula(
+            @PathParam("idJornada") @Min(1L) Long idJornada,
+            @PathParam("idAula") @NotBlank String idAula
+    ) {
+
+        JornadaAula found = jornadaAulaDI.findById(new JornadaAulaPK(idJornada, idAula));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idJornada);
+        }
+
+        return Response.ok(found).type(MediaType.APPLICATION_JSON).build();
+
+    }
+
+    @GET
+    @Path("/{idJornada}/aula/{idAula}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteJornadaAula(
+            @PathParam("idJornada") @Min(1L) Long idJornada,
+            @PathParam("idAula") @NotBlank String idAula
+    ) {
+
+        JornadaAula found = jornadaAulaDI.findById(new JornadaAulaPK(idJornada, idAula));
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idJornada);
+        }
+
+        jornadaAulaDI.delete(found);
+        return Response.noContent().build();
+
+    }
+
 }

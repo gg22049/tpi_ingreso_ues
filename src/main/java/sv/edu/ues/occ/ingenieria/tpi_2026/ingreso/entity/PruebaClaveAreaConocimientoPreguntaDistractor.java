@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -40,6 +41,7 @@ public class PruebaClaveAreaConocimientoPreguntaDistractor implements Serializab
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PruebaClaveAreaConocimientoPreguntaDistractorPK pruebaClaveAreaConocimientoPreguntaDistractorPK;
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,12 +50,14 @@ public class PruebaClaveAreaConocimientoPreguntaDistractor implements Serializab
     @Column(name = "observaciones")
     private String observaciones;
     @JoinColumn(name = "id_distractor", referencedColumnName = "id_distractor", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Distractor distractor;
     @JoinColumns({
         @JoinColumn(name = "id_prueba_clave", referencedColumnName = "id_prueba_clave", insertable = false, updatable = false),
         @JoinColumn(name = "id_area_conocimiento", referencedColumnName = "id_area_conocimiento", insertable = false, updatable = false),
         @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta", insertable = false, updatable = false)})
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private PruebaClaveAreaConocimientoPregunta pruebaClaveAreaConocimientoPregunta;
 

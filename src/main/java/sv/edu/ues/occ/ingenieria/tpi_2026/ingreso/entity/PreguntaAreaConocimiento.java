@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -33,13 +34,16 @@ public class PreguntaAreaConocimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PreguntaAreaConocimientoPK preguntaAreaConocimientoPK;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+    @JsonbTransient
     @JoinColumn(name = "id_area_conocimiento", referencedColumnName = "id_area_conocimiento", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private AreaConocimiento areaConocimiento;
+    @JsonbTransient
     @JoinColumn(name = "id_pregunta", referencedColumnName = "id_pregunta", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Pregunta pregunta;

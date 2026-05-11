@@ -6,7 +6,6 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
@@ -23,11 +22,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.FindRangeParamDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.FindRangeDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp;
 
 /**
@@ -38,12 +35,12 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AreaConocimientoDAOImp
 public class AreaConocimientoResource {
 
     @Inject
-    AreaConocimientoDAOImp DI;
+    AreaConocimientoDAOImp areaDI;
 
     /**
-     * Crea un AreaConocimiento. - POST /area-conocimiento
+     * Crea un AreaConocimiento - POST /area-conocimiento
      *
-     * @param dto Json de la entidad a persistir
+     * @param entity Json e la entidad a persistir.
      * @param uriInfo Contexto de la Request para construir Location.
      *
      * @return
@@ -55,23 +52,22 @@ public class AreaConocimientoResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            AreaConocimiento entity = DI.toEntity(dto);
-            DI.create(entity);
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-            uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
-            return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response create(
+            @Valid AreaConocimiento entity,
+            @Context UriInfo uriInfo
+    ) {
+
+        areaDI.create(entity);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+        uriBuilder.path(String.valueOf(entity.getIdAreaConocimiento()));
+        return Response.created(uriBuilder.build()).build();
+
     }
 
     /**
-     * Retorna un AreaConocimiento segun id. - GET /area-conocimiento/{id}
+     * Retorna un AreaConocimiento segun id - GET /area-conocimiento/{id}
      *
-     * @param idAreaConocimiento Id para realizar la busqueda.
+     * @param id Llave primaria para realizar la busqueda.
      *
      * @return
      * <ul>
@@ -82,29 +78,16 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @GET
-    @Path("/{id:\\d+}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) throws DomainException {
-        try {
-            AreaConocimiento found = DI.findById(id);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + id,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        ))
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
-            return Response.ok(DI.toDto(found), MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response findById(@PathParam("id") @Min(1) Integer id) {
+
+        AreaConocimiento found = areaDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        return Response.ok(found, MediaType.APPLICATION_JSON).build();
+
     }
 
     /**
@@ -117,26 +100,29 @@ public class AreaConocimientoResource {
      * @return
      * <ul>
      * <li>200 Ok + Json con la lista.</li>
-     * <li>400 Bad Request Si limit mayor que offset.</li>
+     * <li>400 Bad Request Si limit menor que offset.</li>
+     * <li>400 Bad Request Si el rango solicitado es mayor a 50 elementos.</li>
      * <li>500 Internal Server Error en excepciones internas.</li>
      * </ul>
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findByRange(@Valid @BeanParam FindRangeParamDTO params) throws DomainException {
-        try {
-            List<AreaConocimientoDTO> resultList = DI.findByRange(params.getOffset(), params.getLimit()).stream().map(r -> DI.toDto(r)).toList();
-            return Response.ok(resultList).header(HeaderName.TOTAL_RECORDS.toString(), resultList.size()).type(MediaType.APPLICATION_JSON).build();
-        } catch (Exception e) {
-            throw new DomainException(e);
-        }
+    public Response findByRange(@Valid @BeanParam FindRangeDTO params) {
+
+        List<AreaConocimiento> resultList = areaDI.findByRange(params.getOffset(), params.getLimit());
+        return Response
+                .ok(resultList)
+                .header(HeaderName.TOTAL_RECORDS.toString(), resultList.size())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+
     }
 
     /**
      * Actualiza un AreaConocimiento. - put /area-conocimiento/{id}
      *
-     * @param id Id de entidad modificada.
-     * @param dto Entidad modificada.
+     * @param id Llave primaria de entidad modificada.
+     * @param entity Entidad modificada.
      *
      * @return
      * <ul>
@@ -147,38 +133,25 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @PUT
-    @Path("/{id:\\d+}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Valid AreaConocimientoDTO dto, @Context UriInfo uriInfo) {
-        try {
-            AreaConocimiento found = DI.findById(id);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + id,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
-            AreaConocimiento entity = DI.toEntity(dto);
-            entity.setIdAreaConocimiento(id);
-            DI.update(entity);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    public Response update(@PathParam("id") @Min(1) Integer id, @Valid AreaConocimiento entity) {
+
+        AreaConocimiento found = areaDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        entity.setIdAreaConocimiento(id);
+        entity.setIdAreaConocimientoPadre(found.getIdAreaConocimientoPadre());
+        areaDI.update(entity);
+        return Response.noContent().build();
+
     }
 
     /**
      * Elimina un AreaConocimiento. - DELETE /area-conocimiento/{id}
      *
-     * @param id Id de entidad modificada.
+     * @param id Llave primaria de entidad a eliminar.
      *
      * @return
      * <ul>
@@ -189,29 +162,83 @@ public class AreaConocimientoResource {
      * </ul>
      */
     @DELETE
-    @Path("/{id:\\d+}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") @Min(1) @Max(Integer.MAX_VALUE) Integer id, @Context UriInfo uriInfo) {
-        try {
-            AreaConocimiento found = DI.findById(id);
-            if (found == null) {
-                return Response
-                        .status(404)
-                        .entity(new ErrorDetailDTO(
-                                null,
-                                ErrorType.NO_MATCH_ID.toString(),
-                                404,
-                                "No entity with id: " + id,
-                                uriInfo.getAbsolutePath().toString(),
-                                null
-                        )
-                        ).build();
-            }
-            DI.delete(found);
-            return Response.noContent().build();
-        } catch (Exception e) {
-            throw new DomainException(e);
+    @Path("/{id}")
+    public Response delete(@PathParam("id") @Min(1) Integer id) {
+
+        AreaConocimiento found = areaDI.findById(id);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(id);
         }
+        areaDI.delete(found);
+        return Response.noContent().build();
+
+    }
+
+    /**
+     * Asigna una AreaConocimiento padre a otra AreaConocimiento - PUT
+     * /area-conocimiento/{idArea}/area-padre/{idPadre}
+     *
+     * @param idArea Id para realizar la busqueda.
+     * @param idPadre Id para realizar la busqueda.
+     *
+     * @return
+     * <ul>
+     * <li>201 Created + Location del recurso creado.</li>
+     * <li>400 Bad Request si el payload es invalido.
+     * <li>404 Not Found + Id no encontrado.</li>
+     * <li>500 Internal Server Error en excepciones internas.</li>
+     * </ul>
+     */
+    @PUT
+    @Path("/{idArea}/area-padre/{idPadre}")
+    public Response setAreaPadre(
+            @PathParam("idArea") @Min(1) Integer idArea,
+            @PathParam("idPadre") @Min(1) Integer idPadre
+    ) {
+
+        AreaConocimiento area = areaDI.findById(idArea);
+        if (area == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idArea);
+        }
+
+        AreaConocimiento areaPadre = areaDI.findById(idPadre);
+        if (areaPadre == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idPadre);
+        }
+
+        area.setIdAreaConocimientoPadre(areaPadre);
+        areaDI.update(area);
+        return Response.noContent().build();
+
+    }
+
+    /**
+     * Desasginar una AreaConocimiento padre a otra AreaConocimiento - DELETE
+     * /area-conocimiento/{idArea}/area-padre/
+     *
+     * @param idArea Llave primaria para realizar la busqueda de la entidad.
+     *
+     * @return
+     * <ul>
+     * <li>201 Created + Location del recurso creado.</li>
+     * <li>400 Bad Request si el payload es invalido.
+     * <li>404 Not Found + Id no encontrado.</li>
+     * <li>500 Internal Server Error en excepciones internas.</li>
+     * </ul>
+     */
+    @DELETE
+    @Path("/{idArea}/area-padre")
+    public Response unsetAreaPadre(@PathParam("idArea") @Min(1) Integer idArea) {
+
+        AreaConocimiento found = areaDI.findById(idArea);
+        if (found == null) {
+            throw new EntityNotFoundInRepositoryExcpetion(idArea);
+        }
+
+        found.setIdAreaConocimientoPadre(null);
+        areaDI.update(found);
+        return Response.noContent().build();
+
     }
 
 }

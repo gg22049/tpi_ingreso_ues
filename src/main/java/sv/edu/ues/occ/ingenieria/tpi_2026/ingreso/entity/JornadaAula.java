@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -37,13 +38,16 @@ public class JornadaAula implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected JornadaAulaPK jornadaAulaPK;
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
     @JoinColumn(name = "id_jornada", referencedColumnName = "id_jornada", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Jornada jornada;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "jornadaAula", fetch = FetchType.LAZY)
     private List<PruebaJornadaAulaAspiranteOpcion> pruebaJornadaAulaAspiranteOpcionList;
 

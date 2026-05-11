@@ -10,32 +10,46 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 
 /**
- * "Several Internal Server Exception, Could Not Properly Response."
  *
  * @author caesar
  */
 @Provider
-public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
+public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalStateException> {
 
     @Context
     UriInfo uriInfo;
 
     @Override
-    public Response toResponse(DomainException e) {
+    public Response toResponse(IllegalStateException e) {
+
         String errorId = java.util.UUID.randomUUID().toString();
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
+
+        Throwable rootCause = e;
+        String result;
+
+        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+            rootCause = rootCause.getCause();
+        }
+
+        if (rootCause instanceof SQLIntegrityConstraintViolationException) {
+            result = "Operation violates database constraints.";
+        } else {
+            result = "Unexpected internal server error.";
+        }
+
         ErrorDetailDTO error = new ErrorDetailDTO(
                 errorId,
                 ErrorType.INTERNAL_EXCEPTION.toString(),
                 500,
-                "Unexpected Error in Resource " + uriInfo.getPath().toString(),
+                result,
                 uriInfo.getAbsolutePath().toString(),
                 null
         );
@@ -45,6 +59,7 @@ public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
                 .entity(error)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
+
     }
 
 }

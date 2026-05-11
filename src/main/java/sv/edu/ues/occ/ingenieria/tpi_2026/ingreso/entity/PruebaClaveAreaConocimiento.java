@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -40,6 +41,7 @@ public class PruebaClaveAreaConocimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PruebaClaveAreaConocimientoPK pruebaClaveAreaConocimientoPK;
     @Column(name = "cantidad")
     private Integer cantidad;
@@ -48,11 +50,14 @@ public class PruebaClaveAreaConocimiento implements Serializable {
     @Column(name = "porcentaje")
     private BigDecimal porcentaje;
     @JoinColumn(name = "id_area_conocimiento", referencedColumnName = "id_area_conocimiento", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private AreaConocimiento areaConocimiento;
     @JoinColumn(name = "id_prueba_clave", referencedColumnName = "id_prueba_clave", insertable = false, updatable = false)
+    @JsonbTransient
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private PruebaClave pruebaClave;
+    @JsonbTransient
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pruebaClaveAreaConocimiento", fetch = FetchType.LAZY)
     private List<PruebaClaveAreaConocimientoPregunta> pruebaClaveAreaConocimientoPreguntaList;
 

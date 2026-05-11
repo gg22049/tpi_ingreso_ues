@@ -15,12 +15,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Generalizacion de metodos CRUD.
+ * Implementacion abstracta del DefaultDAO con metodos CRUD.
  *
  * @param <T> Parametro generico a suministrar.
  * @author caesar
  */
-public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable {
+public abstract class AbstractDefaultDAOImp<T> implements DefaultDAO<T>, Serializable {
 
     private final Class<T> tipoDato;
 
@@ -32,27 +32,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
     public abstract EntityManager getEntityManager();
 
     /**
-     * Metodo para obtener el entity de un dto.
-     *
-     * @param dto DTO a transdormar.
-     * @return Entity transformada y con relaciones resueltas.
-     */
-    public abstract T toEntity(U dto);
-
-    /**
-     * Metodo para obtener un dto de una entidad.
-     *
-     * @param entity Entity a transformar.
-     * @return DTO plano transformado.
-     */
-    public abstract U toDto(T entity);
-
-    /**
      * Metodo constructor de la clase abstracta.
      *
      * @param tipoDato Clase de la entidad en la que se opera.
      */
-    public AbstractCRUD(Class<T> tipoDato) {
+    public AbstractDefaultDAOImp(Class<T> tipoDato) {
         this.tipoDato = tipoDato;
     }
 
@@ -68,11 +52,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
         if (entity == null) {
             throw new IllegalArgumentException("Entidad invalido");
         }
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             em.persist(entity);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -89,11 +73,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
     @Override
     public List<T> findAll() {
         EntityManager em = null;
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<T> cq = cb.createQuery(tipoDato);
             Root<T> raiz = cq.from(tipoDato);
@@ -122,11 +106,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
         if (id == null) {
             throw new IllegalArgumentException("Id invalido");
         }
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             return em.find(tipoDato, id);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -150,11 +134,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
         if (offset < 0 || limit < offset) {
             throw new IllegalArgumentException("Rango invalido");
         }
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<T> cq = cb.createQuery(tipoDato);
             Root<T> raiz = cq.from(tipoDato);
@@ -183,11 +167,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
         if (entity == null) {
             throw new IllegalArgumentException("Entidad invalida");
         }
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             return em.merge(entity);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -208,11 +192,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
         if (entity == null) {
             throw new IllegalArgumentException("Entidad invalida");
         }
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             if (!em.contains(entity)) {
                 entity = em.merge(entity);
             }
@@ -232,11 +216,11 @@ public abstract class AbstractCRUD<T, U> implements DefaultDAO<T>, Serializable 
     @Override
     public Long count() throws IllegalStateException {
         EntityManager em = null;
+        em = getEntityManager();
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
         try {
-            em = getEntityManager();
-            if (em == null) {
-                throw new IllegalStateException("Error accediendo al repositorio");
-            }
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Long> cq = cb.createQuery(Long.class);
             Root<T> raiz = cq.from(tipoDato);

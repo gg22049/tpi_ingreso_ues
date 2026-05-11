@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -45,6 +46,7 @@ public class PruebaJornadaAulaAspiranteOpcionExamen implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
+    @JsonbTransient
     protected PruebaJornadaAulaAspiranteOpcionExamenPK pruebaJornadaAulaAspiranteOpcionExamenPK;
     @Basic(optional = false)
     @NotNull
@@ -65,6 +67,7 @@ public class PruebaJornadaAulaAspiranteOpcionExamen implements Serializable {
         @JoinColumn(name = "id_jornada", referencedColumnName = "id_jornada", insertable = false, updatable = false),
         @JoinColumn(name = "id_aula", referencedColumnName = "id_aula", insertable = false, updatable = false),
         @JoinColumn(name = "id_aspirante_opcion", referencedColumnName = "id_aspirante_opcion", insertable = false, updatable = false)})
+    @JsonbTransient
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private PruebaJornadaAulaAspiranteOpcion pruebaJornadaAulaAspiranteOpcion;
 

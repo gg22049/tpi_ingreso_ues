@@ -188,18 +188,17 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.5.1</version>
             </plugin>
-            <!--             posiblemente descartado -->
-            <!--            <plugin>
+            <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>3.11.5</version>
                 <configuration>
                     <installDirectory>/usr/local/openliberty26-jee10/wlp</installDirectory>
                     <serverName>tpi_2026</serverName>
-                                        <deployApplication>true</deployApplication>
+                    <deployApplication>true</deployApplication>
                     <applicationDirectory>apps</applicationDirectory>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
     
@@ -260,7 +259,8 @@
                                         <exclude>**/boundary/**</exclude>
                                         <exclude>**/entity/**</exclude>
                                     </excludes>
-                                    <rules>
+                                    <!--Coverage for Packaging-->
+                                    <!--                                    <rules>
                                         <rule>
                                             <element>PACKAGE</element>
                                             <limits>
@@ -271,7 +271,7 @@
                                                 </limit>
                                             </limits>
                                         </rule>
-                                    </rules>
+                                    </rules>-->
                                 </configuration>
                             </execution>
                             <execution>

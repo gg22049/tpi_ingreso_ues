@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.DomainException;
 
 /**
  * "Several Internal Server Exception, Could Not Properly Response."
@@ -22,13 +21,13 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception
  * @author caesar
  */
 @Provider
-public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
+public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
 
     @Context
     UriInfo uriInfo;
 
     @Override
-    public Response toResponse(DomainException e) {
+    public Response toResponse(RuntimeException e) {
         String errorId = java.util.UUID.randomUUID().toString();
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error UUID: " + errorId, e);
         ErrorDetailDTO error = new ErrorDetailDTO(

@@ -11,5 +11,6 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 public enum ErrorType {
     NO_MATCH_ID,
     INTERNAL_EXCEPTION,
-    VALIDATION_ERROR
+    VALIDATION_ERROR,
+    UNPROCESSABLE
 }

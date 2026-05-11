@@ -19,6 +19,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoIdentificacionDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
 /**
  *
@@ -283,123 +286,43 @@ public class AspiranteResourceST extends STAbstract {
 
     @Test
     @Order(6)
-    void findByEmail() {
-        System.out.println("AspiranteResource.findByEmail");
-
-        // 400 - constraint validation
+    public void createAspiranteIdentificacion() {
+        TipoIdentificacionDTO dto = new TipoIdentificacionDTO(null, "id test", PATH);
         Response response = webTarget
-                .path(PATH + "/%20")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
-        assertEquals(400, response.getStatus());
-
-        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
-
-        assertEquals(400, dtoError.status());
-        assertNotNull(dtoError.type());
-        assertNotNull(dtoError.detail());
-        assertNotNull(dtoError.instance());
-        assertNotNull(dtoError.issues());
-        assertFalse(dtoError.issues().isEmpty());
-        assertEquals("arg0", dtoError.issues().getFirst().field());
-        assertTrue(dtoError.issues().getFirst().message().contains("must not be blank"));
-
-        // 404 - not found
-        response = webTarget
-                .path(PATH + "/abc@test.com")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
-        assertEquals(404, response.getStatus());
-
-        dtoError = response.readEntity(ErrorDetailDTO.class);
-
-        assertEquals(404, dtoError.status());
-        assertNotNull(dtoError.type());
-        assertNotNull(dtoError.detail());
-        assertNotNull(dtoError.instance());
-        assertTrue(dtoError.detail().contains("No entity with email:"));
-
-        // 200 - found
-        response = webTarget
-                .path(PATH + "/test@test.com")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        assertNotNull(response);
-        assertEquals(200, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
-
-        AspiranteDTO dtoResponse = response.readEntity(AspiranteDTO.class);
-
-        assertEquals(1, dtoResponse.idAspirante());
-        assertNotNull(dtoResponse.nombres());
-        assertFalse(dtoResponse.nombres().isBlank());
-
-    }
-
-    @Test
-    @Order(7)
-    public void deleteByEmail() {
-        System.out.println("AspiranteResource.deleteByEmail");
-
-        // 400 - constraint validation
-        Response response = webTarget
-                .path(PATH + "/%20")
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
-
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
-        assertEquals(400, response.getStatus());
-
-        ErrorDetailDTO dtoError = response.readEntity(ErrorDetailDTO.class);
-
-        assertEquals(400, dtoError.status());
-        assertNotNull(dtoError.type());
-        assertNotNull(dtoError.detail());
-        assertNotNull(dtoError.instance());
-        assertNotNull(dtoError.issues());
-        assertFalse(dtoError.issues().isEmpty());
-        assertEquals("arg0", dtoError.issues().getFirst().field());
-        assertTrue(dtoError.issues().getFirst().message().contains("must not be blank"));
-
-        // 404 - not found
-        response = webTarget
-                .path(PATH + "/abc@test.com")
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
-
-        assertNotNull(response);
-        assertEquals(404, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
-
-        dtoError = response.readEntity(ErrorDetailDTO.class);
-
-        assertEquals(404, dtoError.status());
-        assertNotNull(dtoError.type());
-        assertNotNull(dtoError.detail());
-        assertNotNull(dtoError.instance());
-        assertTrue(dtoError.detail().contains("No entity with email: "));
-
-        create();
-
-        //204 - deleted
-        AspiranteDTO dto = new AspiranteDTO(null, "username", "lastname", Date.from(Instant.now()), "correo@test.com", Date.from(Instant.now()), "");
-        response = webTarget
-                .path(PATH)
+                .path("tipo-identificacion")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
-        response = webTarget
-                .path(PATH + "/correo@test.com")
-                .request(MediaType.APPLICATION_JSON)
-                .delete();
-
         assertNotNull(response);
-        assertEquals(204, response.getStatus());
+        assertEquals(201, response.getStatus());
+
+        String location = response.getHeaderString("Location");
+        Integer idTipoID = Integer.valueOf(
+                location.substring(location.lastIndexOf("/") + 1)
+        );
+
+        //
+        AspiranteIdentificacion aspId = new AspiranteIdentificacion(null, "123456789", "NO-SCAN", null);
+        response = webTarget
+                .path("aspirante")
+                .path("1")
+                .path("identificacion")
+                .path(idTipoID.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(aspId, MediaType.APPLICATION_JSON));
+
+        assertEquals(201, response.getStatus());
+
+        response = webTarget
+                .path("aspirante")
+                .path("1")
+                .path("identificacion")
+                .path(idTipoID.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        assertEquals(200, response.getStatus());
+        System.out.println(response.readEntity(String.class));
+
     }
 
 }
