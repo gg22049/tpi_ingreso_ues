@@ -12,6 +12,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.ErrorType;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
 
 /**
  * "Several Internal Server Exception, Could Not Properly Response."
@@ -19,13 +20,13 @@ import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.Error
  * @author caesar
  */
 @Provider
-public class EntityNotFoundInRepositoryExceptionMapper implements ExceptionMapper<RuntimeException> {
+public class EntityNotFoundInRepositoryExceptionMapper implements ExceptionMapper<EntityNotFoundInRepositoryExcpetion> {
 
     @Context
     UriInfo uriInfo;
 
     @Override
-    public Response toResponse(RuntimeException e) {
+    public Response toResponse(EntityNotFoundInRepositoryExcpetion e) {
         return Response
                 .status(404)
                 .entity(new ErrorDetailDTO(

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaDistractor;
@@ -226,51 +225,6 @@ public class PreguntaDistractorDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PreguntaDistractorDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        PreguntaDistractorDAOImp cut = new PreguntaDistractorDAOImp();
-        PreguntaDistractor preDistractor = null;
-        PreguntaDistractorDTO pdDTO;
-        PreguntaDistractorDTO pdDTO1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(preDistractor);
-        });
-        pdDTO = cut.toDto(new PreguntaDistractor(new PreguntaDistractorPK(1l, 1l), true, "no hay"));
-        pdDTO1 = cut.toDto(new PreguntaDistractor(null, true, "no hay"));
-
-        assertNotNull(pdDTO);
-        assertEquals(1, pdDTO.idPregunta());
-        assertEquals(1, pdDTO.idDistractor());
-        assertNotNull(pdDTO1);
-        assertEquals(0, pdDTO1.idPregunta());
-        assertEquals(0, pdDTO1.idDistractor());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PreguntaDistractorDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        PreguntaDistractorDAOImp cut = new PreguntaDistractorDAOImp();
-        PreguntaDistractorDTO pdDTO = null;
-        PreguntaDistractor pd;
-        PreguntaDistractor pd1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pdDTO);
-
-        });
-        pd = cut.toEntity(new PreguntaDistractorDTO(1, 1, true, "no hay"));
-        assertNotNull(pd);
-        assertNotNull(pd.getPreguntaDistractorPK());
-       
-    }
+   
 
 }

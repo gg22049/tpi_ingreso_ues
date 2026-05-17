@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 /**
  *
@@ -197,41 +196,6 @@ public class PreguntaDAOImpIT extends ITAbstract{
             cut.em.close();
         }
     }
-      @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PreguntaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        PreguntaDAOImp cut = new PreguntaDAOImp();
-        Pregunta p = null;
-        PreguntaDTO pDTO;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(p);
-        });
-        pDTO = cut.toDto(new Pregunta(1l, "Que hace?", true, "imagen", ""));
-        assertNotNull(pDTO);
-        assertEquals(1, pDTO.idPregunta());
-        assertEquals("Que hace?", pDTO.valor());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PreguntaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PreguntaDAOImp cut = new PreguntaDAOImp();
-        PreguntaDTO pDTO = null;
-        Pregunta p1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pDTO);
-        });
-        p1 = cut.toEntity(new PreguntaDTO(1l, "Que es TDD?", true, "IMAGEN", ""));
-        assertNotNull(p1);
-        assertEquals("Que es TDD?", p1.getValor());
-        
-    }
+   
 
 }

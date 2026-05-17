@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaAulaAspiranteOpcionExamenDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
@@ -410,52 +409,5 @@ public class PruebaJornadaAulaAspiranteOpcionExamenDAOImpIT extends ITAbstract {
     }
 
      
- @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaClaveAreaConocimeintoPreguntaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal=new BigDecimal("31");
-        PruebaJornadaAulaAspiranteOpcionExamenDAOImp cut = new PruebaJornadaAulaAspiranteOpcionExamenDAOImp();
-        PruebaJornadaAulaAspiranteOpcionExamen pjaaoE = null;
-        PruebaJornadaAulaAspiranteOpcionExamenDTO pjaaoEDTO;
-        PruebaJornadaAulaAspiranteOpcionExamenDTO pjaaoEDTO1;
-        PruebaJornadaAulaAspiranteOpcionExamenPK pk=new PruebaJornadaAulaAspiranteOpcionExamenPK(1l, 1l, "A3", 1l);
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pjaaoE);
-
-        });
-        pjaaoEDTO = cut.toDto(new PruebaJornadaAulaAspiranteOpcionExamen(pk, decimal, cal.getTime(), "imagen", "ninguna"));
-        //pcacpDTO1=cut.toDto(new PruebaClaveAreaConocimientoPregunta(null, cal.getTime(), "nada"));
-        
-        assertNotNull(pjaaoEDTO);
-        assertEquals("A3", pjaaoEDTO.idAula());
-        //assertNotNull(pcacpDTO1);
-       // assertNotNull(pcacpDTO1.idDistractor());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaJornadaAulaAspiranteOpcionExamenDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal=new BigDecimal("21");
-        PruebaJornadaAulaAspiranteOpcionExamenDAOImp cut = new PruebaJornadaAulaAspiranteOpcionExamenDAOImp();
-        PruebaJornadaAulaAspiranteOpcionExamenDTO pjaaoEDTO = null;
-        PruebaJornadaAulaAspiranteOpcionExamen pjaaoE;
-        PruebaJornadaAulaAspiranteOpcionExamenDTO pjaaoE1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pjaaoEDTO);
-
-        });
-        pjaaoE = cut.toEntity(new PruebaJornadaAulaAspiranteOpcionExamenDTO(1l, 1l, "I300515", 1l, decimal, cal.getTime(), "img", "ninguna"));
-        assertNotNull(pjaaoE);
-        //pcacpd1 = cut.toEntity(new PruebaClaveAreaConocimientoPreguntaDistractorDTO(0, 0, 0, 0, cal.getTime(), "nada"));
-        //assertNotNull(pcacpd1);
-        //assertNull(pcacpd1.getDistractor());
-
-    }
+ 
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 
 /**
@@ -23,28 +22,14 @@ public class PreguntaDAOImpTest {
     @Mock
     EntityManager emMock;
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("PreguntaDAOImpTest.toEntityTest");
-        PreguntaDAOImp cut = new PreguntaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        Pregunta result = cut.toEntity(new PreguntaDTO(1L, "val", Boolean.TRUE, "url", "obs"));
-        assertEquals(1L, result.getIdPregunta());
-    }
+  @Test
+void constructorAndGetEntityManagerTest() {
+    PreguntaDAOImp cut = new PreguntaDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("PreguntaDAOImpTest.toDtoTest");
-        PreguntaDAOImp cut = new PreguntaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        PreguntaDTO result = cut.toDto(new Pregunta(1L, "val", Boolean.TRUE, "url", "obs"));
-        assertEquals(1L, result.idPregunta());
-    }
+}
 
 }

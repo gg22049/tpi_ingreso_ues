@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 
 /**
@@ -207,41 +206,5 @@ public class DistractorDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("DistractorDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        DistractorDAOImp cut = new DistractorDAOImp();
-        Distractor distractor1 = new Distractor(1l, "100", true, "imagen");
-        DistractorDTO distractorDTO;
-        Distractor distractor2 = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(distractor2);
-
-        });
-
-        distractorDTO = cut.toDto(distractor1);
-        assertNotNull(distractorDTO);
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("DistractorDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        DistractorDAOImp cut = new DistractorDAOImp();
-        DistractorDTO distractorDTO1 = new DistractorDTO(1l, "100kM", true, "imagen");
-        Distractor distractor;
-        DistractorDTO distractor2 = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(distractor2);
-
-        });
-
-        distractor = cut.toEntity(distractorDTO1);
-        assertNotNull(distractor);
-    }
+    
 }

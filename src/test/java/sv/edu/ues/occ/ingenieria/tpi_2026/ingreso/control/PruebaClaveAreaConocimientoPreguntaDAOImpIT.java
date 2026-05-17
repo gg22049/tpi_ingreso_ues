@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import static sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.ITAbstract.emf;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoPreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
@@ -268,48 +267,6 @@ public class PruebaClaveAreaConocimientoPreguntaDAOImpIT extends ITAbstract {
     }
 
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaClaveAreaConocimeintoPreguntaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveAreaConocimientoPreguntaDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDAOImp();
-        PruebaClaveAreaConocimientoPregunta pcacp = null;
-        PruebaClaveAreaConocimientoPreguntaDTO pcacpDTO;
-        PruebaClaveAreaConocimientoPreguntaDTO pcacpDTO1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pcacp);
-
-        });
-        pcacpDTO = cut.toDto(new PruebaClaveAreaConocimientoPregunta(new PruebaClaveAreaConocimientoPreguntaPK(1l, 1, 1l),
-                new BigDecimal("34")
-        ));
-
-        assertNotNull(pcacpDTO);
-        assertEquals(1l, pcacpDTO.idPruebaClave());
    
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaClaveAreaConocimeintoPreguntaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveAreaConocimientoPreguntaDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDAOImp();
-        PruebaClaveAreaConocimientoPreguntaDTO pcacpDTO = null;
-        PruebaClaveAreaConocimientoPregunta pcacp;
-        PruebaClaveAreaConocimientoPregunta pcacp1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pcacpDTO);
-
-        });
-        pcacp = cut.toEntity(new PruebaClaveAreaConocimientoPreguntaDTO(1l, 1, 1l, new BigDecimal("23")));
-        assertNotNull(pcacp);
-  
-
-    }
 
 }

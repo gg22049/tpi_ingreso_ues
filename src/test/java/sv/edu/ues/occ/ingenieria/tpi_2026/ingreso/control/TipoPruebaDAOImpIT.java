@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoPruebaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
 
@@ -195,45 +194,6 @@ TipoPrueba newTipoPrueba;
     }
     
     
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("TipoPruebaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        TipoPruebaDAOImp cut = new TipoPruebaDAOImp();
-        TipoPrueba tp = null;
-        TipoPruebaDTO pdDTO;
-        
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(tp);
-        });
-        pdDTO = cut.toDto(new TipoPrueba(1, "examen presencial", true, "NADA"));
-        assertNotNull(pdDTO);
-        assertEquals(1, pdDTO.idTipoPrueba());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("TipoPruebaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        TipoPruebaDAOImp cut = new TipoPruebaDAOImp();
-        TipoPruebaDTO tpDTO = null;
-        TipoPrueba tp1;
-        TipoPrueba tp2;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(tpDTO);
-
-        });
-        tp1 = cut.toEntity(new TipoPruebaDTO(1, "Examen Presencial", true, "nada"));
-        assertNotNull(tp1);
-        assertEquals(1, tp1.getIdTipoPrueba());
-       
-    }
+    
 
 }

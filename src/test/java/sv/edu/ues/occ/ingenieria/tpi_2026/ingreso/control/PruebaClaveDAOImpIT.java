@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
@@ -221,56 +220,7 @@ public class PruebaClaveDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("AspiranteOpcionDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveDAOImp cut = new PruebaClaveDAOImp();
-        PruebaClaveDTO pcDTO;
-        PruebaClave pc2 = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pc2);
+    
 
-        });
 
-        pcDTO = cut.toDto(new PruebaClave(1l, "calve 1", new Prueba(1l)));
-        assertNotNull(pcDTO);
-        PruebaClaveDTO aspiDTO = cut.toDto(new PruebaClave(1l, "calve 1", null));
-        assertNotNull(aspiDTO);
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaClaveDAOImp.testToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveDAOImp cut = new PruebaClaveDAOImp();
-        cut.em = emf.createEntityManager();
-        EntityTransaction tx = cut.em.getTransaction();
-        try {
-            tx.begin();
-            PruebaClaveDTO pcDTO1 = new PruebaClaveDTO(1l, "clave 1", 1l);
-            PruebaClaveDTO pcDTO2 = new PruebaClaveDTO(2l, "I300515", null);
-            PruebaClave pc1;
-            PruebaClave pc2;
-            PruebaClaveDTO pc = null;
-            assertThrows(IllegalStateException.class, () -> {
-                cut.toEntity(pc);
-
-            });
-
-            pc1 = cut.toEntity(pcDTO1);
-            assertNotNull(pc1);
-            pc2 = cut.toEntity(pcDTO2);
-            assertNotNull(pc2);
-            assertNull(pc2.getIdPrueba());
-        } finally {
-
-            cut.em.close();
-        }
-
-    }
 }

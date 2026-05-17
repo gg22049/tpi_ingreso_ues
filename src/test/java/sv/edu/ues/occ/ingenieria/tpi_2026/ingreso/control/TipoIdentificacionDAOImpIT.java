@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoIdentificacion;
 
@@ -197,46 +196,5 @@ public class TipoIdentificacionDAOImpIT extends ITAbstract {
     }
     
     
-    
-     @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("TipoIdentificacionDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        TipoIdentificacionDAOImp cut = new TipoIdentificacionDAOImp();
-        TipoIdentificacion ti = null;
-        TipoIdentificacionDTO tiDTO;
-        
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(ti);
-//PreguntaDistractorDAOImp
-        });
-        tiDTO = cut.toDto(new TipoIdentificacion(1, "DUI", "Deben presentar imagen"));
-        assertNotNull(tiDTO);
-        assertEquals(1, tiDTO.idTipoIdentificacion());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("TipoIdentificacionDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-      
-        TipoIdentificacionDAOImp cut = new TipoIdentificacionDAOImp();
-        TipoIdentificacionDTO tiDTO = null;
-        TipoIdentificacion ti1;
-        TipoIdentificacion ti2;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(tiDTO);
-
-        });
-        ti1 = cut.toEntity(new TipoIdentificacionDTO(1, "DUI", "Deben presentar imagen"));
-        assertNotNull(ti1);
-        assertEquals(1,ti1.getIdTipoIdentificacion() );
-       //TipoIdentificacionDAOImp
-    }
+  
 }

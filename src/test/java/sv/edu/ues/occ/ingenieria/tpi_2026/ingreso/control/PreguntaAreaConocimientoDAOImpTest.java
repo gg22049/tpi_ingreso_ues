@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimientoPK;
 
@@ -25,35 +24,13 @@ public class PreguntaAreaConocimientoDAOImpTest {
     EntityManager emMock;
 
     @Test
-    public void toEntityTest() {
-        System.out.println("PreguntaAreaConocimientoDAOImpTest.toEntityTest");
-        PreguntaAreaConocimientoDAOImp cut = new PreguntaAreaConocimientoDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        PreguntaAreaConocimiento result = result = cut.toEntity(new PreguntaAreaConocimientoDTO(1L, 1, "obs"));
-        assertNotNull(result.getPreguntaAreaConocimientoPK());
-        assertEquals(1L, result.getPreguntaAreaConocimientoPK().getIdPregunta());
-        assertEquals(1, result.getPreguntaAreaConocimientoPK().getIdAreaConocimiento());
-    }
+void constructorAndGetEntityManagerTest() {
+    PreguntaAreaConocimientoDAOImp cut = new PreguntaAreaConocimientoDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("PreguntaAreaConocimientoDAOImpTest.toDtoTest");
-        PreguntaAreaConocimientoDAOImp cut = new PreguntaAreaConocimientoDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        PreguntaAreaConocimientoDTO result = cut.toDto(new PreguntaAreaConocimiento(null, "obs"));
-        assertNotNull(result);
-        assertEquals(0L, result.idPregunta());
-        assertEquals(0, result.idAreaConocimiento());
-        result = cut.toDto(new PreguntaAreaConocimiento(new PreguntaAreaConocimientoPK(1L, 1), "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.idPregunta());
-        assertEquals(1, result.idAreaConocimiento());
-    }
+}
 
 }

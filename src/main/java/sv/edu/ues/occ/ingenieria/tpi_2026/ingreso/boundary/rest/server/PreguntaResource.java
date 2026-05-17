@@ -117,7 +117,7 @@ public class PreguntaResource {
             @Valid Pregunta entity
     ) {
 
-        Pregunta found = preguntaDI.findById(entity);
+        Pregunta found = preguntaDI.findById(id);
         if (found == null) {
             throw new EntityNotFoundInRepositoryExcpetion(id);
         }

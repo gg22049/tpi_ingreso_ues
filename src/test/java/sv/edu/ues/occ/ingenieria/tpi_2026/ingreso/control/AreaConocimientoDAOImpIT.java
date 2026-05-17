@@ -11,7 +11,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Order;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 
 /*
@@ -39,11 +38,19 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
     void testCreate() {
         System.out.println("AreaConocimientoDAOImp.testCreate");
         AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+
         assertThrows(IllegalArgumentException.class, () -> {
             cut.create(null);
         });
         assertThrows(IllegalStateException.class, () -> {
             cut.create(newEntity);
+        });
+        cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+
+            cut.create(new AreaConocimiento(null, null));
         });
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
@@ -77,6 +84,13 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
             cut.findById(1L);
         });
         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
+            cut.findById(1l);
+        });
+        cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
             tx.begin();
@@ -100,6 +114,14 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
         assertThrows(IllegalStateException.class, () -> {
             cut.findAll();
         });
+         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
+            cut.findAll();
+        });
+        
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
@@ -132,6 +154,13 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
         assertThrows(IllegalStateException.class, () -> {
             cut.findByRange(offset, limit);
         });
+         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
+            cut.findByRange(offset, limit);
+        });
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
@@ -161,6 +190,13 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
         assertThrows(IllegalStateException.class, () -> {
             cut.update(newEntity);
         });
+         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
+            cut.update(newEntity);
+        });
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
@@ -186,6 +222,13 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
             cut.delete(null);
         });
         assertThrows(IllegalStateException.class, () -> {
+            cut.delete(newEntity);
+        });
+         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
             cut.delete(newEntity);
         });
         cut.em = emf.createEntityManager();
@@ -214,6 +257,13 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
         assertThrows(IllegalStateException.class, () -> {
             cut.count();
         });
+         cut.em = emf.createEntityManager();
+        cut.em.close();
+
+        assertThrows(IllegalStateException.class, () -> {
+            
+            cut.count();
+        });
         cut.em = emf.createEntityManager();
         EntityTransaction tx = cut.em.getTransaction();
         try {
@@ -228,63 +278,6 @@ public class AreaConocimientoDAOImpIT extends ITAbstract {
             tx.rollback();
             cut.em.close();
         }
-    }
- @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("AreaConocimientoDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("33");
-        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
-        AreaConocimiento prueba = null;
-        AreaConocimientoDTO areaConocimientoDTO;
-        AreaConocimientoDTO areaConocimientoDTO1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(prueba);
-
-        });
-        AreaConocimiento acPadre= new AreaConocimiento(1, "calculo", "matematica avanzada", true, null);
-        areaConocimientoDTO = cut.toDto(new AreaConocimiento(2, "mate", "ejercicios matematica", true, acPadre));
-        assertNotNull(areaConocimientoDTO);
-        assertNotNull(areaConocimientoDTO.idAreaConocimientoPadre());
-        areaConocimientoDTO1 = cut.toDto( acPadre);
-        assertNotNull(areaConocimientoDTO1);
-        assertNull(areaConocimientoDTO1.idAreaConocimientoPadre());
-    }
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("AreaConocimientoDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("33");
-        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
-        cut.em = emf.createEntityManager();
-        EntityTransaction tx = cut.em.getTransaction();
-        try {
-            tx.begin();
-            AreaConocimiento areaConocimiento;
-            AreaConocimiento areaConocimiento1;
-            AreaConocimientoDTO areaConocimientoDTO = null;
-            assertThrows(IllegalStateException.class, () -> {
-                cut.toEntity(areaConocimientoDTO);
-
-            });
-            AreaConocimientoDTO dto = new AreaConocimientoDTO(1, "Mate", "Ejercicios matematicos", true, 1);
-
-            areaConocimiento = cut.toEntity(dto);
-            assertNotNull(areaConocimiento);
-            assertNotNull(areaConocimiento.getIdAreaConocimientoPadre());
-            areaConocimiento1 = cut.toEntity(new AreaConocimientoDTO(1, "Mate", "Ejercicios matematicos", true, null));
-            assertNotNull(areaConocimiento1);
-            assertNull(areaConocimiento1.getIdAreaConocimientoPadre());
-        } finally {
-            tx.rollback();
-            cut.em.close();
-
-        }
-
     }
 
 }

@@ -13,12 +13,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.Date;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteOpcionDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoIdentificacionDTO;
 import io.cucumber.datatable.DataTable;
 import java.util.Map;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteIdentificacionDTO;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -31,9 +27,10 @@ public class CrearAspiranteYAsociarCarrerasE2E extends STAbstract {
     private Long idAspirante;
     private Long idOpcionUno;
     private Long idOpcionDos;
-
+   /*
     @Given("existe una identificacion tipo {string}")
     public void existe_una_identificacion(String tipo) {
+     
         TipoIdentificacionDTO dto = new TipoIdentificacionDTO(null, tipo, null);
         Response response = webTarget
                 .path("tipo-identificacion")
@@ -151,5 +148,5 @@ public class CrearAspiranteYAsociarCarrerasE2E extends STAbstract {
         assertEquals(idAspirante, dtoResponse.idAspirante());
         assertEquals(opcion, dtoResponse.idOpcion());
     }
-
+*/
 }

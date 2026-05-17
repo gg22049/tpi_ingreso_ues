@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.DistractorAreaConocimiento;
@@ -226,46 +225,5 @@ public class DistractorAreaConocimientoDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("DistractorAreaConocimeintoDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        DistractorAreaConocimientoDAOImp cut = new DistractorAreaConocimientoDAOImp();
-
-        DistractorAreaConocimiento dac = null;
-        DistractorAreaConocimientoPK dacPK = new DistractorAreaConocimientoPK(2l, 1);
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(dac);
-
-        });
-
-        DistractorAreaConocimientoDTO dto1 = cut.toDto(new DistractorAreaConocimiento(dacPK, "nada"));
-        DistractorAreaConocimientoDTO dto2 = cut.toDto(new DistractorAreaConocimiento(null, "nada"));
-        assertNotNull(dto1);
-        assertNotNull(dto2);
-        assertNull(dto2.idDistractor());
-        assertEquals(0, dto2.idAreaConocimiento());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("DistractorAreaConocimientoDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        DistractorAreaConocimientoDAOImp cut = new DistractorAreaConocimientoDAOImp();
-        DistractorAreaConocimientoDTO dacDTO = null;
-        DistractorAreaConocimiento dac = null;
-        DistractorAreaConocimiento dac2 = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(dacDTO);
-
-        });
-        dac = cut.toEntity(new DistractorAreaConocimientoDTO(1l, 0, "nada"));
-        assertNotNull(dac);
-        assertEquals(1l, dac.getDistractorAreaConocimientoPK().getIdDistractor());
-    }
+   
 }

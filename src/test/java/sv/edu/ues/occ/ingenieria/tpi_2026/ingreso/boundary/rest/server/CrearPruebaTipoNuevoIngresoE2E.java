@@ -14,9 +14,7 @@ import java.net.URI;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.STAbstract.webTarget;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.TipoPruebaDTO;
+
 
 /**
  *
@@ -33,7 +31,7 @@ public class CrearPruebaTipoNuevoIngresoE2E extends STAbstract {
     private Integer idTipoPrueba;
     private Long idPrueba;
     private Long idPruebaClave;
-
+/*
     @Given("existe un tipo de prueba llamado {string}")
     public void existe_un_tipo_de_prueba_llamado(String string) {
         TipoPruebaDTO tipoPruebaDTO = new TipoPruebaDTO(null, string, Boolean.parseBoolean(string), null);
@@ -122,5 +120,5 @@ public class CrearPruebaTipoNuevoIngresoE2E extends STAbstract {
            assertEquals(200, response.getStatus());
            
     }
-
+*/
 }

@@ -116,7 +116,7 @@ public class AreaConocimientoResourceST extends STAbstract {
 
         // 404 - not found - param idArea
         response = webTarget
-                .path(PATH + "/100/area-padre/1")
+                .path(PATH + "/100/area-padre/10")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.entity("", MediaType.APPLICATION_JSON));
 

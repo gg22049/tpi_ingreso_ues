@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 
 /**
@@ -22,29 +21,14 @@ public class DistractorDAOImpTest {
 
     @Mock
     EntityManager emMock;
+@Test
+void constructorAndGetEntityManagerTest() {
+    DistractorDAOImp cut=new DistractorDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("DistractorDAOImpTest.toEntityTest");
-        DistractorDAOImp cut = new DistractorDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        Distractor result = cut.toEntity(new DistractorDTO(1L, "val", Boolean.TRUE, "url"));
-        assertEquals(1L, result.getIdDistractor());
-    }
-
-    @Test
-    public void toDtoTest() {
-        System.out.println("DistractorDAOImpTest.toDtoTest");
-        DistractorDAOImp cut = new DistractorDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        DistractorDTO result = cut.toDto(new Distractor(1L, "val", Boolean.TRUE, "url"));
-        assertEquals(1L, result.idDistractor());
-    }
+}
 
 }

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaAulaAspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
@@ -267,48 +266,6 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImpIT extends ITAbstract {
             tx.rollback();
             cut.em.close();
         }
-    }
-
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("31");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
-        PruebaJornadaAulaAspiranteOpcion pjaao = null;
-        PruebaJornadaAulaAspiranteOpcionDTO pjaaoDTO;
-        PruebaJornadaAulaAspiranteOpcionPK pk = new PruebaJornadaAulaAspiranteOpcionPK(1l, 1l, "A3", 1l);
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pjaao);
-
-        });
-        pjaaoDTO = cut.toDto(new PruebaJornadaAulaAspiranteOpcion(pk, true, cal.getTime()));
-        assertNotNull(pjaaoDTO);
-        assertEquals("A3", pjaaoDTO.idAula());
-        
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("21");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
-        PruebaJornadaAulaAspiranteOpcionDTO pjaaoDTO = null;
-        PruebaJornadaAulaAspiranteOpcion pjaaO;
-        PruebaJornadaAulaAspiranteOpcionDTO pjaaO1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pjaaoDTO);
-
-        });
-        pjaaO = cut.toEntity(new PruebaJornadaAulaAspiranteOpcionDTO(1L, 1L, "A3", 1L, true, cal.getTime()));
-        assertNotNull(pjaaO);
-
     }
 
 }

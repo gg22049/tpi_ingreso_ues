@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaAulaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAulaPK;
 
@@ -24,38 +23,14 @@ public class JornadaAulaDAOImpTest {
     @Mock
     EntityManager emMock;
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("JornadaAulaDAOImpTest.toEntityTest");
-        JornadaAulaDAOImp cut = new JornadaAulaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        cut.em = emMock;
-        JornadaAula result = cut.toEntity(new JornadaAulaDTO(1L, "1", "obs"));
-        assertNotNull(result);
-        assertNotNull(result.getJornadaAulaPK());
-        assertEquals(1L, result.getJornadaAulaPK().getIdJornada());
-        assertEquals("1", result.getJornadaAulaPK().getIdAula());
-    }
+   @Test
+void constructorAndGetEntityManagerTest() {
+    JornadaAulaDAOImp cut =new JornadaAulaDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("JornadaAulaDAOImpTest.toDtoTest");
-        JornadaAulaDAOImp cut = new JornadaAulaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        JornadaAulaDTO result = cut.toDto(new JornadaAula(null, "obs"));
-        assertNotNull(result);
-        assertEquals("", result.idAula());
-        assertEquals(0L, result.idJornada());
-        result = cut.toDto(new JornadaAula(new JornadaAulaPK(1L, "1"), "obs"));
-        assertNotNull(result);
-        assertEquals("1", result.idAula());
-        assertEquals(1L, result.idJornada());
-    }
+}
 
 }

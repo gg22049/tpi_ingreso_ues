@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PreguntaAreaConocimiento;
@@ -225,49 +224,5 @@ public class PreguntaAreaConocimientoDAOImpIT extends ITAbstract {
         }
     }
     
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PreguntaAreaConocimientoDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PreguntaAreaConocimientoDAOImp cut = new PreguntaAreaConocimientoDAOImp();
-        PreguntaAreaConocimiento pac = null;
-        PreguntaAreaConocimientoDTO pacDTO;
-        PreguntaAreaConocimientoDTO pacDTO1;
-        
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pac);
-        });
-        
-        pacDTO = cut.toDto(new PreguntaAreaConocimiento(new PreguntaAreaConocimientoPK(1l, 1), ""));
-        assertNotNull(pacDTO);
-        assertEquals(1l, pacDTO.idPregunta());
-        pacDTO1 = cut.toDto(new PreguntaAreaConocimiento(null, ""));
-        assertNotNull(pacDTO1);
-        assertEquals(0, pacDTO1.idAreaConocimiento());
-        assertEquals(0, pacDTO1.idPregunta());
-    }
     
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PreguntaAreaConocimientoDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PreguntaAreaConocimientoDAOImp cut = new PreguntaAreaConocimientoDAOImp();
-        
-        PreguntaAreaConocimiento pac;
-        PreguntaAreaConocimientoDTO pacDTO = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pacDTO);
-            
-        });
-        
-        pac = cut.toEntity(new PreguntaAreaConocimientoDTO(1l, 1, ""));
-        assertNotNull(pac);
-        assertNotNull(pac.getPreguntaAreaConocimientoPK());
-        assertEquals(1, pac.getPreguntaAreaConocimientoPK().getIdAreaConocimiento());
-        assertEquals(1, pac.getPreguntaAreaConocimientoPK().getIdPregunta());
-    }
 }

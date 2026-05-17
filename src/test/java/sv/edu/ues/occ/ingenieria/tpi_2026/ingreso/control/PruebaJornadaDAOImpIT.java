@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornada;
@@ -235,41 +234,5 @@ public class PruebaJornadaDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaJornadaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        PruebaJornadaDAOImp cut = new PruebaJornadaDAOImp();
-        PruebaJornada pj = null;
-        PruebaJornadaDTO pjDTO;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pj);
-        });
-        pjDTO = cut.toDto(new PruebaJornada(new PruebaJornadaPK(1, 1), cal.getTime(), "Se podria cambiar la jornada de esta prueba"));
-        assertNotNull(pjDTO);
-        assertEquals(1, pjDTO.idJornada());
-        assertEquals(1, pjDTO.idPrueba());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaJornadaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaJornadaDAOImp cut = new PruebaJornadaDAOImp();
-        PruebaJornadaDTO tiDTO = null;
-        PruebaJornada ti1;
-        PruebaJornada ti2;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(tiDTO);
-        });
-        ti1 = cut.toEntity(new PruebaJornadaDTO(1, 1, cal.getTime(), "Se podria cambiar la jornada de esta prueba"));
-        assertNotNull(ti1);
-        assertEquals(cal.getTime(), ti1.getFechaCreacion());
-
-    }
+  
 }

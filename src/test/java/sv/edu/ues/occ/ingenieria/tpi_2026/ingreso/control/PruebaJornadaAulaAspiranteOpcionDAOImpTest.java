@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaAulaAspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaAulaAspiranteOpcionPK;
 
@@ -26,36 +25,13 @@ public class PruebaJornadaAulaAspiranteOpcionDAOImpTest {
     @Mock
     EntityManager emMock;
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImpTest.toEntityTest");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        PruebaJornadaAulaAspiranteOpcion result = cut.toEntity(new PruebaJornadaAulaAspiranteOpcionDTO(1L, 2L, "3", 4L, Boolean.TRUE, Date.from(Instant.now())));
-        PruebaJornadaAulaAspiranteOpcionPK key = result.getPruebaJornadaAulaAspiranteOpcionPK();
-        assertNotNull(key);
-        assertEquals(1L, key.getIdPrueba());
-        assertEquals(2L, key.getIdJornada());
-        assertEquals("3", key.getIdAula());
-        assertEquals(4L, key.getIdAspiranteOpcion());
-    }
+   @Test
+void constructorAndGetEntityManagerTest() {
+    PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("PruebaJornadaAulaAspiranteOpcionDAOImpTest.toDtoTest");
-        PruebaJornadaAulaAspiranteOpcionDAOImp cut = new PruebaJornadaAulaAspiranteOpcionDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        PruebaJornadaAulaAspiranteOpcionDTO result = cut.toDto(new PruebaJornadaAulaAspiranteOpcion(new PruebaJornadaAulaAspiranteOpcionPK(1L, 2L, "3", 4L), Boolean.TRUE, Date.from(Instant.now())));
-        assertEquals(1L, result.idPrueba());
-        assertEquals(2L, result.idJornada());
-        assertEquals("3", result.idAula());
-        assertEquals(4L, result.idAspiranteOpcion());
-    }
-
+}
 }

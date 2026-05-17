@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoPreguntaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPregunta;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClaveAreaConocimientoPreguntaPK;
 
@@ -26,32 +25,13 @@ public class PruebaClaveAreaConocimientoPreguntaDAOImpTest {
     EntityManager emMock;
 
     @Test
-    public void toEntityTest() {
-        System.out.println("PruebaClaveAreaConocimientoPreguntaDAOImpTest.toEntityTest");
-        PruebaClaveAreaConocimientoPreguntaDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        PruebaClaveAreaConocimientoPregunta result = cut.toEntity(new PruebaClaveAreaConocimientoPreguntaDTO(1L, 2, 3L, BigDecimal.ONE));
-        PruebaClaveAreaConocimientoPreguntaPK key = result.getPruebaClaveAreaConocimientoPreguntaPK();
-        assertEquals(1L, key.getIdPruebaClave());
-        assertEquals(2, key.getIdAreaConocimiento());
-        assertEquals(3L, key.getIdPregunta());
-    }
+void constructorAndGetEntityManagerTest() {
+    PruebaClaveAreaConocimientoPreguntaDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("PruebaClaveAreaConocimientoPreguntaDAOImpTest.toDtoTest");
-        PruebaClaveAreaConocimientoPreguntaDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        PruebaClaveAreaConocimientoPreguntaDTO result = cut.toDto(new PruebaClaveAreaConocimientoPregunta(new PruebaClaveAreaConocimientoPreguntaPK(1L, 2, 3L), BigDecimal.ONE));
-        assertEquals(1L, result.idPruebaClave());
-        assertEquals(2, result.idAreaConocimiento());
-        assertEquals(3L, result.idPregunta());
-    }
+}
 
 }

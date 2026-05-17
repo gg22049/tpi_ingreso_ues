@@ -8,9 +8,10 @@ import jakarta.persistence.EntityManager;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
 
@@ -23,37 +24,18 @@ public class AspiranteIdentificacionDAOImpTest {
 
     @Mock
     EntityManager emMock;
+    
+@Test
+void constructorAndGetEntityManagerTest() {
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("AspiranteIdentificacionDAOImpTest.toEntityTest");
-        AspiranteIdentificacionDAOImp cut = new AspiranteIdentificacionDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        cut.em = emMock;
-        AspiranteIdentificacion result = cut.toEntity(new AspiranteIdentificacionDTO(1L, 1, "valor", "url", "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.getAspiranteIdentificacionPK().getIdAspirante());
-        assertEquals(1, result.getAspiranteIdentificacionPK().getIdTipoIdentificacion());
-    }
+    AspiranteIdentificacionDAOImp cut = new AspiranteIdentificacionDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
+    AspiranteIdentificacion aspiranteIdentificacion = new AspiranteIdentificacion();
+    aspiranteIdentificacion.setAspiranteIdentificacionPK(new AspiranteIdentificacionPK(1l, 0));
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("AspiranteIdentificacionDAOImpTest.toDtoTest");
-        AspiranteIdentificacionDAOImp cut = new AspiranteIdentificacionDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        AspiranteIdentificacionDTO result = cut.toDto(new AspiranteIdentificacion(null, "val", "url", "obs"));
-        assertEquals(0, result.idAspirante());
-        assertEquals(0L, result.idTipoIdentificacion());
-        result = cut.toDto(new AspiranteIdentificacion(new AspiranteIdentificacionPK(1L, 1), "val", "url", "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.idAspirante());
-        assertEquals(1, result.idTipoIdentificacion());
-    }
-
+}
+   
 }

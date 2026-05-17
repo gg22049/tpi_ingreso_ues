@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteIdentificacionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacion;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteIdentificacionPK;
@@ -291,46 +290,4 @@ public class AspiranteIdentificacionDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("AspiranteIdentificacionDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteIdentificacionDAOImp aspiranteIdentificacionDI = new AspiranteIdentificacionDAOImp();
-        AspiranteIdentificacionPK aspiranteIdentificacionPK = new AspiranteIdentificacionPK(1l, 1);
-        AspiranteIdentificacionDTO aspiranteIdentificacionDTO;
-        AspiranteIdentificacionDTO aspiranteIdentificacionDTO2;
-        AspiranteIdentificacion aspiranteIdentificacion = null;
-        assertThrows(IllegalStateException.class, () -> {
-            aspiranteIdentificacionDI.toDto(aspiranteIdentificacion);
-        });
-        AspiranteIdentificacion ai = new AspiranteIdentificacion(null, "00000", "imagen", null);
-        AspiranteIdentificacion ai2 = new AspiranteIdentificacion(aspiranteIdentificacionPK, "00000", "imagen", null);
-
-        aspiranteIdentificacionDTO = aspiranteIdentificacionDI.toDto(ai);
-        assertNotNull(aspiranteIdentificacionDTO);
-        aspiranteIdentificacionDTO2 = aspiranteIdentificacionDI.toDto(ai2);
-        assertNotNull(aspiranteIdentificacionDTO2);
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("AspiranteIdentificacionDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteIdentificacionDAOImp dao = new AspiranteIdentificacionDAOImp();
-        AspiranteIdentificacionDTO aspiranteDTO1 = new AspiranteIdentificacionDTO(1L, 1, "00000000", "Imagen", null);
-
-        AspiranteIdentificacion aspiranteIdentificacion;
-        AspiranteIdentificacionDTO aspiranteIdentificacionDTONull = null;
-        assertThrows(IllegalStateException.class, () -> {
-            dao.toEntity(aspiranteIdentificacionDTONull);
-
-        });
-
-        aspiranteIdentificacion = dao.toEntity(aspiranteDTO1);
-        assertNotNull(aspiranteIdentificacion);
-    }
 }

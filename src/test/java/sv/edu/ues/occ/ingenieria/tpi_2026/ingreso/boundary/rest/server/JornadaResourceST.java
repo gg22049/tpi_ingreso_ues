@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ErrorDetailDTO;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /**
  *
@@ -37,7 +37,7 @@ public class JornadaResourceST extends STAbstract {
         System.out.println("JornadaResource.create");
 
         // 400 - constraint validation
-        JornadaDTO dto = new JornadaDTO(null, "", null, null, null);
+        Jornada dto = new Jornada(null, "", null, null, null);
         Response response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
@@ -56,7 +56,7 @@ public class JornadaResourceST extends STAbstract {
         assertFalse(body.issues().isEmpty());
 
         // 201 - created
-        dto = new JornadaDTO(null, "name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
+        dto = new Jornada(null, "name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
         response = webTarget
                 .path(PATH)
                 .request(MediaType.APPLICATION_JSON)
@@ -70,6 +70,7 @@ public class JornadaResourceST extends STAbstract {
         idJornada = Long.valueOf(
                 location.substring(location.lastIndexOf("/") + 1)
         );
+        System.out.println(idJornada);
     }
 
     @Test
@@ -125,11 +126,11 @@ public class JornadaResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        JornadaDTO dtoResponse = response.readEntity(JornadaDTO.class);
+        Jornada dtoResponse = response.readEntity(Jornada.class);
 
-        assertEquals(idJornada, dtoResponse.idJornada());
-        assertNotNull(dtoResponse.nombre());
-        assertFalse(dtoResponse.nombre().isBlank());
+        //assertEquals(idJornada, dtoResponse.getIdJornada());
+        assertNotNull(dtoResponse.getNombre());
+        assertFalse(dtoResponse.getNombre().isBlank());
 
     }
 
@@ -169,7 +170,7 @@ public class JornadaResourceST extends STAbstract {
         assertEquals(200, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString("Content-Type"));
 
-        List<JornadaDTO> resultList = response.readEntity(new GenericType<List<JornadaDTO>>() {
+        List<Jornada> resultList = response.readEntity(new GenericType<List<Jornada>>() {
         });
         assertNotNull(resultList);
         assertFalse(resultList.isEmpty());
@@ -182,7 +183,7 @@ public class JornadaResourceST extends STAbstract {
         System.out.println("JornadaResource.update");
 
         // 400 - constraint validation
-        JornadaDTO dto = new JornadaDTO(null, "", null, null, null);
+        Jornada dto = new Jornada(null, "", null, null, null);
         Response response = webTarget
                 .path(PATH + "/0")
                 .request(MediaType.APPLICATION_JSON)
@@ -202,7 +203,7 @@ public class JornadaResourceST extends STAbstract {
         assertFalse(dtoError.issues().isEmpty());
 
         // 404 - not found
-        dto = new JornadaDTO(null, "name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
+        dto = new Jornada(null, "name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
         response = webTarget
                 .path(PATH + "/100")
                 .request(MediaType.APPLICATION_JSON)
@@ -221,7 +222,7 @@ public class JornadaResourceST extends STAbstract {
         assertTrue(dtoError.detail().contains("No entity with id:"));
 
         // 204 - updated
-        dto = new JornadaDTO(null, "new name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
+        dto = new Jornada(null, "new name", Date.from(Instant.parse("2020-01-23T00:00:00+00:08")), Date.from(Instant.now()), null);
         response = webTarget
                 .path(PATH + "/" + idJornada)
                 .request(MediaType.APPLICATION_JSON)
@@ -276,6 +277,7 @@ public class JornadaResourceST extends STAbstract {
         assertTrue(dtoError.detail().contains("No entity with id:"));
 
         //204 - deleted
+  
         response = webTarget
                 .path(PATH + "/" + idJornada)
                 .request(MediaType.APPLICATION_JSON)

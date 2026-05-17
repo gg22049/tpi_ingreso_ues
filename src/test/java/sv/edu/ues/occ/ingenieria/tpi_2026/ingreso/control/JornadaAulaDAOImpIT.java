@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaAulaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAula;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.JornadaAulaPK;
@@ -225,48 +224,5 @@ public class JornadaAulaDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("JornadaAulaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        JornadaAulaDAOImp cut = new JornadaAulaDAOImp();
-        JornadaAula ja = null;
-        JornadaAulaDTO jaDTO;
-        JornadaAulaDTO jaDTO1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(ja);
-        });
-
-        jaDTO = cut.toDto(new JornadaAula(new JornadaAulaPK(1l, "A3"), ""));
-        assertNotNull(jaDTO);
-        assertEquals(1l, jaDTO.idJornada());
-        assertEquals("A3", jaDTO.idAula());
-        jaDTO1 = cut.toDto(new JornadaAula(null, "No hay"));
-        assertNotNull(jaDTO1);
-        assertEquals(0l, jaDTO1.idJornada());
-        assertEquals("", jaDTO1.idAula());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("JornadaAulaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        JornadaAulaDAOImp cut = new JornadaAulaDAOImp();
-        JornadaAula ja;
-        JornadaAulaDTO jaDTO = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(jaDTO);
-
-        });
-
-        ja = cut.toEntity(new JornadaAulaDTO(1l, "A3", "El matadero"));
-        assertNotNull(ja);
-        assertEquals("A3", ja.getJornadaAulaPK().getIdAula());
-        assertEquals(1, ja.getJornadaAulaPK().getIdJornada());
-    }
+   
 }

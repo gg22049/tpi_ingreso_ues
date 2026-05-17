@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteOpcionDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AspiranteOpcion;
 
@@ -218,60 +217,5 @@ public class AspiranteOpcionDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("AspiranteOpcionDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteOpcionDAOImp aspiranteOpcionDI = new AspiranteOpcionDAOImp();
-        AspiranteOpcion aspiranteOpcion1 = new AspiranteOpcion(1l, "I300515", null);
-        Aspirante aspi = new Aspirante(1l);
-        AspiranteOpcionDTO aspiranteOpcionDTO;
-        AspiranteOpcion aspiranteOpcion2 = null;
-        AspiranteOpcion aspiranteOpcion3 = new AspiranteOpcion();
-        aspiranteOpcion3.setIdAspirante(aspi);
-        assertThrows(IllegalStateException.class, () -> {
-            aspiranteOpcionDI.toDto(aspiranteOpcion2);
-
-        });
-
-        aspiranteOpcionDTO = aspiranteOpcionDI.toDto(aspiranteOpcion1);
-        assertNotNull(aspiranteOpcionDTO);
-        AspiranteOpcionDTO aspiDTO = aspiranteOpcionDI.toDto(aspiranteOpcion3);
-        assertNotNull(aspiDTO);
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("AspiranteOpcionDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteOpcionDAOImp cut = new AspiranteOpcionDAOImp();
-        cut.em = emf.createEntityManager();
-        EntityTransaction tx = cut.em.getTransaction();
-        try {
-            tx.begin();
-            AspiranteOpcionDTO aspiranteOpcionDTO1 = new AspiranteOpcionDTO(null, "I300515", cal.getTime(), 1l);
-            AspiranteOpcionDTO aspiranteOpcionDTO2 = new AspiranteOpcionDTO(null, "I300515", cal.getTime(), null);
-            AspiranteOpcion aspiranteOpcion;
-            AspiranteOpcion aspiranteOpcion3;
-            AspiranteOpcionDTO aspiranteOpcion2 = null;
-            assertThrows(IllegalStateException.class, () -> {
-                cut.toEntity(aspiranteOpcion2);
-
-            });
-
-            aspiranteOpcion = cut.toEntity(aspiranteOpcionDTO1);
-            assertNotNull(aspiranteOpcion);
-            aspiranteOpcion3 = cut.toEntity(aspiranteOpcionDTO2);
-            assertNotNull(aspiranteOpcion3);
-            assertNull(aspiranteOpcion3.getIdAspirante());
-        } finally {
-
-            cut.em.close();
-        }
-
-    }
+  
 }

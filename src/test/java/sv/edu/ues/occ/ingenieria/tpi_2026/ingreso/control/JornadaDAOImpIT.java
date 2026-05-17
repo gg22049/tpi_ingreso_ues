@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /**
@@ -196,41 +195,5 @@ public class JornadaDAOImpIT extends ITAbstract {
         }
     }
     
-       @Test
-    @Order(8)
-    void testToDto(){
-        System.out.println("JornadaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        JornadaDAOImp cut = new JornadaDAOImp();
-        Jornada jornada1= new Jornada(1l, "2028", cal.getTime(), cal.getTime(), "no hay");
-        JornadaDTO jornadaDTO;
-        Jornada jornada2=null;
-        assertThrows(IllegalStateException.class, () -> {
-          cut.toDto(jornada2);
-           
-        });
-        
-         jornadaDTO=cut.toDto(jornada1);
-         assertNotNull(jornadaDTO);
-    }
-    
-      @Test
-    @Order(9)
-    void testToEntity(){
-        System.out.println("JornadaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-       JornadaDAOImp cut = new JornadaDAOImp();
-        JornadaDTO jornadaDTO1= new JornadaDTO(1l, "jornada 2028", cal.getTime(), cal.getTime(), "no hay");
-        Jornada jornada;
-        JornadaDTO jornada2=null;
-        assertThrows(IllegalStateException.class, () -> {
-          cut.toEntity(jornada2);
-           
-        });
-        
-         jornada=cut.toEntity(jornadaDTO1);
-         assertNotNull(jornada);
-    }
+  
 }

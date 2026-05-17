@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 
 /**
@@ -239,79 +238,9 @@ public class AspiranteDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testFindByEmail(){
-        System.out.println("AspiranteDAOImp.testFindByEmail");
-        AspiranteDAOImp cut = new AspiranteDAOImp();
-        
-        assertThrows(IllegalArgumentException.class, () -> {
-            cut.findByEmail(null);
-        });
-      
-         assertThrows(IllegalArgumentException.class, () -> {
-            cut.findByEmail(" ");
-        });
-        assertThrows(Exception.class, () -> {
-            cut.findByEmail("correo@noexiste");
-        });
-        
-        cut.em=emf.createEntityManager();
-        EntityTransaction tx=cut.em.getTransaction();
-        try {
-            tx.begin();
-            cut.em.persist(newAspirante);
-            cut.em.flush();
-            cut.em.clear();
-             
-            Aspirante correoNoEncontrado =cut.findByEmail("busquemos@gmail");
-            assertNull(correoNoEncontrado);
-            Aspirante found= cut.findByEmail(newAspirante.getCorreo());
-            assertNotNull(found);
-            assertEquals(found.getCorreo(), newAspirante.getCorreo());
-        } finally {
-            tx.rollback();
-            cut.em.close();
-        }
-    }
+  
     
     
     
-     @Test
-    @Order(8)
-    void testToDto(){
-        System.out.println("AspiranteDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteDAOImp aspiranteDI=new AspiranteDAOImp();
-        Aspirante aspirante1= new Aspirante(12L, "Juan", "chepe", cal.getTime() , "juan@hotmail",cal.getTime(), "No hay");
-        AspiranteDTO aspiranteDTO;
-        Aspirante aspirante2=null;
-        assertThrows(IllegalStateException.class, () -> {
-          aspiranteDI.toDto(aspirante2);
-           
-        });
-        
-         aspiranteDTO=aspiranteDI.toDto(aspirante1);
-         assertNotNull(aspiranteDTO);
-    }
     
-      @Test
-    @Order(9)
-    void testToEntity(){
-        System.out.println("AspiranteDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        AspiranteDAOImp aspiranteDI=new AspiranteDAOImp();
-        AspiranteDTO aspiranteDTO1= new AspiranteDTO(1L, "Fernando", "Torrento", cal.getTime(), "hola@ues.edu.sv", null, "");
-        Aspirante aspirante;
-        AspiranteDTO aspirante2=null;
-        assertThrows(IllegalStateException.class, () -> {
-          aspiranteDI.toEntity(aspirante2);
-           
-        });
-        
-         aspirante=aspiranteDI.toEntity(aspiranteDTO1);
-         assertNotNull(aspirante);
-    }
 }

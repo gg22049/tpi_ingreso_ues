@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import static sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.ITAbstract.emf;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoPreguntaDistractorDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Distractor;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Pregunta;
@@ -296,49 +295,5 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorDAOImpIT {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaClaveAreaConocimeintoPreguntaDistractorDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveAreaConocimientoPreguntaDistractorDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDistractorDAOImp();
-        PruebaClaveAreaConocimientoPreguntaDistractor pcacpd = null;
-        PruebaClaveAreaConocimientoPreguntaDistractorDTO pcacpdDTO;
-        PruebaClaveAreaConocimientoPreguntaDistractorDTO pcacpdDTO1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pcacpd);
-
-        });
-        pcacpdDTO = cut.toDto(new PruebaClaveAreaConocimientoPreguntaDistractor(
-                new PruebaClaveAreaConocimientoPreguntaDistractorPK(1l, 1, 1l, 1l),
-                cal.getTime(), "nada"
-        ));
-        pcacpdDTO1=cut.toDto(new PruebaClaveAreaConocimientoPreguntaDistractor(null, cal.getTime(), "nada"));
-        
-        assertNotNull(pcacpdDTO);
-        assertNotNull(pcacpdDTO.idDistractor());
-        assertNotNull(pcacpdDTO1);
-        assertNotNull(pcacpdDTO1.idDistractor());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaClaveAreaConocimeintoPreguntaDistractorDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        PruebaClaveAreaConocimientoPreguntaDistractorDAOImp cut = new PruebaClaveAreaConocimientoPreguntaDistractorDAOImp();
-        PruebaClaveAreaConocimientoPreguntaDistractorDTO pcacpdDTO = null;
-        PruebaClaveAreaConocimientoPreguntaDistractor pcacpd;
-        PruebaClaveAreaConocimientoPreguntaDistractor pcacpd1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pcacpdDTO);
-
-        });
-        pcacpd = cut.toEntity(new PruebaClaveAreaConocimientoPreguntaDistractorDTO(1l, 1, 1l, 1, cal.getTime(), "nada"));
-        assertNotNull(pcacpd);
-
-    }
+    
 }

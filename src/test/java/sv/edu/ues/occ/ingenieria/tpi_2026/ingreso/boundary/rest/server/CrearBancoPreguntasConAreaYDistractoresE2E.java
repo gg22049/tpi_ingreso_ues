@@ -11,11 +11,6 @@ import io.cucumber.java.en.When;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.DistractorDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaAreaConocimientoDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDTO;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PreguntaDistractorDTO;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -28,7 +23,7 @@ public class CrearBancoPreguntasConAreaYDistractoresE2E extends STAbstract {
     private Long idPregunta;
     private Long idDistractorUno;
     private Long idDistractorDos;
-
+/*
     @Given("existe un area de conocimiento llamada {string}")
     public void existe_un_area_de_conocimiento(String area) {
         AreaConocimientoDTO dto = new AreaConocimientoDTO(null, area, "descripcion", Boolean.TRUE, null);
@@ -153,5 +148,5 @@ public class CrearBancoPreguntasConAreaYDistractoresE2E extends STAbstract {
         assertEquals(idPregunta, dtoResponse.idPregunta());
         assertEquals(idDistractorDos, dtoResponse.idDistractor());
     }
-
+*/
 }

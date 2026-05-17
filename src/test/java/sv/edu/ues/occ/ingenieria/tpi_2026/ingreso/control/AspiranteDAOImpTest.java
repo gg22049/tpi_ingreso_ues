@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AspiranteDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Aspirante;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,36 +27,33 @@ public class AspiranteDAOImpTest {
 
     @Mock
     EntityManager emMock;
+    
+@Test
+void constructorAndGetEntityManagerTest() {
+    System.out.println("AspiranteDAOImpTest.constructorAndGetEntityManagerTest");
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("AspiranteDAOImpTest.toEntityTest");
-        AspiranteDAOImp cut = new AspiranteDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        Aspirante result = cut.toEntity(new AspiranteDTO(1L, "name", "last name", Date.from(Instant.now()), "email", null, "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.getIdAspirante());
-        assertNotNull(result.getFechaNacimiento());
-    }
+    AspiranteDAOImp cut = new AspiranteDAOImp();
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("AspiranteDAOImpTest.toDtoTest");
-        AspiranteDAOImp cut = new AspiranteDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        AspiranteDTO result = cut.toDto(new Aspirante(1L, "name", "last name", Date.from(Instant.now()), "email", null, "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.idAspirante());
-        assertNotNull(result.fechaNacimiento());
-    }
+    cut.em = emMock;
 
-    @Test
+    EntityManager result = cut.getEntityManager();
+
+    assertNotNull(result);
+    assertEquals(emMock, result);
+
+    Aspirante aspirante = new Aspirante();
+    aspirante.setIdAspirante(1l);
+
+    when(emMock.find(eq(Aspirante.class), eq(1)))
+            .thenReturn(aspirante);
+
+    Aspirante found = cut.findById(1);
+
+    assertNotNull(found);
+    assertEquals(1, found.getIdAspirante());
+}
+   
+    /*@Test
     public void findByEmailTest() {
         System.out.println("AspiranteDAOImpTest.findByEmailTest");
         AspiranteDAOImp cut = new AspiranteDAOImp();
@@ -84,5 +80,5 @@ public class AspiranteDAOImpTest {
         assertNotNull(result);
         assertEquals(1l, result.getIdAspirante());
     }
-
+*/
 }

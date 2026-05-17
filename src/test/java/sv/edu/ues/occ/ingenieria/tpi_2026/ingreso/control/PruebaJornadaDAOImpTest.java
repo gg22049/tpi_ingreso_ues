@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaJornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornada;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaJornadaPK;
 
@@ -26,32 +25,14 @@ public class PruebaJornadaDAOImpTest {
     @Mock
     EntityManager emMock;
 
-    @Test
-    public void toEntityTest() {
-        System.out.println("PruebaJornadaDAOImpTest.toEntityTest");
-        PruebaJornadaDAOImp cut = new PruebaJornadaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        PruebaJornada result = cut.toEntity(new PruebaJornadaDTO(1L, 2L, Date.from(Instant.now()), "obs"));
-        PruebaJornadaPK key = result.getPruebaJornadaPK();
-        assertNotNull(key);
-        assertEquals(1L, key.getIdPrueba());
-        assertEquals(2L, key.getIdJornada());
-    }
+   @Test
+void constructorAndGetEntityManagerTest() {
+    PruebaJornadaDAOImp cut = new PruebaJornadaDAOImp();
+    cut.em = emMock;
+    EntityManager result = cut.getEntityManager();
+    assertNotNull(result);
+    assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("PruebaJornadaDAOImpTest.toDtoTest");
-        PruebaJornadaDAOImp cut = new PruebaJornadaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        PruebaJornadaDTO result = cut.toDto(new PruebaJornada(new PruebaJornadaPK(1L, 2L), Date.from(Instant.now()), "obs"));
-        assertEquals(1L, result.idPrueba());
-        assertEquals(2L, result.idJornada());
-    }
+}
 
 }

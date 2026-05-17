@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.JornadaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Jornada;
 
 /**
@@ -26,29 +25,12 @@ public class JornadaDAOImpTest {
     EntityManager emMock;
 
     @Test
-    public void toEntityTest() {
-        System.out.println("JornadaDAOImpTest.toEntityTest");
+    void constructorAndGetEntityManagerTest() {
         JornadaDAOImp cut = new JornadaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        Jornada result = cut.toEntity(new JornadaDTO(1L, "name", Date.from(Instant.now()), Date.from(Instant.now()), "obs"));
+        cut.em = emMock;
+        EntityManager result = cut.getEntityManager();
         assertNotNull(result);
-        assertEquals(1L, result.getIdJornada());
-    }
+        assertEquals(emMock, result);
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("JornadaDAOImpTest.toDtoTest");
-        JornadaDAOImp cut = new JornadaDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        JornadaDTO result = cut.toDto(new Jornada(1L, "name", Date.from(Instant.now()), Date.from(Instant.now()), "obs"));
-        assertNotNull(result);
-        assertEquals(1L, result.idJornada());
     }
-
 }

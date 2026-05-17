@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.AreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 
 /**
@@ -94,6 +93,18 @@ public class AreaConocimientoDAOImpTest {
         List<AreaConocimiento> resultList = cut.findAll();
         assertNotNull(resultList);
         assertEquals(baseList.size(), resultList.size());
+
+        //resetear mock
+        reset(cbMock);
+        //caso de error
+        when(cbMock.createQuery(AreaConocimiento.class))
+                .thenThrow(new RuntimeException("Error simulado"));
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            cut.findAll();
+        });
+
+        assertEquals("Error al obtener todos los registros", ex.getMessage());
     }
 
     @Test
@@ -116,7 +127,43 @@ public class AreaConocimientoDAOImpTest {
         AreaConocimiento found = cut.findById(id);
         assertNotNull(expected);
         assertEquals(expected.getIdAreaConocimiento(), expected.getIdAreaConocimiento());
+        // Cubrir el catch
+        reset(emMock);
+        cut.em = emMock;
+
+        doThrow(new RuntimeException("Error simulado"))
+                .when(emMock)
+                .find(any(), any());
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            cut.findById(id);
+        });
+
+        assertEquals("Error durante la busqueda por id", ex.getMessage());
     }
+
+    @Test
+    void findByIdExceptionTest() {
+        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+        cut.em = emMock;
+
+        Integer id = 1;
+
+        when(emMock.find(any(), any()))
+                .thenAnswer(invocation -> {
+                    throw new RuntimeException("Error simulado");
+                });
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            cut.findById(id);
+        });
+
+        assertEquals("Error durante la busqueda por id", ex.getMessage());
+
+        verify(emMock).find(any(), any());
+    }
+    
+  
 
     @Test
     void findByRangeTest() {
@@ -136,6 +183,7 @@ public class AreaConocimientoDAOImpTest {
                 () -> {
                     cut.findByRange(1, 10);
                 });
+
         cut.em = emMock;
         CriteriaBuilder cbMock = mock(CriteriaBuilder.class);
         CriteriaQuery<AreaConocimiento> cqMock = mock(CriteriaQuery.class);
@@ -149,6 +197,17 @@ public class AreaConocimientoDAOImpTest {
         List<AreaConocimiento> resultList = cut.findByRange(1, 10);
         assertNotNull(resultList);
         assertEquals(baseList.size(), resultList.size());
+        //resetear mock
+        reset(cbMock);
+        //caso de error
+        when(cbMock.createQuery(AreaConocimiento.class))
+                .thenThrow(new RuntimeException("Error simulado"));
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            cut.findByRange(1, 10);
+        });
+
+        assertEquals("Error al obtener el rango de registros", ex.getMessage());
     }
 
     @Test
@@ -171,8 +230,32 @@ public class AreaConocimientoDAOImpTest {
         when(emMock.contains(area)).thenReturn(true);
         cut.delete(area);
         verify(emMock, times(2)).remove(area);
+
     }
 
+@Test
+void deleteExceptionTest() {
+    System.out.println("AreaConocimientoDAOImpTest.deleteExceptionTest");
+
+    AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+
+    AreaConocimiento area = new AreaConocimiento();
+    area.setIdAreaConocimiento(1);
+
+    cut.em = emMock;
+
+    when(emMock.contains(any()))
+            .thenThrow(new RuntimeException("Error simulado"));
+
+    IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+        cut.delete(area);
+    });
+
+    assertEquals("Error eliminando el registro", ex.getMessage());
+
+    verify(emMock).contains(any());
+}
+    
     @Test
     void countTest() {
         System.out.println("AreaConocimientoDAOImpTest.countTest");
@@ -196,42 +279,63 @@ public class AreaConocimientoDAOImpTest {
         Long result = cut.count();
         assertNotNull(result);
         assertEquals(sizeExpected, result);
+        //resetear mock
+        reset(cbMock);
+        //caso de error
+        when(cbMock.createQuery(AreaConocimiento.class))
+                .thenThrow(new RuntimeException("Error simulado"));
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            cut.count();
+        });
+
+        assertEquals("Error contando los registros de la tabla", ex.getMessage());
     }
 
     @Test
-    public void toEntityTest() {
-        System.out.println("AreaConocimientoDAOImpTest.toEntityTest");
-        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toEntity(null);
-                });
-        cut.em = emMock;
-        when(emMock.find(AreaConocimiento.class, 1)).thenReturn(baseList.getFirst());
-        AreaConocimiento result = cut.toEntity(new AreaConocimientoDTO(1, "nombre", "des", Boolean.TRUE, null));
-        assertNull(result.getIdAreaConocimientoPadre());
-        result = cut.toEntity(new AreaConocimientoDTO(1, "nombre", "des", Boolean.TRUE, 1));
-        assertNotNull(result);
-        assertEquals(1, result.getIdAreaConocimiento());
-        assertEquals(1, result.getIdAreaConocimientoPadre().getIdAreaConocimiento());
-    }
+void updateExceptionTest() {
+    System.out.println("AreaConocimientoDAOImpTest.updateExceptionTest");
 
-    @Test
-    public void toDtoTest() {
-        System.out.println("AreaConocimientoDAOImpTest.toDtoTest");
-        AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
-        assertThrows(IllegalStateException.class,
-                () -> {
-                    cut.toDto(null);
-                });
-        AreaConocimientoDTO result = cut.toDto(new AreaConocimiento(1, "name", "desc", Boolean.TRUE, null));
-        assertNotNull(result);
-        assertEquals(1, result.idAreaConocimiento());
-        assertNull(result.idAreaConocimientoPadre());
-        result = cut.toDto(new AreaConocimiento(1, "name", "desc", Boolean.TRUE, baseList.getFirst()));
-        assertNotNull(result);
-        assertEquals(1, result.idAreaConocimiento());
-        assertNotNull(result.idAreaConocimientoPadre());
-    }
+    AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
 
+    AreaConocimiento area = new AreaConocimiento();
+    area.setIdAreaConocimiento(1);
+
+    cut.em = emMock;
+
+    when(emMock.merge(any()))
+            .thenThrow(new RuntimeException("Error simulado"));
+
+    IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+        cut.update(area);
+    });
+
+    assertEquals("Error actualizando el registro", ex.getMessage());
+
+    verify(emMock).merge(any());
+}
+
+@Test
+void createExceptionTest() {
+    System.out.println("AreaConocimientoDAOImpTest.createExceptionTest");
+
+    AreaConocimientoDAOImp cut = new AreaConocimientoDAOImp();
+
+    AreaConocimiento area = new AreaConocimiento();
+    area.setIdAreaConocimiento(1);
+
+    cut.em = emMock;
+
+    doThrow(new RuntimeException("Error simulado"))
+            .when(emMock)
+            .persist(any());
+
+    IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+        cut.create(area);
+    });
+
+    assertEquals("Error persistiendo la entidad", ex.getMessage());
+
+    verify(emMock).persist(any());
+}
 }

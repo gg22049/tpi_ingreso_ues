@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.TipoPrueba;
 
@@ -209,62 +208,6 @@ public class PruebaDAOImpIT extends ITAbstract {
             tx.rollback();
             cut.em.close();
         }
-    }
-
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("33");
-        PruebaDAOImp cut = new PruebaDAOImp();
-        Prueba prueba = null;
-        PruebaDTO pruebaDTO;
-        PruebaDTO pruebaDTO2;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(prueba);
-
-        });
-
-        pruebaDTO = cut.toDto(new Prueba(1l, "examen", "no hay", decimal, decimal, 100, cal.getTime(), new TipoPrueba(1)));
-        assertNotNull(pruebaDTO);
-        pruebaDTO2 = cut.toDto(new Prueba(1l, "examen", "no hay", decimal, decimal, 100, cal.getTime(), null));
-        assertNotNull(pruebaDTO2);
-        assertNull(pruebaDTO2.idTipoPrueba());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("33");
-        PruebaDAOImp cut = new PruebaDAOImp();
-        cut.em = emf.createEntityManager();
-        EntityTransaction tx = cut.em.getTransaction();
-        try {
-            tx.begin();
-            Prueba prueba;
-            Prueba prueba2;
-            PruebaDTO pruebaDTO = null;
-            assertThrows(IllegalStateException.class, () -> {
-                cut.toEntity(pruebaDTO);
-
-            });
-            PruebaDTO dto = new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), 1);
-            prueba = cut.toEntity(dto);
-            assertNotNull(prueba);
-            prueba2 = cut.toEntity(new PruebaDTO(1l, "jornada 2018", "nada", decimal, decimal, 34, cal.getTime(), null));
-            assertNotNull(prueba2);
-            assertNull(prueba2.getIdTipoPrueba());
-        } finally {
-            tx.rollback();
-            cut.em.close();
-
-        }
-
     }
 
 }

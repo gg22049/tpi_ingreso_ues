@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.dto.PruebaClaveAreaConocimientoDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.Prueba;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.PruebaClave;
@@ -236,51 +235,6 @@ public class PruebaClaveAreaConocimientoDAOImpIT extends ITAbstract {
         }
     }
 
-    @Test
-    @Order(8)
-    void testToDto() {
-        System.out.println("PruebaClaveAreaConocimeintoDAOImp.testToDto");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-        BigDecimal decimal = new BigDecimal("34");
-        PruebaClaveAreaConocimientoDAOImp cut = new PruebaClaveAreaConocimientoDAOImp();
-        PruebaClaveAreaConocimiento pcac = null;
-        PruebaClaveAreaConocimientoDTO pcacDTO;
-        PruebaClaveAreaConocimientoDTO pcacDTO1;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toDto(pcac);
-
-        });
-        pcacDTO = cut.toDto(new PruebaClaveAreaConocimiento(new PruebaClaveAreaConocimientoPK(1l, 1), 1, decimal));
-        pcacDTO1 = cut.toDto(new PruebaClaveAreaConocimiento(null, 1, decimal));
-
-        assertNotNull(pcacDTO);
-        assertNotNull(pcacDTO.idPruebaClave());
-        assertNotNull(pcacDTO.idAreaConocimiento());
-        assertNotNull(pcacDTO1);
-        assertEquals(0, pcacDTO1.idAreaConocimiento());
-        assertEquals(0, pcacDTO1.idPruebaClave());
-    }
-
-    @Test
-    @Order(9)
-    void testToEntity() {
-        System.out.println("PruebaClaveAreaConocimeintoDAOImp.estToEntity");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, Calendar.JANUARY, 15);
-         BigDecimal decimal = new BigDecimal("34");
-        PruebaClaveAreaConocimientoDAOImp cut = new PruebaClaveAreaConocimientoDAOImp();
-        PruebaClaveAreaConocimientoDTO pcacDTO = null;
-        PruebaClaveAreaConocimiento pcacp;
-        PruebaClaveAreaConocimiento pcacp1;
-
-        assertThrows(IllegalStateException.class, () -> {
-            cut.toEntity(pcacDTO);
-
-        });
-        pcacp = cut.toEntity(new PruebaClaveAreaConocimientoDTO(1l, 1, 15, decimal));
-        assertNotNull(pcacp);
-
-    }
+    
 
 }
