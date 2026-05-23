@@ -10,7 +10,6 @@ import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,46 +17,37 @@ import java.util.List;
  * @author usermein
  */
 @Provider
-public class CorsResponseFilter implements ContainerResponseFilter{
+public class CorsResponseFilter implements ContainerResponseFilter {
 
-    public static final String METODOS_PERMITIDOS="GET, POST, PUT, DELETE, OPTIONS, HEAD";
-    public static final int MAXIMO_CACHE=30*60*60;
-    public static final String CABECERAS_PERMITIDAS="origin,accept,content-type";
-    public static final String CABECERAS_EXPUESTAS="location,info";
-    
+    public static final String METODOS_PERMITIDOS = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+    public static final int MAXIMO_CACHE = 30 * 60 * 60;
+    public static final String CABECERAS_PERMITIDAS = "Origin, Accept, Content-Type";
+    public static final String CABECERAS_EXPUESTAS = "Location, Info";
+
     @Override
-    public void filter(ContainerRequestContext crc, ContainerResponseContext responseContext) throws IOException {
-        MultivaluedMap<String, Object> headers=responseContext.getHeaders();
-        headers.add("Access-Control-Allow-Origin","*");
-         headers.add("Access-Control-Allow-Headers",getResquestedAllowedHeaders(crc));
-          headers.add("Access-Control-Expose-Origin",getResquestedExposedHeaders(crc));
-           headers.add("Access-Control-Allow-Credentials","true");
-           headers.add("Access-Control-Allow-Methods",METODOS_PERMITIDOS);
-           headers.add("Access-Control-MAx-Age",MAXIMO_CACHE);
-           headers.add("x-responded-by","cors-response-filter");
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+        MultivaluedMap<String, Object> headers = responseContext.getHeaders();
+
+        headers.putSingle("Access-Control-Allow-Origin", "*");
+        headers.putSingle("Access-Control-Allow-Headers", getRequestedAllowedHeaders(requestContext));
+        headers.putSingle("Access-Control-Expose-Headers", CABECERAS_EXPUESTAS);
+        headers.putSingle("Access-Control-Allow-Credentials", "true");
+        headers.putSingle("Access-Control-Allow-Methods", METODOS_PERMITIDOS);
+        headers.putSingle("Access-Control-Max-Age", String.valueOf(MAXIMO_CACHE));
+        headers.putSingle("x-responded-by", "cors-response-filter");
     }
-    
-    String getResquestedAllowedHeaders(ContainerRequestContext responseContext){
-        List<String> headers=responseContext.getHeaders().get("Access-Control-Allow-Headers");
-        return crearCabeceras(headers, CABECERAS_PERMITIDAS);
-    }
-    
-    String getResquestedExposedHeaders(ContainerRequestContext responseContext){
-        List<String> headers=responseContext.getHeaders().get("Access-Control-Expose-Headers");
-        return crearCabeceras(headers, CABECERAS_EXPUESTAS);
-    }
-    
-    String crearCabeceras(List<String> cabeceras, String cabecerasPorDefecto){
-        if (cabeceras==null || cabeceras.isEmpty()) {
-            return cabecerasPorDefecto;
+
+    String getRequestedAllowedHeaders(ContainerRequestContext requestContext) {
+        List<String> headers = requestContext.getHeaders().get("Access-Control-Allow-Headers");
+        if (headers == null || headers.isEmpty()) {
+            return CABECERAS_PERMITIDAS;
         }
-        List<String> salida=new ArrayList<>();
-        StringBuilder sb= new StringBuilder();
-        for (Object cabecera : cabeceras) {
-            sb.append(cabecera);
-            sb.append(";");
+        StringBuilder sb = new StringBuilder();
+        for (Object header : headers) {
+            sb.append(header);
+            sb.append(", ");
         }
-        sb.append(cabecerasPorDefecto);
-        return  sb.toString();
+        sb.append(CABECERAS_PERMITIDAS);
+        return sb.toString();
     }
 }

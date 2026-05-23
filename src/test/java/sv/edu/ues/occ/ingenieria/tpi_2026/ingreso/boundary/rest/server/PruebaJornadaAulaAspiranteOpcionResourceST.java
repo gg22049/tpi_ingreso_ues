@@ -5,12 +5,10 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,13 +41,13 @@ public class PruebaJornadaAulaAspiranteOpcionResourceST extends STAbstract {
     @BeforeAll
     void init() {
         // jornada-aula
-        JornadaAula jornadaAulaDto = new JornadaAula(new JornadaAulaPK(1l, "A3"), "hola");
+        JornadaAula jornadaAulaDto = new JornadaAula(new JornadaAulaPK(1l, idAula), "hola");
         Response response = webTarget
-                .path("jornada/1/aula/A3")
+                .path("jornada/1/aula/" + idAula)
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(jornadaAulaDto, MediaType.APPLICATION_JSON));
         System.out.println(response.getStatus());
-        
+
     }
 
     @Test
@@ -60,7 +58,7 @@ public class PruebaJornadaAulaAspiranteOpcionResourceST extends STAbstract {
         // 400 - constraint validation
         PruebaJornadaAulaAspiranteOpcion dto = new PruebaJornadaAulaAspiranteOpcion(null, Boolean.FALSE, null);
         Response response = webTarget
-                .path(PATH + "/0/jornada/0/aula/0/opcion/0")
+                .path(PATH + "/0/jornada/0/aula/" + idAula + "/opcion/0")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
@@ -75,15 +73,17 @@ public class PruebaJornadaAulaAspiranteOpcionResourceST extends STAbstract {
         assertNotNull(body.instance());
         assertNotNull(body.issues());
         assertFalse(body.issues().isEmpty());
-        
+
         // 201 - created
-        dto = new PruebaJornadaAulaAspiranteOpcion(new PruebaJornadaAulaAspiranteOpcionPK(1l, 1l, "A3", 1l), Boolean.FALSE, Date.from(Instant.now()));
+        dto = new PruebaJornadaAulaAspiranteOpcion(new PruebaJornadaAulaAspiranteOpcionPK(1l, 1l, "" + idAula + "", 1l), Boolean.FALSE, Date.from(Instant.now()));
         response = webTarget
-                .path(PATH + "/1/jornada/1/aula/A3/opcion/1")
+                .path(PATH + "/1/jornada/1/aula/" + idAula + "/opcion/1")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
 
         assertNotNull(response);
+        System.out.println(response.readEntity(String.class));
+        System.out.println(OL_CONTAINER.getLogs());
         assertEquals(201, response.getStatus());
         String location = response.getHeaderString("Location");
         assertNotNull(location);
@@ -134,7 +134,7 @@ public class PruebaJornadaAulaAspiranteOpcionResourceST extends STAbstract {
 
         // 200 - found
         response = webTarget
-                .path(PATH + "/1/jornada/1/aula/A3/opcion/1")
+                .path(PATH + "/1/jornada/1/aula/" + idAula + "/opcion/1")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -294,7 +294,7 @@ public class PruebaJornadaAulaAspiranteOpcionResourceST extends STAbstract {
 
         //204 - deleted
         response = webTarget
-                .path(PATH + "/1/jornada/1/aula/A3/opcion/1")
+                .path(PATH + "/1/jornada/1/aula/" + idAula + "/opcion/1")
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
 

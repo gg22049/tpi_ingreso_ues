@@ -5,12 +5,10 @@
 package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -153,7 +151,7 @@ public class PruebaClaveAreaConocimientoPreguntaDistractorResourceST extends STA
         assertNotNull(dtoResponse);
     }
 
-   /* @Test
+    /* @Test
     @Order(3)
     public void findByRange() {
         System.out.println("PruebaClaveAreaConocimientoPreguntaDistractorResource.findByRange");
@@ -253,7 +251,7 @@ System.out.println(json);
         assertNotNull(response);
         assertEquals(204, response.getStatus());
     }
-*/
+     */
     @Test
     @Order(3)
     public void delete() {
