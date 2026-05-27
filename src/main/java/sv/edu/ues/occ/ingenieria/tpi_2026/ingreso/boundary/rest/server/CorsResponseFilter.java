@@ -22,7 +22,7 @@ public class CorsResponseFilter implements ContainerResponseFilter {
     public static final String METODOS_PERMITIDOS = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
     public static final int MAXIMO_CACHE = 30 * 60 * 60;
     public static final String CABECERAS_PERMITIDAS = "Origin, Accept, Content-Type";
-    public static final String CABECERAS_EXPUESTAS = "Location, Info";
+    public static final String CABECERAS_EXPUESTAS = "Location, Info, " + HeaderName.TOTAL_RECORDS.toString();
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
