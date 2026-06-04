@@ -53,7 +53,6 @@ public class AspiranteOpcion implements Serializable {
     private Long idAspiranteOpcion;
     @Basic(optional = false)
     @NotBlank
-    @JsonbTransient
     @Size(min = 1, max = 124)
     @Column(name = "id_opcion")
     private String idOpcion;

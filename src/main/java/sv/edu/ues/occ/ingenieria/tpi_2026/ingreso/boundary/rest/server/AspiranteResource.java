@@ -3,6 +3,7 @@ package sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -12,6 +13,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,6 +22,7 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.FindRangeDTO;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.EntityNotFoundInRepositoryExcpetion;
+import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.exception.ExistentEntityException;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteIdentificacionDAOImp;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.control.AspiranteOpcionDAOImp;
@@ -53,10 +56,16 @@ public class AspiranteResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(@Valid Aspirante entity, @Context UriInfo uriInfo) {
 
-        aspiranteDI.create(entity);
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-        uriBuilder.path(String.valueOf(entity.getIdAspirante().toString()));
-        return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
+        Aspirante found = aspiranteDI.findByEmail(entity.getCorreo());
+
+        if (found == null) {
+            aspiranteDI.create(entity);
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+            uriBuilder.path(String.valueOf(entity.getIdAspirante().toString()));
+            return Response.created(uriBuilder.build()).type(MediaType.APPLICATION_JSON).build();
+        }
+
+        return Response.status(Response.Status.CONFLICT).build();
 
     }
 
@@ -72,6 +81,19 @@ public class AspiranteResource {
 
         return Response.ok(found, MediaType.APPLICATION_JSON).build();
 
+    }
+
+    @GET
+    @Path("/email/disponible")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findByEmail(@QueryParam("email") @NotBlank String email) {
+
+        Aspirante found = aspiranteDI.findByEmail(email);
+        if (found == null) {
+            return Response.noContent().build();
+        }
+
+        return Response.status(Response.Status.CONFLICT).build();
     }
 
     @GET
@@ -133,6 +155,9 @@ public class AspiranteResource {
             throw new EntityNotFoundInRepositoryExcpetion(idIdentificacion);
         }
 
+        if (aspiranteIdentificacionDI.findById(new AspiranteIdentificacionPK(idAspirante, idIdentificacion)) != null) {
+            throw new ExistentEntityException("idAspirante: " + idAspirante + " idIdentificacion: " + idIdentificacion);
+        }
         entity.setAspiranteIdentificacionPK(new AspiranteIdentificacionPK(idAspirante, idIdentificacion));
         aspiranteIdentificacionDI.create(entity);
         return Response.created(uriInfo.getAbsolutePath()).build();
@@ -173,11 +198,10 @@ public class AspiranteResource {
     }
 
     @POST
-    @Path("/{idAspirante}/opcion/{idOpcion}")
+    @Path("/{idAspirante}/opcion")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createAspiranteOpcion(
             @PathParam("idAspirante") @Min(1L) Long idAspirante,
-            @PathParam("idOpcion") @Min(1) String idOpcion,
             @Valid AspiranteOpcion entity,
             @Context UriInfo uriInfo
     ) {
@@ -188,7 +212,7 @@ public class AspiranteResource {
         }
 
         entity.setIdAspirante(found);
-        entity.setIdOpcion(idOpcion);
+//        entity.setIdOpcion(idOpcion);
         aspiranteOpcionDI.create(entity);
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
