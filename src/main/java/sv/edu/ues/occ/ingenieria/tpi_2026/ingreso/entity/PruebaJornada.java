@@ -33,7 +33,19 @@ import java.util.Date;
     @NamedQuery(name = "PruebaJornada.findByIdPrueba", query = "SELECT p FROM PruebaJornada p WHERE p.pruebaJornadaPK.idPrueba = :idPrueba"),
     @NamedQuery(name = "PruebaJornada.findByIdJornada", query = "SELECT p FROM PruebaJornada p WHERE p.pruebaJornadaPK.idJornada = :idJornada"),
     @NamedQuery(name = "PruebaJornada.findByFechaCreacion", query = "SELECT p FROM PruebaJornada p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "PruebaJornada.findByObservaciones", query = "SELECT p FROM PruebaJornada p WHERE p.observaciones = :observaciones")})
+    @NamedQuery(name = "PruebaJornada.findByObservaciones", query = "SELECT p FROM PruebaJornada p WHERE p.observaciones = :observaciones"),
+    @NamedQuery(name = "PruebaJornada.findByFilteredRangeProcesos", query = "SELECT new sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ProcesoDTO( "
+            + "p.idPrueba, "
+            + "j.idJornada, "
+            + "ja.jornadaAulaPK.idAula, "
+            + "p.nombre, "
+            + "j.fechaInicio, "
+            + "j.fechaFin "
+            + ") "
+            + "FROM PruebaJornada pj JOIN pj.prueba p JOIN pj.jornada j JOIN j.jornadaAulaList ja "
+            + "WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :name, '%')) "
+            + "ORDER BY j.fechaInicio")
+})
 public class PruebaJornada implements Serializable {
 
     private static final long serialVersionUID = 1L;
