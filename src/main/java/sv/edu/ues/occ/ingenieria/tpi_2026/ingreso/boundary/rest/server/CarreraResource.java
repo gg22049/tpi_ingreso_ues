@@ -27,7 +27,23 @@ public class CarreraResource {
             new CarreraDTO("Ingenieria Civil", "Diseña, construye y mantiene infraestructuras básicas", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwDnoYcFAx5MQG0OiulRKcPmQe415MF_iGwg&s"),
             new CarreraDTO("Ingenieria Electrica", "Se enfoca en el diseño, desarrollo y mantenimiento de sistemas de generación, transmisión, distribución y uso de energía eléctrica para suplir las necesidades de industrias, comercios y hogares.", "https://ube.edu.ec/img/carreras/1712079657_95ff7639b4c719c236f5.jpg"),
             new CarreraDTO("Ingenieria Agronoma", "Aplica la ciencia y la tecnología para optimizar la producción agrícola, garantizar la seguridad alimentaria y promover el desarrollo sostenible.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGx7sucDVYct5_q6DKGgbiiR1RIo0QtmqcvQ&s"),
-            new CarreraDTO("Ingenieria Sistemas Informaticos", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg")
+            new CarreraDTO("Ingenieria Sistemas Informaticos", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg"),
+            new CarreraDTO("Ingenieria Idustrial", "Diseña, construye y mantiene infraestructuras básicas", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwDnoYcFAx5MQG0OiulRKcPmQe415MF_iGwg&s"),
+            new CarreraDTO("Ingenieria Mecanica", "Se enfoca en el diseño, desarrollo y mantenimiento de sistemas de generación, transmisión, distribución y uso de energía eléctrica para suplir las necesidades de industrias, comercios y hogares.", "https://ube.edu.ec/img/carreras/1712079657_95ff7639b4c719c236f5.jpg"),
+            new CarreraDTO("Ingenieria Software", "Aplica la ciencia y la tecnología para optimizar la producción agrícola, garantizar la seguridad alimentaria y promover el desarrollo sostenible.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGx7sucDVYct5_q6DKGgbiiR1RIo0QtmqcvQ&s"),
+            new CarreraDTO("Arquitectura", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg"),
+            new CarreraDTO("Licenciatura en Idiomas", "Diseña, construye y mantiene infraestructuras básicas", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwDnoYcFAx5MQG0OiulRKcPmQe415MF_iGwg&s"),
+            new CarreraDTO("Licenciatura Mercadotecnia", "Se enfoca en el diseño, desarrollo y mantenimiento de sistemas de generación, transmisión, distribución y uso de energía eléctrica para suplir las necesidades de industrias, comercios y hogares.", "https://ube.edu.ec/img/carreras/1712079657_95ff7639b4c719c236f5.jpg"),
+            new CarreraDTO("Licenciatura en Psicologia", "Aplica la ciencia y la tecnología para optimizar la producción agrícola, garantizar la seguridad alimentaria y promover el desarrollo sostenible.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGx7sucDVYct5_q6DKGgbiiR1RIo0QtmqcvQ&s"),
+            new CarreraDTO("Licenciatura en Veterianaria", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg"),
+            new CarreraDTO("Doctorado en Medicina", "Diseña, construye y mantiene infraestructuras básicas", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwDnoYcFAx5MQG0OiulRKcPmQe415MF_iGwg&s"),
+            new CarreraDTO("Licenciatura en Enfermeria", "Se enfoca en el diseño, desarrollo y mantenimiento de sistemas de generación, transmisión, distribución y uso de energía eléctrica para suplir las necesidades de industrias, comercios y hogares.", "https://ube.edu.ec/img/carreras/1712079657_95ff7639b4c719c236f5.jpg"),
+            new CarreraDTO("Licenciatura en Administracion de Empresas", "Aplica la ciencia y la tecnología para optimizar la producción agrícola, garantizar la seguridad alimentaria y promover el desarrollo sostenible.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGx7sucDVYct5_q6DKGgbiiR1RIo0QtmqcvQ&s"),
+            new CarreraDTO("Licenciatura en Filosofia", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg"),
+            new CarreraDTO("Licenciatura en Procesos Penales", "Diseña, construye y mantiene infraestructuras básicas", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwDnoYcFAx5MQG0OiulRKcPmQe415MF_iGwg&s"),
+            new CarreraDTO("Licenciatura en Literatura", "Se enfoca en el diseño, desarrollo y mantenimiento de sistemas de generación, transmisión, distribución y uso de energía eléctrica para suplir las necesidades de industrias, comercios y hogares.", "https://ube.edu.ec/img/carreras/1712079657_95ff7639b4c719c236f5.jpg"),
+            new CarreraDTO("Licenciatura en Matematicas", "Aplica la ciencia y la tecnología para optimizar la producción agrícola, garantizar la seguridad alimentaria y promover el desarrollo sostenible.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGx7sucDVYct5_q6DKGgbiiR1RIo0QtmqcvQ&s"),
+            new CarreraDTO("Licenciatura en Fisica", "Diseña, programa y optimiza sistemas tecnológicos complejos", "https://www.espaciodigital.com.co/wp-content/uploads/2021/04/servidores-web.jpg")
     );
 
     @GET
@@ -36,7 +52,7 @@ public class CarreraResource {
             @Valid @BeanParam FindRangeDTO params
     ) {
         return Response
-                .ok(burnedResponse, MediaType.APPLICATION_JSON)
+                .ok(burnedResponse.subList(params.getOffset(), params.getLimit()), MediaType.APPLICATION_JSON)
                 .header(HeaderName.TOTAL_RECORDS.toString(), burnedResponse.size())
                 .build();
     }

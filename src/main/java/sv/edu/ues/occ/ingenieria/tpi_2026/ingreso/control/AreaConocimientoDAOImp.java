@@ -8,6 +8,10 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.entity.AreaConocimiento;
 
 /**
@@ -28,6 +32,23 @@ public class AreaConocimientoDAOImp extends AbstractDefaultDAOImp<AreaConocimien
     @Override
     public EntityManager getEntityManager() {
         return this.em;
+    }
+
+    public List<AreaConocimiento> findByIdArbolAreas(Long idPrueba) throws IllegalArgumentException, IllegalStateException {
+        if (idPrueba == null) {
+            throw new IllegalArgumentException("El id de Prueba no puede ser nulo");
+        }
+        if (em == null) {
+            throw new IllegalStateException("Error accediendo al repositorio");
+        }
+        try {
+            TypedQuery<AreaConocimiento> q = em.createNamedQuery("AreaConocimiento.findByIdArbolAreas", AreaConocimiento.class);
+            q.setParameter("idPrueba", idPrueba);
+            return q.getResultList();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            throw new IllegalStateException("Error al obtener el rango de registros", e);
+        }
     }
 
 }

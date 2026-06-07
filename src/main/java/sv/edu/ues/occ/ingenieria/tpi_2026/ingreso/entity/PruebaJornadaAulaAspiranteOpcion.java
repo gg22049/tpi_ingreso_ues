@@ -38,7 +38,21 @@ import java.util.Date;
     @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findByIdAula", query = "SELECT p FROM PruebaJornadaAulaAspiranteOpcion p WHERE p.pruebaJornadaAulaAspiranteOpcionPK.idAula = :idAula"),
     @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findByIdAspiranteOpcion", query = "SELECT p FROM PruebaJornadaAulaAspiranteOpcion p WHERE p.pruebaJornadaAulaAspiranteOpcionPK.idAspiranteOpcion = :idAspiranteOpcion"),
     @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findByActivo", query = "SELECT p FROM PruebaJornadaAulaAspiranteOpcion p WHERE p.activo = :activo"),
-    @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findByFecha", query = "SELECT p FROM PruebaJornadaAulaAspiranteOpcion p WHERE p.fecha = :fecha")})
+    @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findByFecha", query = "SELECT p FROM PruebaJornadaAulaAspiranteOpcion p WHERE p.fecha = :fecha"),
+    @NamedQuery(name = "PruebaJornadaAulaAspiranteOpcion.findExamenByCorreo",
+            query = "SELECT new sv.edu.ues.occ.ingenieria.tpi_2026.ingreso.boundary.rest.server.dto.ResultadoExamenDTO( "
+            + "p.nombre, "
+            + "pjaao.fecha, "
+            + "p.notaAprobacion,"
+            + "pjaaoe.resultado"
+            + ") "
+            + "FROM PruebaJornadaAulaAspiranteOpcion pjaao "
+            + "JOIN pjaao.prueba p "
+            + "JOIN pjaao.aspiranteOpcion ao "
+            + "JOIN ao.idAspirante a "
+            + "LEFT JOIN pjaao.pruebaJornadaAulaAspiranteOpcionExamen pjaaoe "
+            + "WHERE a.correo = :correo")
+})
 public class PruebaJornadaAulaAspiranteOpcion implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -38,7 +38,17 @@ import java.util.List;
     @NamedQuery(name = "AreaConocimiento.findByIdAreaConocimiento", query = "SELECT a FROM AreaConocimiento a WHERE a.idAreaConocimiento = :idAreaConocimiento"),
     @NamedQuery(name = "AreaConocimiento.findByNombre", query = "SELECT a FROM AreaConocimiento a WHERE a.nombre = :nombre"),
     @NamedQuery(name = "AreaConocimiento.findByDescripcion", query = "SELECT a FROM AreaConocimiento a WHERE a.descripcion = :descripcion"),
-    @NamedQuery(name = "AreaConocimiento.findByActivo", query = "SELECT a FROM AreaConocimiento a WHERE a.activo = :activo")})
+    @NamedQuery(name = "AreaConocimiento.findByActivo", query = "SELECT a FROM AreaConocimiento a WHERE a.activo = :activo"),
+    @NamedQuery(
+            name = "AreaConocimiento.findByIdArbolAreas",
+            query = "SELECT a "
+            + "FROM Prueba p "
+            + "JOIN p.pruebaClaveList pc "
+            + "JOIN pc.pruebaClaveAreaConocimientoList pcac "
+            + "JOIN pcac.areaConocimiento a "
+            + "WHERE p.idPrueba = :idPrueba "
+            + "GROUP BY a.idAreaConocimiento")
+})
 public class AreaConocimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
