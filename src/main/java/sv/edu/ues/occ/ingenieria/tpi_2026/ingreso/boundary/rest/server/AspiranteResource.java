@@ -212,7 +212,6 @@ public class AspiranteResource {
         }
 
         entity.setIdAspirante(found);
-//        entity.setIdOpcion(idOpcion);
         aspiranteOpcionDI.create(entity);
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();

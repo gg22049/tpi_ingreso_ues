@@ -260,7 +260,7 @@
                                         <exclude>**/entity/**</exclude>
                                     </excludes>
                                     <!--Coverage for Packaging-->
-                                                                        <rules>
+                                    <rules>
                                         <rule>
                                             <element>PACKAGE</element>
                                             <limits>
